@@ -1,0 +1,5 @@
+.Rhistory
+evooracle_venv/
+.vscode/
+__pycache__/
+openLLM/

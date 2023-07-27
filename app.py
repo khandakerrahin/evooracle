@@ -13,6 +13,10 @@ from langchain.agents.agent_toolkits import create_python_agent
 from langchain.tools.python.tool import PythonREPLTool
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
+# Utilities to Load or download required models
+from model_loader import load_model
+
+
 # Path to weights 
 BASE_PATH = '/home/shaker/models/GPT4All/'
 
@@ -42,7 +46,7 @@ st.set_page_config(
 st.title('Oracle Generation Tool with LLM')
 
 with st.sidebar:
-    my_logo = add_logo(logo_path="/home/shaker/git/Nopenai/FbK_02.png", width=200, height=200)
+    my_logo = add_logo(logo_path="/home/shaker/git/evooracle/resources/FbK_02.png", width=200, height=200)
     st.sidebar.image(my_logo)
 
 #     st.info('This application allows you to use LLMs for a range of tasks. The selections displayed below leverage prompt formatting to streamline your ability to do stuff!')
@@ -57,14 +61,16 @@ with st.sidebar:
     
     if model != 'OpenAI': 
         PATH = f'{BASE_PATH}{model}'
-        # Instance of llm
-        #llm = GPT4All(model=PATH, backend=None, verbose=True, temp=0.1, n_predict=None, top_p=.95, top_k=40, n_batch=9, repeat_penalty=1.1, repeat_last_n=1.1) 
+
+        # Usage example
+        load_model(BASE_PATH, model)
         
+        # Instance of llm
         # Verbose is required to pass to the callback manager
         #llm = GPT4All(model=local_path, callbacks=callbacks, verbose=True)
         # If you want to use a custom model add the backend parameter
         # Check https://docs.gpt4all.io/gpt4all_python.html for supported backends
-        llm = GPT4All(model=PATH, backend=None, callbacks=callbacks, verbose=True, temp=0.1, n_predict=4096, top_p=.95, top_k=40, n_batch=9, repeat_penalty=1.1, repeat_last_n=1.1)
+        llm = GPT4All(model=PATH, backend="llama", callbacks=callbacks, verbose=True, temp=0.1, n_predict=4096, top_p=.95, top_k=40, n_batch=9, repeat_penalty=1.1, repeat_last_n=1.1)
         
     else: 
         llm = OpenAI(temperature=0.5)
