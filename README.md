@@ -2,7 +2,7 @@
 This repository contains an automated Oracle generation tool that leverages the power of Large Language Models (LLMs) to enhance software testing efficiency. The tool is designed to generate JUnit tests and test case assertions, acting as an Oracle for the system under test.
 
 ## Tool Architecture
-![alt text](resources/UML_Component_Diagram_EvoOracle.png)
+![alt text](resources/UML_Component_Diagram_EvoOracle_v2.png)
 *Figure 01: Tool Architecture*
 
 ## Workflow
