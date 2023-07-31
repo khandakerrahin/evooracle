@@ -61,6 +61,8 @@ def parse_data(dir_path: str):
 
                     # Get method data
                     methods = class_data['methods']
+                    focal_method_names = ''
+                    
                     for method_data in methods:
                         m_sig = method_data['m_sig']
                         method_name = method_data['method_name']
@@ -69,6 +71,9 @@ def parse_data(dir_path: str):
                         parameters = method_data['parameters']
                         is_test_method = method_data['is_test_method']
 
+                        if is_test_method:
+                            focal_method_names = method_data['focal_methods']
+                        
                         if "public" in method_data['modifiers']:
                             is_public = True
                         else:
@@ -91,7 +96,7 @@ def parse_data(dir_path: str):
                             db.insert("test", row={"project_name": project_name,
                                                 "signature": m_sig,
                                                 "method_name": method_name,
-                                                "focal_method_name":'',
+                                                "focal_method_name":str(focal_method_names),
                                                 "parameters": parameters,
                                                 "source_code": source_code,
                                                 "class_name": class_name,
