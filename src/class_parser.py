@@ -238,10 +238,12 @@ class ClassParser():
                 object_name = ClassParser.match_from_span(object_node, blob)
                 # Append the class name and method name in the format "Class.method" to focal_methods
                 metadata['focal_methods'].append(f'{object_name}.{method_invocation_name}')
-            else:
+            # else: 
+                # TODO check and process if not assersions
+                # Skipping this for now as considering as Assertions now
                 # If object_node is None, it means the method is invoked without an object (e.g., static method)
                 # In that case, append only the method name to focal_methods
-                metadata['focal_methods'].append(method_invocation_name)
+                # metadata['focal_methods'].append(method_invocation_name)
             
         # Method Invocations
         ClassParser.get_method_m_deps(function_node, metadata, dependent_classes, instance_2_classes, blob)

@@ -186,5 +186,6 @@ def drop_table():
     sql_script = """
         DROP TABLE IF EXISTS `class`;
         DROP TABLE IF EXISTS `method`;
+        DROP TABLE IF EXISTS `test`;
     """
     db.execute(sql_script)
