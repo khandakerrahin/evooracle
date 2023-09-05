@@ -7,7 +7,7 @@ The dataset folder will contain all the information in the direction.
 import time
 from string_tables import string_tables
 from tools import *
-from askLLM import start_whole_process
+from askLLM import start_whole_process, whole_process_with_LLM
 from db_operations import database
 from task import Task
 from colorama import Fore, Style, init
@@ -206,7 +206,12 @@ def prepare_test_cases(sql_query, multiprocess=True, repair=True, confirmed=Fals
                     return (string_tables.NL + string_tables.ASSERTION_PLACEHOLDER)
 
                 source_code = re.sub(pattern, replacement, source_code)
+            
+            # prepare the test case
             test_case = package + string_tables.NL +  imports + string_tables.NL + class_signature + string_tables.NL + string_tables.LEFT_CURLY_BRACE + string_tables.NL + source_code + string_tables.NL + string_tables.RIGHT_CURLY_BRACE
+
+            # prepare the context
+
 
             # update Method to add the sourcecode_with_placeholder
             db.update("method", conditions = {"id": id}, new_cols = {"source_code_with_placeholder": source_code})
@@ -223,13 +228,9 @@ def prepare_test_cases(sql_query, multiprocess=True, repair=True, confirmed=Fals
 
 
 
-
+    whole_process_with_LLM(test_num, base_name, base_dir, repair, submits, total);
     
 
-    # Find all the files
-    source_dir = os.path.join(dataset_dir, "direction_1")
-
-    # start_whole_process(source_dir, result_path, multiprocess=multiprocess, repair=repair)
     print("WHOLE PROCESS FINISHED")
     # Run accumulated tests
     # project_path = os.path.abspath(project_dir)

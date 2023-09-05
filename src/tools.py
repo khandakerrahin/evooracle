@@ -20,7 +20,7 @@ def get_messages_tokens(messages):
     """
     cnt = 0
     for message in messages:
-        cnt += count_tokens(message["content"])
+        cnt += count_tokens(message)
     return cnt
 
 

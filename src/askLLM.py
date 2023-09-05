@@ -145,14 +145,14 @@ def generate_messages(template_name, context_file):
     context = load_context_file(context_file)
     messages = []
 
-    system_name = f"{template_name.split('.')[0]}_system.jinja2"
-    system_path = os.path.join("../prompt", system_name)
-    if os.path.exists(system_path):
-        system_message = generate_prompt(system_name, {})
-        messages.append({"role": "system", "content": system_message})
+    # system_name = f"{template_name.split('.')[0]}_system.jinja2"
+    # system_path = os.path.join("../prompt", system_name)
+    # if os.path.exists(system_path):
+    #     system_message = generate_prompt(system_name, {})
+    #     messages.append({"role": "system", "content": system_message})
 
     user_message = generate_prompt(template_name, context)
-    messages.append({"role": "user", "content": user_message})
+    messages.append(user_message)
 
     return messages
 
@@ -405,7 +405,7 @@ def remain_prompt_tokens(messages):
     return MAX_PROMPT_TOKENS - get_messages_tokens(messages)
 
 
-def whole_process(test_num, base_name, base_dir, repair, submits, total):
+def whole_process_with_LLM(test_num, base_name, base_dir, repair, submits, total):
     """
     Multiprocess version of start_generation
     :param test_num:
@@ -436,8 +436,10 @@ def whole_process(test_num, base_name, base_dir, repair, submits, total):
     # 2. Get data from direction_1 as well as direction_3
     with open(get_dataset_path(method_id, project_name, class_name, method_name, 1), "r") as f:
         context_d_1 = json.load(f)
+        print(context_d_1)
     with open(get_dataset_path(method_id, project_name, class_name, method_name, 3), "r") as f:
         context_d_3 = json.load(f)
+        print(context_d_3)
 
     def _remove_imports_context(strings):
         if imports:
@@ -449,11 +451,11 @@ def whole_process(test_num, base_name, base_dir, repair, submits, total):
 
     try:
         while rounds < max_rounds:
-            # 1. Ask GPT
+            # 1. Ask LLM
             steps += 1
             rounds += 1
             print(progress, method_id, "test_" + str(test_num), "Asking " + model + "...", "rounds", rounds)
-            gpt_file_name = os.path.join(save_dir, str(steps) + "_GPT_" + str(rounds) + ".json")
+            llm_file_name = os.path.join(save_dir, str(steps) + "_LLM_" + str(rounds) + ".json")
             # Need to generate new messages
             if rounds != 1:
                 last_round_result = get_latest_file(save_dir)
@@ -532,17 +534,19 @@ def whole_process(test_num, base_name, base_dir, repair, submits, total):
                             break
                 # print(Fore.BLUE, messages[1]['content'], Style.RESET_ALL)
 
-            # status = ask_chatgpt(messages, gpt_file_name)
-            status = ask_openLLM(messages, gpt_file_name)
+            print(Fore.BLUE, messages, Style.RESET_ALL)
+            
+            # status = ask_chatgpt(messages, llm_file_name)
+            status = ask_openLLM(messages, llm_file_name)
             
             if not status:
-                print(progress, Fore.RED + 'OpenAI Fail processing messages', Style.RESET_ALL)
+                print(progress, Fore.RED + 'LLM Failed processing messages', Style.RESET_ALL)
                 break
 
-            with open(gpt_file_name, "r") as f:
+            with open(llm_file_name, "r") as f:
                 gpt_result = json.load(f)
 
-            # 2. Extract information from GPT, and RUN save the result
+            # 2. Extract information from LLM, and RUN save the result
             steps += 1
 
             raw_file_name = os.path.join(save_dir, str(steps) + "_raw_" + str(rounds) + ".json")
@@ -601,6 +605,247 @@ def whole_process(test_num, base_name, base_dir, repair, submits, total):
         run_temp_dir = os.path.abspath(run_temp_dir)
         shutil.rmtree(run_temp_dir)
 
+def whole_process(test_num, base_name, base_dir, repair, submits, total):
+    """
+    Multiprocess version of start_generation
+    :param test_num:
+    :param base_name:
+    :param base_dir:
+    :param repair:
+    :param submits:
+    :param total:
+    :return:
+    """
+    progress = '[' + str(submits) + ' / ' + str(total) + ']'
+    # Create subdirectories for each test
+    save_dir = os.path.join(base_dir, str(test_num))
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+    run_temp_dir = os.path.join(save_dir, "runtemp")
+
+    steps, rounds = 0, 0
+    method_id, project_name, class_name, method_name = parse_file_name(base_name)
+
+    # 1. Get method data
+    with open(get_dataset_path(method_id, project_name, class_name, method_name, "raw"), "r") as f:
+        raw_data = json.load(f)
+
+    package = raw_data["package"]
+    imports = raw_data["imports"]
+
+    # 2. Get data from direction_1 as well as direction_3
+    with open(get_dataset_path(method_id, project_name, class_name, method_name, 1), "r") as f:
+        context_d_1 = json.load(f)
+        print(context_d_1)
+    with open(get_dataset_path(method_id, project_name, class_name, method_name, 3), "r") as f:
+        context_d_3 = json.load(f)
+        print(context_d_3)
+
+    def _remove_imports_context(strings):
+        if imports:
+            strings = strings.replace(imports, "")
+        if package:
+            strings = strings.replace(package, "")
+        strings = strings.strip()
+        return strings
+
+    try:
+        while rounds < max_rounds:
+            # 1. Ask LLM
+            steps += 1
+            rounds += 1
+            print(progress, method_id, "test_" + str(test_num), "Asking " + model + "...", "rounds", rounds)
+            llm_file_name = os.path.join(save_dir, str(steps) + "_LLM_" + str(rounds) + ".json")
+            # Need to generate new messages
+            if rounds != 1:
+                last_round_result = get_latest_file(save_dir)
+                with open(last_round_result, "r") as f:
+                    last_round_result = json.load(f)
+                last_raw = get_latest_file(save_dir, suffix="raw")
+                with open(last_raw, "r") as f:
+                    last_raw = json.load(f)
+
+                # Prepare the error message
+                context = {"class_name": context_d_1["class_name"], "method_name": context_d_1["focal_method"],
+                           "unit_test": last_raw["source_code"], "method_code": context_d_1["information"]}
+                # Required, cannot truncate
+
+                # Adaptive generate error message
+                messages = generate_messages(TEMPLATE_ERROR, context)
+                allow_tokens = remain_prompt_tokens(messages)
+                if allow_tokens < MIN_ERROR_TOKENS:
+                    context["method_code"] = _remove_imports_context(context["method_code"])
+                    messages = generate_messages(TEMPLATE_ERROR, context)
+                    allow_tokens = remain_prompt_tokens(messages)
+                if allow_tokens < MIN_ERROR_TOKENS:
+                    context["method_code"] = context_d_3["full_fm"]
+                    messages = generate_messages(TEMPLATE_ERROR, context)
+                    allow_tokens = remain_prompt_tokens(messages)
+                if allow_tokens < MIN_ERROR_TOKENS:
+                    context["method_code"] = _remove_imports_context(context_d_3["full_fm"])
+                    messages = generate_messages(TEMPLATE_ERROR, context)
+                    allow_tokens = remain_prompt_tokens(messages)
+                if allow_tokens >= MIN_ERROR_TOKENS:
+                    if "compile_error" in last_round_result:
+                        context["error_type"] = "compiling"
+                        error_mes = process_error_message(last_round_result["compile_error"], allow_tokens)
+                        context["error_message"] = error_mes
+                    if "runtime_error" in last_round_result:
+                        context["error_type"] = "running"
+                        error_mes = process_error_message(last_round_result["runtime_error"], allow_tokens)
+                        context["error_message"] = error_mes
+                else:
+                    print(progress, Fore.RED + method_id, "Tokens not enough, test fatal error...",
+                          Style.RESET_ALL)  # Fatal error
+                    break
+                if "compile_error" not in last_round_result and "runtime_error" not in last_round_result:
+                    print(progress, Fore.RED + method_id, "Timeout error, test fatal error...", Style.RESET_ALL)
+                    break
+                messages = generate_messages(TEMPLATE_ERROR, context)
+                # print('-------------------')
+                # print(context["error_message"])
+            else:  # Direction_1 or Direction_3
+                if not context_d_3["c_deps"] and not context_d_3["m_deps"]:  # No dependencies d_1
+                    context = copy.deepcopy(context_d_1)
+                    messages = generate_messages(TEMPLATE_NO_DEPS, context)
+                    if remain_prompt_tokens(messages) < 0:  # Truncate information
+                        context["information"] = _remove_imports_context(context["information"])
+                        messages = generate_messages(TEMPLATE_NO_DEPS, context)
+                        if remain_prompt_tokens(messages) < 0:  # Failed generating messages
+                            messages = []
+                else:  # Has dependencies d_3
+                    context = copy.deepcopy(context_d_3)
+                    messages = generate_messages(TEMPLATE_WITH_DEPS, context)
+                    if remain_prompt_tokens(messages) < 0:  # Need Truncate information
+                        context["full_fm"] = _remove_imports_context(context["full_fm"])
+                        messages = generate_messages(TEMPLATE_WITH_DEPS, context)
+                        if remain_prompt_tokens(messages) < 0:  # Failed generating messages
+                            messages = []
+
+                if not messages:  # Turn to minimum messages
+                    context = copy.deepcopy(context_d_1)  # use direction 1 as template
+                    context["information"] = context_d_3["full_fm"]  # use full_fm d_3 as context
+                    messages = generate_messages(TEMPLATE_NO_DEPS, context)
+                    if remain_prompt_tokens(messages) < 0:
+                        context["information"] = _remove_imports_context(context["information"])
+                        messages = generate_messages(TEMPLATE_NO_DEPS, context)  # !! MINIMUM MESSAGES!!
+                        if remain_prompt_tokens(messages) < 0:  # Failed generating messages
+                            print(progress, Fore.RED + "Tokens not enough, test fatal error...", Style.RESET_ALL)
+                            break
+                # print(Fore.BLUE, messages[1]['content'], Style.RESET_ALL)
+
+            print(Fore.BLUE, messages, Style.RESET_ALL)
+            
+            # status = ask_chatgpt(messages, llm_file_name)
+            status = ask_openLLM(messages, llm_file_name)
+            
+            if not status:
+                print(progress, Fore.RED + 'LLM Failed processing messages', Style.RESET_ALL)
+                break
+
+            with open(llm_file_name, "r") as f:
+                gpt_result = json.load(f)
+
+            # 2. Extract information from LLM, and RUN save the result
+            steps += 1
+
+            raw_file_name = os.path.join(save_dir, str(steps) + "_raw_" + str(rounds) + ".json")
+
+            # extract the test and save the result in raw_file_name
+            # input_string = gpt_result["choices"][0]['message']["content"]
+            input_string = gpt_result
+            test_passed, fatal_error = extract_and_run(input_string, raw_file_name, class_name, method_id, test_num,
+                                                       project_name,
+                                                       package)
+
+            if test_passed:
+                print(progress, Fore.GREEN + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
+                      "test passed",
+                      Style.RESET_ALL)
+                break
+
+            if not os.path.exists(raw_file_name):
+                print(progress, Fore.RED + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
+                      "no code in raw result", Style.RESET_ALL)
+                break
+
+            # Open up the raw result
+            with open(get_latest_file(save_dir), "r") as f:
+                raw_result = json.load(f)
+
+            # 4. Start imports Repair
+            steps += 1
+            # print(progress, method_id, "test_" + str(test_num), "Fixing imports", "rounds", rounds)
+            imports_file_name = os.path.join(save_dir, str(steps) + "_imports_" + str(rounds) + ".json")
+            # run imports repair
+            source_code = raw_result["source_code"]
+            source_code = repair_imports(source_code, imports)
+            test_passed, fatal_error = extract_and_run(source_code, imports_file_name, class_name, method_id, test_num,
+                                                       project_name,
+                                                       package)
+            if test_passed:
+                print(progress, Fore.GREEN + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
+                      "test passed",
+                      Style.RESET_ALL)
+                break
+            if fatal_error:
+                print(progress, Fore.RED + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
+                      "fatal error",
+                      Style.RESET_ALL)
+                break
+
+            print(progress, Fore.YELLOW + method_id, "test_" + str(test_num), "Test failed, fixing...", "rounds",
+                  rounds,
+                  Style.RESET_ALL)
+            if not repair:  # If we do not want to repair the code, we don't need to second round
+                break
+    except Exception as e:
+        print(progress, Fore.RED + str(e), Style.RESET_ALL)
+    if os.path.exists(run_temp_dir):
+        run_temp_dir = os.path.abspath(run_temp_dir)
+        shutil.rmtree(run_temp_dir)
+
+def start_whole_process_02(source_dir, result_path, multiprocess=False, repair=True):
+    """
+    Start repair process
+    :param repair:  Whether to repair the code
+    :param multiprocess: Whether to use multiprocess
+    :param source_dir: The directory of the dataset or scoped dataset.
+    :return:
+    """
+    # Get a list of all file paths
+    file_paths = []
+    for root, dirs, files in os.walk(source_dir):
+        for file in files:
+            if file.endswith(".json"):
+                file_paths.append(os.path.join(root, file))
+
+    submits = 0
+    total = len(file_paths) * test_number
+    if multiprocess:
+        print("Multi process executing!")
+        # Create a process pool with maximum of process_number
+        with concurrent.futures.ProcessPoolExecutor(max_workers=process_number) as executor:
+            for idx, file_path in enumerate(file_paths):
+                _, base_name = os.path.split(file_path.replace("/dataset/", "/result/"))
+                base_dir = os.path.join(result_path, base_name.split(".json")[0])
+                for test_num in range(1, test_number + 1):
+                    submits += 1
+                    executor.submit(whole_process, test_num, base_name, base_dir, repair, submits, total)
+        print("Main process executing!")
+    else:
+        print("Single process executing!")
+        for idx, file_path in enumerate(file_paths):
+            # print(Fore.YELLOW + "ID: " + str(idx), "filePath: ", file_path,Style.RESET_ALL)
+            
+            _, base_name = os.path.split(file_path.replace("/dataset/", "/result/"))
+            base_dir = os.path.join(result_path, base_name.split(".json")[0])
+            for test_num in range(1, test_number + 1):
+                submits += 1
+                whole_process(test_num, base_name, base_dir, repair, submits, total)
+                break
+            break
+
 
 def start_whole_process(source_dir, result_path, multiprocess=False, repair=True):
     """
@@ -633,8 +878,12 @@ def start_whole_process(source_dir, result_path, multiprocess=False, repair=True
     else:
         print("Single process executing!")
         for idx, file_path in enumerate(file_paths):
+            # print(Fore.YELLOW + "ID: " + str(idx), "filePath: ", file_path,Style.RESET_ALL)
+            
             _, base_name = os.path.split(file_path.replace("/dataset/", "/result/"))
             base_dir = os.path.join(result_path, base_name.split(".json")[0])
             for test_num in range(1, test_number + 1):
                 submits += 1
                 whole_process(test_num, base_name, base_dir, repair, submits, total)
+                break
+            break
