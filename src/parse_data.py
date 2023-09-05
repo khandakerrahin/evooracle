@@ -89,35 +89,21 @@ def parse_data(dir_path: str):
                                     c_deps[dep_class] = []
                                 c_deps[dep_class].append(m_deps[dep_class])
 
-                        if is_test_method:
-                            # insert Test data into table test
-                            # project_name	signature	focal_method_name	method_name	parameters	source_code	class_name	dependencies	use_field	is_constructor	is_get_set	is_public
-
-                            db.insert("test", row={"project_name": project_name,
+                        # insert method data into table method
+                        db.insert("method", row={"project_name": project_name,
                                                 "signature": m_sig,
                                                 "method_name": method_name,
                                                 "focal_method_name":str(focal_method_names),
                                                 "parameters": parameters,
                                                 "source_code": source_code,
+                                                "source_code_with_placeholder": "",
                                                 "class_name": class_name,
                                                 "dependencies": str(m_deps),
                                                 "use_field": use_field,
                                                 "is_constructor": is_constructor,
+                                                "is_test_method": is_test_method,
                                                 "is_get_set": is_get_set,
                                                 "is_public": is_public})
-                        else:
-                            # insert method data into table method
-                            db.insert("method", row={"project_name": project_name,
-                                                 "signature": m_sig,
-                                                 "method_name": method_name,
-                                                 "parameters": parameters,
-                                                 "source_code": source_code,
-                                                 "class_name": class_name,
-                                                 "dependencies": str(m_deps),
-                                                 "use_field": use_field,
-                                                 "is_constructor": is_constructor,
-                                                 "is_get_set": is_get_set,
-                                                 "is_public": is_public})
                         
                         
 
