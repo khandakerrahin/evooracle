@@ -4,7 +4,7 @@ from db_operations import *
 from tools import *
 from parse_data import parse_data
 from export_data import export_data
-from scope_test import start_generation
+from scope_test import start_generation, prepare_test_cases
 from parse_xml import result_analysis
 from task import Task
 
@@ -31,20 +31,21 @@ def run():
     parse_data(info_path)
 
     # clear last dataset
-    clear_dataset()
+    # clear_dataset()
 
     # Export data for multi-process
-    export_data()
+    # export_data()
 
     project_name = os.path.basename(os.path.normpath(project_dir))
 
-    # Modify SQL query to test the designated classes.
+    # SQL query to get the classes that contains tests.
     sql_query = """
-        SELECT id FROM method WHERE project_name='{}';
+    SELECT id, class_name, class_path, signature, super_class, package, imports, fields, has_constructor, contains_test, dependencies 
+    FROM class where contains_test is true AND project_name='{}';
     """.format(project_name)
 
     # Start the whole process
-    # start_generation(sql_query, multiprocess=False, repair=True, confirmed=False)
+    prepare_test_cases(sql_query, multiprocess=False, repair=True, confirmed=False)
 
     # Export the result
     # result_analysis()

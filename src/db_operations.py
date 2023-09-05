@@ -149,28 +149,16 @@ def create_table():
             `id` INT AUTO_INCREMENT PRIMARY KEY,
             `project_name` VARCHAR(255) NOT NULL,
             `signature` TEXT NOT NULL,
-            `method_name` VARCHAR(255) NOT NULL,
-            `parameters` TEXT NOT NULL,
-            `source_code` LONGTEXT NOT NULL,
-            `class_name` VARCHAR(255) NOT NULL,
-            `dependencies` LONGTEXT NULL,
-            `use_field` TINYINT(1) NOT NULL,
-            `is_constructor` TINYINT(1) NOT NULL,
-            `is_get_set` TINYINT(1) NOT NULL,
-            `is_public` TINYINT(1) NOT NULL
-        );
-        CREATE TABLE IF NOT EXISTS `test` (
-            `id` INT AUTO_INCREMENT PRIMARY KEY,
-            `project_name` VARCHAR(255) NOT NULL,
-            `signature` TEXT NOT NULL,
             `focal_method_name` VARCHAR(255) NOT NULL,
             `method_name` VARCHAR(255) NOT NULL,
             `parameters` TEXT NOT NULL,
             `source_code` LONGTEXT NOT NULL,
+            `source_code_with_placeholder` LONGTEXT NOT NULL,
             `class_name` VARCHAR(255) NOT NULL,
             `dependencies` LONGTEXT NULL,
             `use_field` TINYINT(1) NOT NULL,
             `is_constructor` TINYINT(1) NOT NULL,
+            `is_test_method` TINYINT(1) NOT NULL,
             `is_get_set` TINYINT(1) NOT NULL,
             `is_public` TINYINT(1) NOT NULL
         );
@@ -186,6 +174,5 @@ def drop_table():
     sql_script = """
         DROP TABLE IF EXISTS `class`;
         DROP TABLE IF EXISTS `method`;
-        DROP TABLE IF EXISTS `test`;
     """
     db.execute(sql_script)
