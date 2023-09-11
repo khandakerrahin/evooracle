@@ -28,7 +28,7 @@ REPORT_FORMAT = config.get("DEFAULT", "REPORT_FORMAT")
 dataset_dir = config.get("DEFAULT", "dataset_dir")
 result_dir = config.get("DEFAULT", "result_dir")
 test_dir = config.get("DEFAULT", "test_dir")
-db_dir = config.get("DEFAULT", "db_dir")
+db_file = config.get("DEFAULT", "db_file")
 project_dir = config.get("DEFAULT", "project_dir")
 class_info_output = config.get("DEFAULT", "class_info_output")
 

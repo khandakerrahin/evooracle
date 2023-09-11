@@ -28,7 +28,7 @@ def run():
     info_path = Task.parse(project_dir)
 
     # Parse data
-    parse_data(info_path, db_dir)
+    parse_data(info_path, db_file)
 
     # clear last dataset
     # clear_dataset()

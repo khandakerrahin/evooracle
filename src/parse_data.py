@@ -165,6 +165,7 @@ def parse_data(dir_path: str, db_out_path: str):
                     class_data_to_store.append(class_entry)
 
                     print(class_name, "FINISHED!")
+                    break
                 
                 # Create the directory if it does not exist
                 output_dir = os.path.dirname(db_out_path)
