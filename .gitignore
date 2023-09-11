@@ -3,6 +3,4 @@ evooracle_venv/
 .vscode/
 __pycache__/
 openLLM/
-class_info/
-dataset/
-result/
+output_resources/
