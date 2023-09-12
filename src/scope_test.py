@@ -164,7 +164,7 @@ def prepare_test_cases(project_dir, multiprocess=True, repair=True, confirmed=Fa
             project_name  = row.get("project_name")
             method_signature = row.get("signature")
             method_name = row.get("method_name")
-            focal_method_name = row.get("focal_method_name")
+            focal_methods = row.get("focal_methods")
             parameters = row.get("parameters")
             source_code = row.get("source_code")
             source_code_with_placeholder = row.get("source_code_with_placeholder")
@@ -225,12 +225,20 @@ def prepare_test_cases(project_dir, multiprocess=True, repair=True, confirmed=Fa
 
             row["source_code_with_placeholder"] = source_code
 
+            # focal_methods = json.loads(focal_method_name)
+            
             # prepare the context
+            class_under_test, method_under_test = (focal_methods[0]).split(".")
+            
+            # print("CUT: ", class_under_test)
+            # print("MUT: ", method_under_test)
+            # print()
 
-
-            # update Method to add the sourcecode_with_placeholder
-            # db.update("method", conditions = {"id": id}, new_cols = {"source_code_with_placeholder": source_code})
-                                         
+            manager.get_details_by_project_class_and_method
+            
+            context = {"class_name": class_under_test, "method_name": method_under_test,
+                           "unit_test": source_code, "method_code": context_d_1["information"]}
+            
             # Store replaced assertions for this method in the dictionary
             replaced_assertions_per_method[method_name] = replaced_assertions
             

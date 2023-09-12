@@ -120,7 +120,7 @@ def parse_data(dir_path: str, db_out_path: str):
                                 "project_name": project_name,
                                 "signature": m_sig,
                                 "method_name": method_name,
-                                "focal_method_name":str(focal_method_names),
+                                "focal_methods":focal_method_names,
                                 "parameters": parameters,
                                 "source_code": source_code,
                                 "source_code_with_placeholder": "",
