@@ -19,7 +19,7 @@ def clear_dataset():
 
 def run():
     # Clear previous entries from DB
-    drop_table()
+    # drop_table()
 
     # Create the table
     # create_table()

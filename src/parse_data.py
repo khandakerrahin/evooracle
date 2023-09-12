@@ -33,6 +33,7 @@ def parse_data(dir_path: str, db_out_path: str):
                     # Get class data
                     project_name = class_data['project_name']
                     class_name = class_data['class_name']
+                    interfaces = class_data['interfaces']
                     class_path = class_data['class_path']
                     c_sig = class_data['c_sig']
 
@@ -54,6 +55,7 @@ def parse_data(dir_path: str, db_out_path: str):
                         package = ""
 
                     has_constructor = class_data['has_constructor']
+                    argument_list = class_data['argument_list']
                     contains_test = class_data['contains_test']
 
                     # Get field data
@@ -88,6 +90,7 @@ def parse_data(dir_path: str, db_out_path: str):
                         is_constructor = method_data['is_constructor']
                         is_get_set = method_data['is_get_set']
                         m_deps = method_data['m_deps']
+                        return_type = method_data['return']
 
                         # Add dependencies from constructor
                         if is_constructor:
@@ -127,7 +130,8 @@ def parse_data(dir_path: str, db_out_path: str):
                                 "is_constructor": is_constructor,
                                 "is_test_method": is_test_method,
                                 "is_get_set": is_get_set,
-                                "is_public": is_public
+                                "is_public": is_public,
+                                "return_type": return_type
                             }
                         
                         method_data_to_store.append(method_entry)
@@ -153,9 +157,11 @@ def parse_data(dir_path: str, db_out_path: str):
                                 "class_path": class_path,
                                 "signature": c_sig,
                                 "super_class": super_class,
+                                "interfaces": interfaces,
                                 "package": package,
                                 "imports": imports,
                                 "fields": fields,
+                                "argument_list": argument_list,
                                 "methods":method_data_to_store,
                                 "has_constructor": has_constructor,
                                 "contains_test":contains_test,
