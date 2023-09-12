@@ -10,7 +10,7 @@ class ResourceManager:
         with open(self.json_file_path, 'r') as json_file:
             return json.load(json_file)
 
-    def get_entries_with_contains_test(self, project_name):
+    def get_classes_with_contains_test(self, project_name):
         filtered_entries = []
         for entry in self.data:
             if entry.get('project_name') == project_name and entry.get('contains_test'):
@@ -47,8 +47,7 @@ class ResourceManager:
     
 # Example usage:
 if __name__ == '__main__':
-    json_file_path = db_file  # Replace with the actual file path
-    manager = ResourceManager(json_file_path)
+    manager = ResourceManager(db_file)
 
     project_name_to_query = 'lang_1_buggy'  # Replace with the project name you want to query
     
