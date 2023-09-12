@@ -11,14 +11,19 @@ import os
 from db_operations import database
 
 
-def parse_data(dir_path: str):
+def parse_data(dir_path: str, db_out_path: str):
     """
     Parse the data from .json files.
     :param dir_path: the path of the .json files.
     :return: None
     """
-    db = database()
+    # db = database()
+    
+    # Create a list to store the extracted class data
+    class_data_to_store = []
+    
     for root, dirs, files in os.walk(dir_path):
+        
         for filename in files:
             if filename.endswith('.json'):
                 with open(os.path.join(root, filename), "r") as f:
@@ -28,9 +33,12 @@ def parse_data(dir_path: str):
                     # Get class data
                     project_name = class_data['project_name']
                     class_name = class_data['class_name']
+                    interfaces = class_data['interfaces']
                     class_path = class_data['class_path']
                     c_sig = class_data['c_sig']
 
+                    method_data_to_store = []
+                        
                     if class_data['superclass']:
                         super_class = class_data['superclass'].split(' ')[1]
                     else:
@@ -47,6 +55,7 @@ def parse_data(dir_path: str):
                         package = ""
 
                     has_constructor = class_data['has_constructor']
+                    argument_list = class_data['argument_list']
                     contains_test = class_data['contains_test']
 
                     # Get field data
@@ -81,6 +90,7 @@ def parse_data(dir_path: str):
                         is_constructor = method_data['is_constructor']
                         is_get_set = method_data['is_get_set']
                         m_deps = method_data['m_deps']
+                        return_type = method_data['return']
 
                         # Add dependencies from constructor
                         if is_constructor:
@@ -90,38 +100,87 @@ def parse_data(dir_path: str):
                                 c_deps[dep_class].append(m_deps[dep_class])
 
                         # insert method data into table method
-                        db.insert("method", row={"project_name": project_name,
-                                                "signature": m_sig,
-                                                "method_name": method_name,
-                                                "focal_method_name":str(focal_method_names),
-                                                "parameters": parameters,
-                                                "source_code": source_code,
-                                                "source_code_with_placeholder": "",
-                                                "class_name": class_name,
-                                                "dependencies": str(m_deps),
-                                                "use_field": use_field,
-                                                "is_constructor": is_constructor,
-                                                "is_test_method": is_test_method,
-                                                "is_get_set": is_get_set,
-                                                "is_public": is_public})
+                        # db.insert("method", row={"project_name": project_name,
+                        #                         "signature": m_sig,
+                        #                         "method_name": method_name,
+                        #                         "focal_method_name":str(focal_method_names),
+                        #                         "parameters": parameters,
+                        #                         "source_code": source_code,
+                        #                         "source_code_with_placeholder": "",
+                        #                         "class_name": class_name,
+                        #                         "dependencies": str(m_deps),
+                        #                         "use_field": use_field,
+                        #                         "is_constructor": is_constructor,
+                        #                         "is_test_method": is_test_method,
+                        #                         "is_get_set": is_get_set,
+                        #                         "is_public": is_public})
                         
+                        # store method data into json
+                        method_entry={
+                                "project_name": project_name,
+                                "signature": m_sig,
+                                "method_name": method_name,
+                                "focal_method_name":str(focal_method_names),
+                                "parameters": parameters,
+                                "source_code": source_code,
+                                "source_code_with_placeholder": "",
+                                "class_name": class_name,
+                                "dependencies": str(m_deps),
+                                "use_field": use_field,
+                                "is_constructor": is_constructor,
+                                "is_test_method": is_test_method,
+                                "is_get_set": is_get_set,
+                                "is_public": is_public,
+                                "return_type": return_type
+                            }
                         
+                        method_data_to_store.append(method_entry)
 
 
                     # insert class data into table class
-                    db.insert("class", row={"project_name": project_name,
-                                            "class_name": class_name,
-                                            "class_path": class_path,
-                                            "signature": c_sig,
-                                            "super_class": super_class,
-                                            "package": package,
-                                            "imports": imports,
-                                            "fields": fields,
-                                            "has_constructor": has_constructor,
-                                            "contains_test":contains_test,
-                                            "dependencies": str(c_deps)})
-                    print(class_name, "FINISHED!")
+                    # db.insert("class", row={"project_name": project_name,
+                    #                         "class_name": class_name,
+                    #                         "class_path": class_path,
+                    #                         "signature": c_sig,
+                    #                         "super_class": super_class,
+                    #                         "package": package,
+                    #                         "imports": imports,
+                    #                         "fields": fields,
+                    #                         "has_constructor": has_constructor,
+                    #                         "contains_test":contains_test,
+                    #                         "dependencies": str(c_deps)})
 
+                    # store class data into json
+                    class_entry = {
+                                "project_name": project_name,
+                                "class_name": class_name,
+                                "class_path": class_path,
+                                "signature": c_sig,
+                                "super_class": super_class,
+                                "interfaces": interfaces,
+                                "package": package,
+                                "imports": imports,
+                                "fields": fields,
+                                "argument_list": argument_list,
+                                "methods":method_data_to_store,
+                                "has_constructor": has_constructor,
+                                "contains_test":contains_test,
+                                "dependencies": str(c_deps)
+                            }
+                    
+                    class_data_to_store.append(class_entry)
+
+                    print(class_name, "FINISHED!")
+                    break
+                
+                # Create the directory if it does not exist
+                output_dir = os.path.dirname(db_out_path)
+                if not os.path.exists(output_dir):
+                    os.makedirs(output_dir)
+
+                # Write the list of parsed data to a JSON file
+                with open(db_out_path, "w") as json_output:
+                    json.dump(class_data_to_store, json_output, indent=4)
 
 if __name__ == '__main__':
     print("This action will alter the information in database.")

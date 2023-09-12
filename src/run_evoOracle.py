@@ -19,21 +19,21 @@ def clear_dataset():
 
 def run():
     # Clear previous entries from DB
-    drop_table()
+    # drop_table()
 
     # Create the table
-    create_table()
+    # create_table()
 
     # Parse project
     info_path = Task.parse(project_dir)
 
     # Parse data
-    parse_data(info_path)
+    parse_data(info_path, db_file)
 
     # clear last dataset
     # clear_dataset()
 
-    # Export data for multi-process
+    # # Export data for multi-process
     # export_data()
 
     project_name = os.path.basename(os.path.normpath(project_dir))
@@ -45,7 +45,7 @@ def run():
     """.format(project_name)
 
     # Start the whole process
-    prepare_test_cases(sql_query, multiprocess=False, repair=True, confirmed=False)
+    # prepare_test_cases(sql_query, multiprocess=False, repair=True, confirmed=False)
 
     # Export the result
     # result_analysis()

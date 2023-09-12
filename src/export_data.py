@@ -8,9 +8,10 @@ Date: 2023-04-01
 
 import os
 import json
+from tools import *
 from db_operations import database
 
-dataset_path = "../dataset/"
+dataset_path = dataset_dir
 db = database()
 
 

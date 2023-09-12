@@ -164,7 +164,8 @@ class ParseTask:
 
     def __init__(self):
         self.parser = ClassParser(GRAMMAR_FILE, LANGUAGE)
-        self.output = "../class_info/"
+        # self.output = "../output_resources/class_info/"
+        self.output = class_info_output
 
     def parse_project(self, target_path):
         """
