@@ -16,7 +16,7 @@ from colorama import Fore, Style, init
 init()
 db = database()
 
-def create_temp_test_folder():
+def create_temp_test_folder(project_dir):
     """
     Create a new folder for this scope test.
     :param direction: The direction of this scope test.
@@ -26,7 +26,7 @@ def create_temp_test_folder():
     now = datetime.datetime.now()
     # format the time as a string
     time_str = now.strftime("%Y%m%d%H%M%S")
-    result_path = os.path.join(result_dir, "custom_test%" + time_str)
+    result_path = os.path.join((project_dir+result_dir), "custom_test%" + time_str)
     if not os.path.exists(result_path):
         os.makedirs(result_path)
     else:
@@ -95,7 +95,7 @@ def prepare_test_cases(project_dir, multiprocess=True, repair=True, confirmed=Fa
     remove_single_test_output_dirs(project_dir)
 
     # get the classes that contains tests.
-    manager = ResourceManager(db_file)
+    manager = ResourceManager(project_dir + db_file)
     class_results = manager.get_classes_with_contains_test(project_name)
 
     # Loop through the results
@@ -130,7 +130,7 @@ def prepare_test_cases(project_dir, multiprocess=True, repair=True, confirmed=Fa
         
         
         # Create the new folder
-        result_path = create_temp_test_folder()
+        result_path = create_temp_test_folder(project_dir)
 
         print("All the classes and tests are loaded.")
         
@@ -249,7 +249,7 @@ def prepare_test_cases(project_dir, multiprocess=True, repair=True, confirmed=Fa
         # print(replaced_assertions_per_method)
             
 
-    with open(testsdb_file, 'w') as json_file:
+    with open(project_dir + testsdb_file, 'w') as json_file:
         json.dump(class_results, json_file, indent=4)  # Use indent for pretty formatting (optional)
 
     # whole_process_with_LLM(test_num, base_name, base_dir, repair, submits, total);

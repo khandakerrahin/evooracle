@@ -9,20 +9,17 @@ from scope_test import start_generation, prepare_test_cases
 from parse_xml import result_analysis
 from task import Task
 
-def clear_dataset():
+def clear_dataset(project_dir):
     """
     Clear the dataset folder.
     :return: None
     """
+    ds_dir = project_dir + dataset_dir
     # Delete the dataset folder
-    if os.path.exists(dataset_dir):
-        shutil.rmtree(dataset_dir)
+    if os.path.exists(ds_dir):
+        shutil.rmtree(ds_dir)
 
-def run(project_dir_from_arg=None):
-    if project_dir_from_arg is not None:
-        project_dir = project_dir_from_arg
-    else:
-        project_dir = default_project_dir
+def run(project_dir):
     
     # Clear previous entries from DB
     # drop_table()
@@ -34,7 +31,7 @@ def run(project_dir_from_arg=None):
     info_path = Task.parse(project_dir)
 
     # Parse data
-    parse_data(info_path, db_file)
+    parse_data(info_path, (project_dir+db_file))
 
     # clear last dataset
     # clear_dataset()
@@ -51,8 +48,10 @@ def run(project_dir_from_arg=None):
     # result_analysis()
 
 if __name__ == '__main__':
+    project_dir = default_project_dir
     # Check if a command-line argument (project_dir) is provided
     if len(sys.argv) > 1:
-        run(sys.argv[1])
-    else:
-        run()  # Continue as it does at the moment when no project_dir is provided.
+        project_dir = sys.argv[1]
+
+        
+    run(project_dir)
