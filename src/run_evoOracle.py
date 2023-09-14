@@ -5,7 +5,7 @@ from db_operations import *
 from tools import *
 from parse_data import parse_data
 from export_data import export_data
-from scope_test import start_generation, prepare_test_cases
+from test_processor import start_generation, prepare_test_cases
 from parse_xml import result_analysis
 from task import Task
 
@@ -28,10 +28,10 @@ def run(project_dir):
     # create_table()
 
     # Parse project
-    info_path = Task.parse(project_dir)
+    # info_path = Task.parse(project_dir)
 
-    # Parse data
-    parse_data(info_path, (project_dir+db_file))
+    # # Parse data
+    # parse_data(info_path, (project_dir+db_file))
 
     # clear last dataset
     # clear_dataset()
@@ -42,7 +42,7 @@ def run(project_dir):
     project_name = os.path.basename(os.path.normpath(project_dir))
 
     # Start the whole process
-    prepare_test_cases(project_dir, multiprocess=False, repair=True, confirmed=False)
+    prepare_test_cases(project_dir)
 
     # Export the result
     # result_analysis()

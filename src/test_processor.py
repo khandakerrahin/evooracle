@@ -1,5 +1,5 @@
 """
-This file is for starting a scope test for selected methods.
+This class will process all the test files: extract test cases, replace assertions, prepares contexts.
 It will automatically create a new folder inside dataset as well as result folder.
 The folder format is "scope_test_YYYYMMDDHHMMSS_Direction".
 The dataset folder will contain all the information in the direction.
@@ -14,7 +14,7 @@ from task import Task
 from colorama import Fore, Style, init
 
 init()
-db = database()
+# db = database()
 
 def create_temp_test_folder(project_dir):
     """
@@ -78,11 +78,11 @@ def find_all_files(folder_path: str, method_ids: list = None):
             file_list.append(file)
     return file_list
 
-def prepare_test_cases(project_dir, multiprocess=True, repair=True, confirmed=False):
+def prepare_test_cases(project_dir):
     """
-    Start the scope test.
-    :param multiprocess: if it needs to
-    :param repair:
+    - Iterates through tests
+    - Replaces Assertions
+    - Prepares contexts for each tests
     :param project_dir:
     :return:    
     """
@@ -155,6 +155,10 @@ def prepare_test_cases(project_dir, multiprocess=True, repair=True, confirmed=Fa
             f.write(record)
         print(Fore.GREEN + "The record has been saved at", record_path, Style.RESET_ALL)
 
+
+        submits = 0
+        total = len(methods) * test_number
+        
         # Define a list to store replaced assertions for each method
         replaced_assertions_per_method = {}
 
@@ -236,14 +240,37 @@ def prepare_test_cases(project_dir, multiprocess=True, repair=True, confirmed=Fa
 
             manager.get_details_by_project_class_and_method
             
-            context = {"class_name": class_under_test, "method_name": method_under_test,
-                           "unit_test": source_code, "method_code": context_d_1["information"]}
+
+            '''
+            Context:
+            You are working with a Java project called [Project_Name], which includes a class called [Class_Name] and a method named [Method_Name]. 
+            This method takes the parameters: [List_of_Parameters].
+            returns [Return Type]
+
+            Description:
+            You are tasked with generating a test oracle for a JUnit test case. The test case is written to test the functionality of the [Class_Name] class's [Method_Name] method.
+
+            In the following the test case, replace the [placeholder] with one or more aprropriate assertions:
+            ```java
+            [test_method_code]
+            ```
+            Just write the assertion statements.
+            '''
+            
+            context = {"project_name": project_name, "class_name": class_under_test, "method_name": method_under_test,
+                        "test_method_code": source_code}
             
             # Store replaced assertions for this method in the dictionary
             replaced_assertions_per_method[method_name] = replaced_assertions
             
             # print("..........................................................................")
             # time.sleep(0)
+
+            for test_num in range(1, test_number + 1):
+                submits += 1
+                # whole_process(test_num, base_name, base_dir, repair, submits, total)
+                whole_process_with_LLM(project_dir, test_num, context, submits, total)
+                break
         
         # Print the modified Java test method
         # print(replaced_assertions_per_method)
@@ -252,9 +279,8 @@ def prepare_test_cases(project_dir, multiprocess=True, repair=True, confirmed=Fa
     with open(project_dir + testsdb_file, 'w') as json_file:
         json.dump(class_results, json_file, indent=4)  # Use indent for pretty formatting (optional)
 
-    # whole_process_with_LLM(test_num, base_name, base_dir, repair, submits, total);
     
-
+    
     print("WHOLE PROCESS FINISHED")
     # Run accumulated tests
     # project_path = os.path.abspath(project_dir)
