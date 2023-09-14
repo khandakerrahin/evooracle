@@ -1,9 +1,9 @@
 """
-This file is for parsing the .json data.
-And insert them into Current Database.
+This class parses and gathers the data from all the JSON files
+and writes everything in a single JSON Database file.
 
-Author: Xie zhuokui
-Date: 2023-04-01
+Author: Shaker
+Date: 2023-09-13
 """
 
 import json
@@ -120,7 +120,7 @@ def parse_data(dir_path: str, db_out_path: str):
                                 "project_name": project_name,
                                 "signature": m_sig,
                                 "method_name": method_name,
-                                "focal_method_name":str(focal_method_names),
+                                "focal_methods":focal_method_names,
                                 "parameters": parameters,
                                 "source_code": source_code,
                                 "source_code_with_placeholder": "",
@@ -183,9 +183,4 @@ def parse_data(dir_path: str, db_out_path: str):
                     json.dump(class_data_to_store, json_output, indent=4)
 
 if __name__ == '__main__':
-    print("This action will alter the information in database.")
-    confirm = input("Are you sure to parse the data? (y/n) ")
-    if confirm == "y":
-        parse_data("/Users/chenyi/Desktop/ChatTester/TestGPT_ASE/information/Lang")
-    else:
-        print("Canceled.")
+    print("Only to be used from within.")

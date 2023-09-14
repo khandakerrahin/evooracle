@@ -32,7 +32,7 @@ class Task:
         """
         Run parse task, extract class information of target project.
         """
-        parse_task = ParseTask()
+        parse_task = ParseTask(target_path)
         return parse_task.parse_project(target_path)
 
 
@@ -162,10 +162,10 @@ class TestTask:
 
 class ParseTask:
 
-    def __init__(self):
+    def __init__(self, project_dir):
         self.parser = ClassParser(GRAMMAR_FILE, LANGUAGE)
         # self.output = "../output_resources/class_info/"
-        self.output = class_info_output
+        self.output = project_dir + class_info_output
 
     def parse_project(self, target_path):
         """

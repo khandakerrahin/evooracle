@@ -1,23 +1,26 @@
 import os.path
 import time
+import sys  # Import the sys module to access command-line arguments
 from db_operations import *
 from tools import *
 from parse_data import parse_data
 from export_data import export_data
-from scope_test import start_generation, prepare_test_cases
+from test_processor import start_generation, prepare_test_cases
 from parse_xml import result_analysis
 from task import Task
 
-def clear_dataset():
+def clear_dataset(project_dir):
     """
     Clear the dataset folder.
     :return: None
     """
+    ds_dir = project_dir + dataset_dir
     # Delete the dataset folder
-    if os.path.exists(dataset_dir):
-        shutil.rmtree(dataset_dir)
+    if os.path.exists(ds_dir):
+        shutil.rmtree(ds_dir)
 
-def run():
+def run(project_dir):
+    
     # Clear previous entries from DB
     # drop_table()
 
@@ -25,10 +28,10 @@ def run():
     # create_table()
 
     # Parse project
-    info_path = Task.parse(project_dir)
+    # info_path = Task.parse(project_dir)
 
-    # Parse data
-    parse_data(info_path, db_file)
+    # # Parse data
+    # parse_data(info_path, (project_dir+db_file))
 
     # clear last dataset
     # clear_dataset()
@@ -38,19 +41,17 @@ def run():
 
     project_name = os.path.basename(os.path.normpath(project_dir))
 
-    # SQL query to get the classes that contains tests.
-    sql_query = """
-    SELECT id, class_name, class_path, signature, super_class, package, imports, fields, has_constructor, contains_test, dependencies 
-    FROM class where contains_test is true AND project_name='{}';
-    """.format(project_name)
-
     # Start the whole process
-    # prepare_test_cases(sql_query, multiprocess=False, repair=True, confirmed=False)
+    prepare_test_cases(project_dir)
 
     # Export the result
     # result_analysis()
 
-
-
 if __name__ == '__main__':
-    run()
+    project_dir = default_project_dir
+    # Check if a command-line argument (project_dir) is provided
+    if len(sys.argv) > 1:
+        project_dir = sys.argv[1]
+
+        
+    run(project_dir)

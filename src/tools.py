@@ -20,7 +20,7 @@ def get_messages_tokens(messages):
     """
     cnt = 0
     for message in messages:
-        cnt += count_tokens(message["content"])
+        cnt += count_tokens(message)
     return cnt
 
 
@@ -111,8 +111,8 @@ def get_raw_data(method_id, project_name, class_name, method_name):
     return raw_data
 
 
-def get_project_abspath():
-    return os.path.abspath(project_dir)
+# def get_project_abspath():
+#     return os.path.abspath(project_dir)
 
 
 def remove_single_test_output_dirs(project_path):
@@ -134,7 +134,7 @@ def get_date_string(directory_name):
     return directory_name.split('%')[1]
 
 
-def find_result_in_projects():
+def find_result_in_projects(project_dir):
     """
     Find the new directory.
     :return: The new directory.

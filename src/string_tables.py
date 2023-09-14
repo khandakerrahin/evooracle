@@ -5,7 +5,7 @@ class string_tables:
     LEFT_PARENTHESIS = "("
     RIGHT_PARENTHESIS = ")" 
     # Placeholder for assertions
-    ASSERTION_PLACEHOLDER = "ASSERTION_PLACEHOLDER"
+    ASSERTION_PLACEHOLDER = "__ASSERTION_PLACEHOLDER__"
     # You can add more constants as needed
     # For example:
     # FILE_PATH = "/path/to/your/file.txt"
