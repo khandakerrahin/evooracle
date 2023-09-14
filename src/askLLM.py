@@ -332,7 +332,7 @@ def extract_code(string):
     return has_code, extracted_code, has_syntactic_error
 
 
-def extract_and_run(input_string, output_path, class_name, method_id, test_num, project_name, package):
+def extract_and_run(input_string, output_path, class_name, test_num, project_name, package, project_dir):
     """
     Extract the code and run it
     :param project_name:
@@ -359,8 +359,8 @@ def extract_and_run(input_string, output_path, class_name, method_id, test_num, 
         shutil.rmtree(temp_dir)
     os.makedirs(temp_dir)
 
-    export_method_test_case(os.path.abspath(temp_dir), class_name, method_id, test_num,
-                            change_class_name(result["source_code"], class_name, method_id, test_num))
+    export_method_test_case(os.path.abspath(temp_dir), class_name, "method_id", test_num,
+                            change_class_name(result["source_code"], class_name, "method_id", test_num))
 
     # run test
     response_dir = os.path.abspath(os.path.dirname(output_path))
@@ -518,7 +518,7 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
                 break
 
             with open(llm_file_name, "r") as f:
-                gpt_result = json.load(f)
+                llm_result = json.load(f)
 
             # 2. Extract information from LLM, and RUN save the result
             steps += 1
@@ -527,12 +527,23 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
 
             # extract the test and save the result in raw_file_name
             # input_string = gpt_result["choices"][0]['message']["content"]
-            input_string = gpt_result
-            test_passed, fatal_error = extract_and_run(input_string, raw_file_name, class_name, method_id, test_num,
-                                                       project_name,
-                                                       package)
+            input_string = llm_result
+
+            assertions = extract_assertions_from_string(input_string)
+            
+            print("LLM Response:")
+            print(assertions)
+
+            updated_source_code = re.sub(re.escape(string_tables.ASSERTION_PLACEHOLDER), assertions, context.get("test_case"))
+
+            print("Updated test source code:")
+            print(updated_source_code)
+
+            test_passed, fatal_error = extract_and_run(updated_source_code, raw_file_name, class_name, test_num,
+                                                       project_name, context.get("package"), project_dir)
 
             if test_passed:
+                print(Fore.GREEN + "PASSED!!!")
                 print(progress, Fore.GREEN + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
                       "test passed",
                       Style.RESET_ALL)

@@ -8,6 +8,8 @@ import re
 import tiktoken
 import datetime
 
+from string_tables import string_tables
+
 enc = tiktoken.get_encoding("cl100k_base")
 encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
 
@@ -134,7 +136,7 @@ def get_date_string(directory_name):
     return directory_name.split('%')[1]
 
 
-def find_result_in_projects(project_dir):
+def find_result_in_projects():
     """
     Find the new directory.
     :return: The new directory.
@@ -275,3 +277,58 @@ def get_current_time():
     current_time = datetime.datetime.now()
     formatted_time = current_time.strftime("%H:%M:%S")
     return formatted_time
+
+
+def replace_assertions(source_code):
+    # Regular expression pattern to match assertions
+    # Define the assertions to be replaced
+    assertion_patterns = [
+        r'assert\s*\(.+?\);',
+        r'assertTrue\s*\(.+?\);',
+        r'assertNull\s*\(.+?\);',
+        r'fail\s*\(.+?\);',
+        r'assertFalse\s*\(.+?\);',
+        r'assertNotEquals\s*\(.+?\);',
+        r'assertEquals\s*\(.+?\);',
+    ]
+
+    # List to store replaced assertions for this method
+    replaced_assertions = []
+
+    # Replace assertions with the placeholder
+    for pattern in assertion_patterns:
+        def replacement(match):
+            # Get the matched text
+            matched_text = match.group(0)
+            # print(f"Pattern: {pattern}")
+            # print(f"Replaced: {matched_text}")
+            replaced_assertions.append(matched_text)
+            return (string_tables.NL + string_tables.ASSERTION_PLACEHOLDER)
+
+        source_code = re.sub(pattern, replacement, source_code)
+
+    return source_code, replaced_assertions
+
+def extract_assertions_from_string(input_string):
+    # Regular expression pattern to match assertions
+    assertion_patterns = [
+        r'assert\s*\(.+?\);',
+        r'assertTrue\s*\(.+?\);',
+        r'assertNull\s*\(.+?\);',
+        r'fail\s*\(.+?\);',
+        r'assertFalse\s*\(.+?\);',
+        r'assertNotEquals\s*\(.+?\);',
+        r'assertEquals\s*\(.+?\);',
+    ]
+
+    # List to store extracted assertions
+    extracted_assertions = []
+
+    # Iterate through each pattern and find matches in the input string
+    for pattern in assertion_patterns:
+        matches = re.finditer(pattern, input_string)
+        for match in matches:
+            extracted_assertions.append(match.group(0))
+
+    extracted_assertions = '\n'.join(extracted_assertions)
+    return extracted_assertions
