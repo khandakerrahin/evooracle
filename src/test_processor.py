@@ -240,25 +240,9 @@ def prepare_test_cases(project_dir):
 
             manager.get_details_by_project_class_and_method
             
-
-            '''
-            Context:
-            You are working with a Java project called [Project_Name], which includes a class called [Class_Name] and a method named [Method_Name]. 
-            This method takes the parameters: [List_of_Parameters].
-            returns [Return Type]
-
-            Description:
-            You are tasked with generating a test oracle for a JUnit test case. The test case is written to test the functionality of the [Class_Name] class's [Method_Name] method.
-
-            In the following the test case, replace the [placeholder] with one or more aprropriate assertions:
-            ```java
-            [test_method_code]
-            ```
-            Just write the assertion statements.
-            '''
-            
-            context = {"project_name": project_name, "class_name": class_under_test, "method_name": method_under_test,
-                        "test_method_code": source_code}
+            context = {"project_name": project_name, "class_name": class_under_test, "method_name": method_under_test, 
+                       "method_details": manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test), 
+                       "test_method_code": source_code, "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER}
             
             # Store replaced assertions for this method in the dictionary
             replaced_assertions_per_method[method_name] = replaced_assertions
@@ -271,6 +255,7 @@ def prepare_test_cases(project_dir):
                 # whole_process(test_num, base_name, base_dir, repair, submits, total)
                 whole_process_with_LLM(project_dir, test_num, context, submits, total)
                 break
+            break
         
         # Print the modified Java test method
         # print(replaced_assertions_per_method)
