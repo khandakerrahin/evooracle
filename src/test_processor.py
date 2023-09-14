@@ -164,22 +164,26 @@ def prepare_test_cases(project_dir):
 
         # Loop through the results
         for row in methods:
-            
             project_name  = row.get("project_name")
-            method_signature = row.get("signature")
             method_name = row.get("method_name")
             focal_methods = row.get("focal_methods")
-            parameters = row.get("parameters")
             source_code = row.get("source_code")
-            source_code_with_placeholder = row.get("source_code_with_placeholder")
-            class_name = row.get("class_name")
-            dependencies = row.get("dependencies")
-            use_field = row.get("use_field")
-            is_constructor = row.get("is_constructor")
-            is_test_method = row.get("is_test_method")
-            is_get_set = row.get("is_get_set")
-            is_public = row.get("is_public")
-            return_type = row.get("return_type")
+
+            # project_name  = row.get("project_name")
+            # method_signature = row.get("signature")
+            # method_name = row.get("method_name")
+            # focal_methods = row.get("focal_methods")
+            # parameters = row.get("parameters")
+            # source_code = row.get("source_code")
+            # source_code_with_placeholder = row.get("source_code_with_placeholder")
+            # class_name = row.get("class_name")
+            # dependencies = row.get("dependencies")
+            # use_field = row.get("use_field")
+            # is_constructor = row.get("is_constructor")
+            # is_test_method = row.get("is_test_method")
+            # is_get_set = row.get("is_get_set")
+            # is_public = row.get("is_public")
+            # return_type = row.get("return_type")
             
             # print("project_name: ", project_name)
             # print("method_signature: ", method_signature)
@@ -241,7 +245,7 @@ def prepare_test_cases(project_dir):
             manager.get_details_by_project_class_and_method
             
             context = {"project_name": project_name, "class_name": class_under_test, "method_name": method_under_test, 
-                       "method_details": manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test), 
+                       "method_details": manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, True), 
                        "test_method_code": source_code, "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER}
             
             # Store replaced assertions for this method in the dictionary

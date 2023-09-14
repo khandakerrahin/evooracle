@@ -31,7 +31,7 @@ class ResourceManager:
                 methods.extend(entry.get('methods', []))
         return methods
     
-    def get_details_by_project_class_and_method(self, project_name, class_name, method_name):
+    def get_details_by_project_class_and_method(self, project_name, class_name, method_name, onlyEssentials):
         method_details = []
         for entry in self.data:
             if (
@@ -41,7 +41,23 @@ class ResourceManager:
                 class_methods = entry.get('methods', [])
                 for method in class_methods:
                     if method.get('method_name') == method_name:
-                        method_details.append(method)
+                        if onlyEssentials:
+                            # get only the essentials
+                            details = {
+                                "signature": method.get("signature"),
+                                "parameters": method.get("parameters"),
+                                "dependencies": method.get("dependencies"),
+                                "use_field": method.get("use_field"),
+                                "is_public": method.get("is_public"),
+                                "return_type": method.get("return_type")
+                            }
+                            method_details.append(details)
+                        else:
+                            # get all details
+                            method_details.append(method)
+                        break
+                    
+                        
         return method_details
 
     
