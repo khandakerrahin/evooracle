@@ -135,26 +135,16 @@ def load_context_file(context_file):
     return context_file
 
 
-def generate_messages(template_name, context_file):
+def generate_messages(template_name, context):
     """
-    This function generates messages before asking GPT, using user and system templates.
+    This function generates messages before asking LLM, using templates.
     :param template_name: The template name of the user template.
-    :param context_file: The context JSON file or dict to render the template.
+    :param context: The context JSON file or dict to render the template.
     :return: A list of generated messages.
     """
-    context = load_context_file(context_file)
-    messages = []
-
-    # system_name = f"{template_name.split('.')[0]}_system.jinja2"
-    # system_path = os.path.join("../prompt", system_name)
-    # if os.path.exists(system_path):
-    #     system_message = generate_prompt(system_name, {})
-    #     messages.append({"role": "system", "content": system_message})
-
-    user_message = generate_prompt(template_name, context)
-    messages.append(user_message)
-
-    return messages
+    message = generate_prompt(template_name, context)
+    
+    return message
 
 
 def complete_code(code):
@@ -405,7 +395,7 @@ def remain_prompt_tokens(messages):
     return MAX_PROMPT_TOKENS - get_messages_tokens(messages)
 
 
-def whole_process_with_LLM(test_num, base_name, base_dir, repair, submits, total):
+def whole_process_with_LLM(project_dir, test_num, context, submits, total):
     """
     Multiprocess version of start_generation
     :param test_num:
@@ -418,121 +408,105 @@ def whole_process_with_LLM(test_num, base_name, base_dir, repair, submits, total
     """
     progress = '[' + str(submits) + ' / ' + str(total) + ']'
     # Create subdirectories for each test
-    save_dir = os.path.join(base_dir, str(test_num))
+    save_dir = os.path.join(project_dir, str(test_num))
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     run_temp_dir = os.path.join(save_dir, "runtemp")
 
     steps, rounds = 0, 0
-    method_id, project_name, class_name, method_name = parse_file_name(base_name)
+    project_name = context.get("project_name")
+    class_name = context.get("project_name")
+    method_name = context.get("project_name")
 
-    # 1. Get method data
-    with open(get_dataset_path(method_id, project_name, class_name, method_name, "raw"), "r") as f:
-        raw_data = json.load(f)
-
-    package = raw_data["package"]
-    imports = raw_data["imports"]
-
-    # 2. Get data from direction_1 as well as direction_3
-    with open(get_dataset_path(method_id, project_name, class_name, method_name, 1), "r") as f:
-        context_d_1 = json.load(f)
-        print(context_d_1)
-    with open(get_dataset_path(method_id, project_name, class_name, method_name, 3), "r") as f:
-        context_d_3 = json.load(f)
-        print(context_d_3)
-
-    def _remove_imports_context(strings):
-        if imports:
-            strings = strings.replace(imports, "")
-        if package:
-            strings = strings.replace(package, "")
-        strings = strings.strip()
-        return strings
+    # context = {"project_name": project_name, "class_name": class_under_test, "method_name": method_under_test,
+    #                     "test_method_code": source_code}
 
     try:
         while rounds < max_rounds:
             # 1. Ask LLM
             steps += 1
             rounds += 1
-            print(progress, method_id, "test_" + str(test_num), "Asking " + model + "...", "rounds", rounds)
+            print(progress, method_name, "test_" + str(test_num), "Asking " + model + "...", "rounds", rounds)
             llm_file_name = os.path.join(save_dir, str(steps) + "_LLM_" + str(rounds) + ".json")
             # Need to generate new messages
+            rounds = 1
             if rounds != 1:
                 last_round_result = get_latest_file(save_dir)
-                with open(last_round_result, "r") as f:
-                    last_round_result = json.load(f)
-                last_raw = get_latest_file(save_dir, suffix="raw")
-                with open(last_raw, "r") as f:
-                    last_raw = json.load(f)
+                # with open(last_round_result, "r") as f:
+                #     last_round_result = json.load(f)
+                # last_raw = get_latest_file(save_dir, suffix="raw")
+                # with open(last_raw, "r") as f:
+                #     last_raw = json.load(f)
 
-                # Prepare the error message
-                context = {"class_name": context_d_1["class_name"], "method_name": context_d_1["focal_method"],
-                           "unit_test": last_raw["source_code"], "method_code": context_d_1["information"]}
-                # Required, cannot truncate
+                # # Prepare the error message
+                # context = {"class_name": context_d_1["class_name"], "method_name": context_d_1["focal_method"],
+                #            "unit_test": last_raw["source_code"], "method_code": context_d_1["information"]}
+                # # Required, cannot truncate
 
-                # Adaptive generate error message
-                messages = generate_messages(TEMPLATE_ERROR, context)
-                allow_tokens = remain_prompt_tokens(messages)
-                if allow_tokens < MIN_ERROR_TOKENS:
-                    context["method_code"] = _remove_imports_context(context["method_code"])
-                    messages = generate_messages(TEMPLATE_ERROR, context)
-                    allow_tokens = remain_prompt_tokens(messages)
-                if allow_tokens < MIN_ERROR_TOKENS:
-                    context["method_code"] = context_d_3["full_fm"]
-                    messages = generate_messages(TEMPLATE_ERROR, context)
-                    allow_tokens = remain_prompt_tokens(messages)
-                if allow_tokens < MIN_ERROR_TOKENS:
-                    context["method_code"] = _remove_imports_context(context_d_3["full_fm"])
-                    messages = generate_messages(TEMPLATE_ERROR, context)
-                    allow_tokens = remain_prompt_tokens(messages)
-                if allow_tokens >= MIN_ERROR_TOKENS:
-                    if "compile_error" in last_round_result:
-                        context["error_type"] = "compiling"
-                        error_mes = process_error_message(last_round_result["compile_error"], allow_tokens)
-                        context["error_message"] = error_mes
-                    if "runtime_error" in last_round_result:
-                        context["error_type"] = "running"
-                        error_mes = process_error_message(last_round_result["runtime_error"], allow_tokens)
-                        context["error_message"] = error_mes
-                else:
-                    print(progress, Fore.RED + method_id, "Tokens not enough, test fatal error...",
-                          Style.RESET_ALL)  # Fatal error
-                    break
-                if "compile_error" not in last_round_result and "runtime_error" not in last_round_result:
-                    print(progress, Fore.RED + method_id, "Timeout error, test fatal error...", Style.RESET_ALL)
-                    break
-                messages = generate_messages(TEMPLATE_ERROR, context)
-                # print('-------------------')
-                # print(context["error_message"])
+                # # Adaptive generate error message
+                # messages = generate_messages(TEMPLATE_ERROR, context)
+                # allow_tokens = remain_prompt_tokens(messages)
+                # if allow_tokens < MIN_ERROR_TOKENS:
+                #     context["method_code"] = _remove_imports_context(context["method_code"])
+                #     messages = generate_messages(TEMPLATE_ERROR, context)
+                #     allow_tokens = remain_prompt_tokens(messages)
+                # if allow_tokens < MIN_ERROR_TOKENS:
+                #     context["method_code"] = context_d_3["full_fm"]
+                #     messages = generate_messages(TEMPLATE_ERROR, context)
+                #     allow_tokens = remain_prompt_tokens(messages)
+                # if allow_tokens < MIN_ERROR_TOKENS:
+                #     context["method_code"] = _remove_imports_context(context_d_3["full_fm"])
+                #     messages = generate_messages(TEMPLATE_ERROR, context)
+                #     allow_tokens = remain_prompt_tokens(messages)
+                # if allow_tokens >= MIN_ERROR_TOKENS:
+                #     if "compile_error" in last_round_result:
+                #         context["error_type"] = "compiling"
+                #         error_mes = process_error_message(last_round_result["compile_error"], allow_tokens)
+                #         context["error_message"] = error_mes
+                #     if "runtime_error" in last_round_result:
+                #         context["error_type"] = "running"
+                #         error_mes = process_error_message(last_round_result["runtime_error"], allow_tokens)
+                #         context["error_message"] = error_mes
+                # else:
+                #     print(progress, Fore.RED + method_id, "Tokens not enough, test fatal error...",
+                #           Style.RESET_ALL)  # Fatal error
+                #     break
+                # if "compile_error" not in last_round_result and "runtime_error" not in last_round_result:
+                #     print(progress, Fore.RED + method_id, "Timeout error, test fatal error...", Style.RESET_ALL)
+                #     break
+                # messages = generate_messages(TEMPLATE_ERROR, context)
+                # # print('-------------------')
+                # # print(context["error_message"])
             else:  # Direction_1 or Direction_3
-                if not context_d_3["c_deps"] and not context_d_3["m_deps"]:  # No dependencies d_1
-                    context = copy.deepcopy(context_d_1)
-                    messages = generate_messages(TEMPLATE_NO_DEPS, context)
-                    if remain_prompt_tokens(messages) < 0:  # Truncate information
-                        context["information"] = _remove_imports_context(context["information"])
-                        messages = generate_messages(TEMPLATE_NO_DEPS, context)
-                        if remain_prompt_tokens(messages) < 0:  # Failed generating messages
-                            messages = []
-                else:  # Has dependencies d_3
-                    context = copy.deepcopy(context_d_3)
-                    messages = generate_messages(TEMPLATE_WITH_DEPS, context)
-                    if remain_prompt_tokens(messages) < 0:  # Need Truncate information
-                        context["full_fm"] = _remove_imports_context(context["full_fm"])
-                        messages = generate_messages(TEMPLATE_WITH_DEPS, context)
-                        if remain_prompt_tokens(messages) < 0:  # Failed generating messages
-                            messages = []
+                messages = generate_messages(TEMPLATE_NO_DEPS, context)
+                # if not context_d_3["c_deps"] and not context_d_3["m_deps"]:  # No dependencies d_1
+                #     context = copy.deepcopy(context_d_1)
+                #     messages = generate_messages(TEMPLATE_NO_DEPS, context)
+                #     if remain_prompt_tokens(messages) < 0:  # Truncate information
+                #         context["information"] = _remove_imports_context(context["information"])
+                #         messages = generate_messages(TEMPLATE_NO_DEPS, context)
+                #         if remain_prompt_tokens(messages) < 0:  # Failed generating messages
+                #             messages = []
+                # else:  # Has dependencies d_3
+                #     context = copy.deepcopy(context_d_3)
+                #     messages = generate_messages(TEMPLATE_WITH_DEPS, context)
+                #     if remain_prompt_tokens(messages) < 0:  # Need Truncate information
+                #         context["full_fm"] = _remove_imports_context(context["full_fm"])
+                #         messages = generate_messages(TEMPLATE_WITH_DEPS, context)
+                #         if remain_prompt_tokens(messages) < 0:  # Failed generating messages
+                #             messages = []
 
-                if not messages:  # Turn to minimum messages
-                    context = copy.deepcopy(context_d_1)  # use direction 1 as template
-                    context["information"] = context_d_3["full_fm"]  # use full_fm d_3 as context
-                    messages = generate_messages(TEMPLATE_NO_DEPS, context)
-                    if remain_prompt_tokens(messages) < 0:
-                        context["information"] = _remove_imports_context(context["information"])
-                        messages = generate_messages(TEMPLATE_NO_DEPS, context)  # !! MINIMUM MESSAGES!!
-                        if remain_prompt_tokens(messages) < 0:  # Failed generating messages
-                            print(progress, Fore.RED + "Tokens not enough, test fatal error...", Style.RESET_ALL)
-                            break
-                # print(Fore.BLUE, messages[1]['content'], Style.RESET_ALL)
+                # if not messages:  # Turn to minimum messages
+                #     context = copy.deepcopy(context_d_1)  # use direction 1 as template
+                #     context["information"] = context_d_3["full_fm"]  # use full_fm d_3 as context
+                #     messages = generate_messages(TEMPLATE_NO_DEPS, context)
+                #     if remain_prompt_tokens(messages) < 0:
+                #         context["information"] = _remove_imports_context(context["information"])
+                #         messages = generate_messages(TEMPLATE_NO_DEPS, context)  # !! MINIMUM MESSAGES!!
+                #         if remain_prompt_tokens(messages) < 0:  # Failed generating messages
+                #             print(progress, Fore.RED + "Tokens not enough, test fatal error...", Style.RESET_ALL)
+                #             break
+                # # print(Fore.BLUE, messages[1]['content'], Style.RESET_ALL)
 
             print(Fore.BLUE, messages, Style.RESET_ALL)
             
