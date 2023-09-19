@@ -24,7 +24,8 @@ init()
 # Create a jinja2 environment
 env = jinja2.Environment(loader=jinja2.FileSystemLoader('../prompt'))
 
-BASE_PATH = '/home/shaker/models/GPT4All/'
+# BASE_PATH = '/home/shaker/models/GPT4All/'
+BASE_PATH = '/media/shaker/infinity/llms/'
 # PATH = f'{BASE_PATH}{"ggml-gpt4all-l13b-snoozy.bin"}'
 PATH = f'{BASE_PATH}{model}'
 
@@ -332,7 +333,7 @@ def extract_code(string):
     return has_code, extracted_code, has_syntactic_error
 
 
-def extract_and_run(input_string, output_path, class_name, method_id, test_num, project_name, package):
+def extract_and_run(input_string, output_path, class_name, test_num, project_name, package, project_dir):
     """
     Extract the code and run it
     :param project_name:
@@ -359,8 +360,14 @@ def extract_and_run(input_string, output_path, class_name, method_id, test_num, 
         shutil.rmtree(temp_dir)
     os.makedirs(temp_dir)
 
-    export_method_test_case(os.path.abspath(temp_dir), class_name, method_id, test_num,
-                            change_class_name(result["source_code"], class_name, method_id, test_num))
+    # print("Project Name")
+    # print(project_name)
+
+    # print("Class Name")
+    # print(class_name)
+
+    export_method_test_case(os.path.abspath(temp_dir), class_name, "method_id", test_num, extracted_code)
+                            # change_class_name(result["source_code"], class_name, "method_id", test_num))
 
     # run test
     response_dir = os.path.abspath(os.path.dirname(output_path))
@@ -414,9 +421,10 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
     run_temp_dir = os.path.join(save_dir, "runtemp")
 
     steps, rounds = 0, 0
+    
     project_name = context.get("project_name")
-    class_name = context.get("project_name")
-    method_name = context.get("project_name")
+    test_class_name = context.get("test_class_name")
+    method_name = context.get("method_name")
 
     # context = {"project_name": project_name, "class_name": class_under_test, "method_name": method_under_test,
     #                     "test_method_code": source_code}
@@ -512,13 +520,17 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
             
             # status = ask_chatgpt(messages, llm_file_name)
             status = ask_openLLM(messages, llm_file_name)
-            
+            # status = """@Test(timeout = 4000)
+            #             public void test000() throws Throwable {
+            #                 float float0 = NumberUtils.max(1.0F, (float) (-662L), 1.0F);
+            #                 assertEquals(float0, 1.0F);
+            #             }"""
             if not status:
                 print(progress, Fore.RED + 'LLM Failed processing messages', Style.RESET_ALL)
                 break
 
             with open(llm_file_name, "r") as f:
-                gpt_result = json.load(f)
+                llm_result = json.load(f)
 
             # 2. Extract information from LLM, and RUN save the result
             steps += 1
@@ -527,12 +539,23 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
 
             # extract the test and save the result in raw_file_name
             # input_string = gpt_result["choices"][0]['message']["content"]
-            input_string = gpt_result
-            test_passed, fatal_error = extract_and_run(input_string, raw_file_name, class_name, method_id, test_num,
-                                                       project_name,
-                                                       package)
+            input_string = llm_result
+
+            assertions = extract_assertions_from_string(input_string)
+            
+            print("LLM Response:")
+            print(assertions)
+
+            updated_source_code = re.sub(re.escape(string_tables.ASSERTION_PLACEHOLDER), assertions, context.get("test_case"))
+
+            # print("Updated test source code:")
+            # print(updated_source_code)
+            
+            test_passed, fatal_error = extract_and_run(updated_source_code, raw_file_name, test_class_name, test_num,
+                                                       project_name, context.get("package"), project_dir)
 
             if test_passed:
+                print(Fore.GREEN + "PASSED!!!")
                 print(progress, Fore.GREEN + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
                       "test passed",
                       Style.RESET_ALL)

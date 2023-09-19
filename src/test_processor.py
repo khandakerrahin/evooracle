@@ -168,6 +168,7 @@ def prepare_test_cases(project_dir):
             method_name = row.get("method_name")
             focal_methods = row.get("focal_methods")
             source_code = row.get("source_code")
+            test_class_name = row.get("class_name")
 
             # project_name  = row.get("project_name")
             # method_signature = row.get("signature")
@@ -202,32 +203,9 @@ def prepare_test_cases(project_dir):
             # print("return_type: ", return_type)
 
             # Regular expression pattern to match assertions
-            # Define the assertions to be replaced
-            assertion_patterns = [
-                r'assert\s*\(.+?\);',
-                r'assertTrue\s*\(.+?\);',
-                r'assertNull\s*\(.+?\);',
-                r'fail\s*\(.+?\);',
-                r'assertFalse\s*\(.+?\);',
-                r'assertNotEquals\s*\(.+?\);',
-                r'assertEquals\s*\(.+?\);',
-            ]
+            source_code, replaced_assertions = replace_assertions(source_code)
 
-            # List to store replaced assertions for this method
-            replaced_assertions = []
 
-            # Replace assertions with the placeholder
-            for pattern in assertion_patterns:
-                def replacement(match):
-                    # Get the matched text
-                    matched_text = match.group(0)
-                    # print(f"Pattern: {pattern}")
-                    # print(f"Replaced: {matched_text}")
-                    replaced_assertions.append(matched_text)
-                    return (string_tables.NL + string_tables.ASSERTION_PLACEHOLDER)
-
-                source_code = re.sub(pattern, replacement, source_code)
-            
             # prepare the test case
             test_case = package + string_tables.NL +  imports + string_tables.NL + signature + string_tables.NL + string_tables.LEFT_CURLY_BRACE + string_tables.NL + source_code + string_tables.NL + string_tables.RIGHT_CURLY_BRACE
 
@@ -244,9 +222,9 @@ def prepare_test_cases(project_dir):
 
             manager.get_details_by_project_class_and_method
             
-            context = {"project_name": project_name, "class_name": class_under_test, "method_name": method_under_test, 
+            context = {"project_name": project_name, "class_name": class_under_test, "test_class_name": test_class_name, "method_name": method_under_test, 
                        "method_details": manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, True), 
-                       "test_method_code": source_code, "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER}
+                       "test_method_code": source_code, "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER, "test_case":test_case, "package":package}
             
             # Store replaced assertions for this method in the dictionary
             replaced_assertions_per_method[method_name] = replaced_assertions
@@ -285,7 +263,7 @@ def prepare_test_cases(project_dir):
 
     # print("SCOPE TEST FINISHED")
 
-def start_generation(sql_query, multiprocess=True, repair=True, confirmed=False):
+def start_generation(project_dir, sql_query, multiprocess=True, repair=True, confirmed=False):
     """
     Start the scope test.
     :param multiprocess: if it needs to
@@ -300,7 +278,7 @@ def start_generation(sql_query, multiprocess=True, repair=True, confirmed=False)
     else:
         raise RuntimeError("One project at one time.")
     # delete the old result
-    remove_single_test_output_dirs(get_project_abspath())
+    remove_single_test_output_dirs(project_dir)
 
     method_ids = [x[0] for x in db.select(script=sql_query)]
     if not method_ids:

@@ -28,10 +28,10 @@ def run(project_dir):
     # create_table()
 
     # Parse project
-    # info_path = Task.parse(project_dir)
+    info_path = Task.parse(project_dir)
 
     # # Parse data
-    # parse_data(info_path, (project_dir+db_file))
+    parse_data(info_path, (project_dir+db_file))
 
     # clear last dataset
     # clear_dataset()

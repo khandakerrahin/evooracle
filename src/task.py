@@ -14,7 +14,7 @@ class Task:
     @staticmethod
     def test(test_path, target_path):
         """
-        Run test task, make sure the target project has be compiled and installed.(run `mvn compile install`)
+        Run test task, make sure the target project has been compiled and installed.(run `mvn compile install`)
         """
         test_task = TestTask(test_path, target_path)
         return test_task.single_test()
@@ -22,7 +22,7 @@ class Task:
     @staticmethod
     def all_test(test_path, target_path):
         """
-        Run test task, make sure the target project has be compiled and installed.(run `mvn compile install`)
+        Run test task, make sure the target project has been compiled and installed.(run `mvn compile install`)
         """
         test_task = TestTask(test_path, target_path)
         return test_task.all_test()
