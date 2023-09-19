@@ -280,17 +280,23 @@ def get_current_time():
     return formatted_time
 
 
+
 def replace_assertions(source_code):
     # Regular expression pattern to match assertions
     # Define the assertions to be replaced
     assertion_patterns = [
-        r'assert\s*\(.+?\);',
-        r'assertTrue\s*\(.+?\);',
-        r'assertNull\s*\(.+?\);',
-        r'fail\s*\(.+?\);',
-        r'assertFalse\s*\(.+?\);',
-        r'assertNotEquals\s*\(.+?\);',
-        r'assertEquals\s*\(.+?\);',
+        r'(\w+\.)?assert\s*\(.+?\);',           # Matches ClassName.assert(...)
+        r'(\w+\.)?assertTrue\s*\(.+?\);',       # Matches ClassName.assertTrue(...)
+        r'(\w+\.)?assertNull\s*\(.+?\);',       # Matches ClassName.assertNull(...)
+        r'(\w+\.)?fail\s*\(.+?\);',             # Matches ClassName.fail(...)
+        r'(\w+\.)?assertFalse\s*\(.+?\);',      # Matches ClassName.assertFalse(...)
+        r'(\w+\.)?assertNotEquals\s*\(.+?\);',  # Matches ClassName.assertNotEquals(...)
+        r'(\w+\.)?assertEquals\s*\(.+?\);',     # Matches ClassName.assertEquals(...)
+        r'(\w+\.)?assertArrayEquals\s*\(.+?\);',# Matches ClassName.assertArrayEquals(...)
+        r'(\w+\.)?assertNotNull\s*\(.+?\);',    # Matches ClassName.assertNotNull(...)
+        r'(\w+\.)?assertNotSame\s*\(.+?\);',    # Matches ClassName.assertNotSame(...)
+        r'(\w+\.)?assertSame\s*\(.+?\);',       # Matches ClassName.assertSame(...)
+        r'(\w+\.)?assertThat\s*\(.+?\);',       # Matches ClassName.assertThat(...)
     ]
 
     # List to store replaced assertions for this method
@@ -301,8 +307,8 @@ def replace_assertions(source_code):
         def replacement(match):
             # Get the matched text
             matched_text = match.group(0)
-            # print(f"Pattern: {pattern}")
-            # print(f"Replaced: {matched_text}")
+            print(f"Pattern: {pattern}")
+            print(f"Replaced: {matched_text}")
             replaced_assertions.append(matched_text)
             return (string_tables.NL + string_tables.ASSERTION_PLACEHOLDER)
 
@@ -313,13 +319,18 @@ def replace_assertions(source_code):
 def extract_assertions_from_string(input_string):
     # Regular expression pattern to match assertions
     assertion_patterns = [
-        r'assert\s*\(.+?\);',
-        r'assertTrue\s*\(.+?\);',
-        r'assertNull\s*\(.+?\);',
-        r'fail\s*\(.+?\);',
-        r'assertFalse\s*\(.+?\);',
-        r'assertNotEquals\s*\(.+?\);',
-        r'assertEquals\s*\(.+?\);',
+        r'(\w+\.)?assert\s*\(.+?\);',           # Matches ClassName.assert(...)
+        r'(\w+\.)?assertTrue\s*\(.+?\);',       # Matches ClassName.assertTrue(...)
+        r'(\w+\.)?assertNull\s*\(.+?\);',       # Matches ClassName.assertNull(...)
+        r'(\w+\.)?fail\s*\(.+?\);',             # Matches ClassName.fail(...)
+        r'(\w+\.)?assertFalse\s*\(.+?\);',      # Matches ClassName.assertFalse(...)
+        r'(\w+\.)?assertNotEquals\s*\(.+?\);',  # Matches ClassName.assertNotEquals(...)
+        r'(\w+\.)?assertEquals\s*\(.+?\);',     # Matches ClassName.assertEquals(...)
+        r'(\w+\.)?assertArrayEquals\s*\(.+?\);',# Matches ClassName.assertArrayEquals(...)
+        r'(\w+\.)?assertNotNull\s*\(.+?\);',    # Matches ClassName.assertNotNull(...)
+        r'(\w+\.)?assertNotSame\s*\(.+?\);',    # Matches ClassName.assertNotSame(...)
+        r'(\w+\.)?assertSame\s*\(.+?\);',       # Matches ClassName.assertSame(...)
+        r'(\w+\.)?assertThat\s*\(.+?\);',       # Matches ClassName.assertThat(...)
     ]
 
     # List to store extracted assertions
