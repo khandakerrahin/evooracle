@@ -252,8 +252,9 @@ def export_method_test_case(output, class_name, m_id, test_num, method_test_case
     Export test case to file.
     output : pathto/project/testcase.java
     """
-    method_test_case = add_timeout(method_test_case)
-    f = os.path.join(output, class_name + "_" + str(m_id) + '_' + str(test_num) + "Test.java")
+    # method_test_case = add_timeout(method_test_case)
+    # f = os.path.join(output, class_name + "_" + str(m_id) + '_' + str(test_num) + "Test.java")
+    f = os.path.join(output, class_name + ".java")
     if not os.path.exists(output):
         os.makedirs(output)
     with open(f, "w") as output_file:

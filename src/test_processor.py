@@ -168,6 +168,7 @@ def prepare_test_cases(project_dir):
             method_name = row.get("method_name")
             focal_methods = row.get("focal_methods")
             source_code = row.get("source_code")
+            test_class_name = row.get("class_name")
 
             # project_name  = row.get("project_name")
             # method_signature = row.get("signature")
@@ -221,7 +222,7 @@ def prepare_test_cases(project_dir):
 
             manager.get_details_by_project_class_and_method
             
-            context = {"project_name": project_name, "class_name": class_under_test, "method_name": method_under_test, 
+            context = {"project_name": project_name, "class_name": class_under_test, "test_class_name": test_class_name, "method_name": method_under_test, 
                        "method_details": manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, True), 
                        "test_method_code": source_code, "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER, "test_case":test_case, "package":package}
             
