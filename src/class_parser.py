@@ -237,7 +237,12 @@ class ClassParser():
             if object_node is not None:
                 object_name = ClassParser.match_from_span(object_node, blob)
                 # Append the class name and method name in the format "Class.method" to focal_methods
-                metadata['focal_methods'].append(f'{object_name}.{method_invocation_name}')
+                # Extract the class name from the object_node
+                class_name = ClassParser.get_method_invocation_name(object_node, blob)
+
+                # Append the class name and method name to focal_methods
+                metadata['focal_methods'].append(f'{class_name}.{method_invocation_name}')
+                # metadata['focal_methods'].append(f'{object_name}.{method_invocation_name}')
             # else: 
                 # TODO check and process if not assersions
                 # Skipping this for now as considering as Assertions now

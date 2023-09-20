@@ -57,9 +57,20 @@ class ResourceManager:
                             method_details.append(method)
                         break
                     
-                        
+        print("method_details : "+ str(method_details))               
         return method_details
 
+    def get_package_by_project_and_class(self, project_name, class_name):
+        for entry in self.data:
+            if (
+                entry.get('project_name') == project_name
+                and entry.get('class_name') == class_name
+                and 'package' in entry
+            ):
+                package_declaration = entry['package']
+                package_name = package_declaration.split(' ')[1].strip(';')
+                return package_name
+        return None
     
 # Example usage:
 if __name__ == '__main__':

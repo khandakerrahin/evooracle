@@ -100,11 +100,10 @@ def prepare_test_cases(project_dir):
 
     # Loop through the results
     for row in class_results:
-        class_name = row.get("class_name")
-        class_path = row.get("class_path")
         signature = row.get("signature")
         super_class = row.get("super_class")
         package = row.get("package")
+        stripped_package = row.get("package").split(' ')[1].strip(';')
         imports = row.get("imports")
         fields = row.get("fields")
         has_constructor = row.get("has_constructor")
@@ -113,7 +112,9 @@ def prepare_test_cases(project_dir):
         methods = row.get("methods")
         argument_list = row.get("argument_list")
         interfaces = row.get("interfaces")
-        
+        test_class_name = row.get("class_name")
+        test_class_path = row.get("class_path")
+        print("ORIGINAL test_class_path: " + test_class_path)
         # print("class_name: ", class_name)
         # print("class_path: ", class_path)
         # print("signature: ", signature)
@@ -151,6 +152,7 @@ def prepare_test_cases(project_dir):
         record += "Included test methods: " + ", ".join(method_names) + "\n"
         record_path = os.path.join(result_path, "record.txt")
 
+
         with open(record_path, "w") as f:
             f.write(record)
         print(Fore.GREEN + "The record has been saved at", record_path, Style.RESET_ALL)
@@ -168,8 +170,7 @@ def prepare_test_cases(project_dir):
             method_name = row.get("method_name")
             focal_methods = row.get("focal_methods")
             source_code = row.get("source_code")
-            test_class_name = row.get("class_name")
-
+            
             # project_name  = row.get("project_name")
             # method_signature = row.get("signature")
             # method_name = row.get("method_name")
@@ -219,19 +220,17 @@ def prepare_test_cases(project_dir):
             # print("CUT: ", class_under_test)
             # print("MUT: ", method_under_test)
             # print()
-
-            manager.get_details_by_project_class_and_method
             
-            context = {"project_name": project_name, "class_name": class_under_test, "test_class_name": test_class_name, "method_name": method_under_test, 
+            context = {"project_name": project_name, "class_name": class_under_test, "test_class_path":test_class_path, "test_class_name": test_class_name, "test_method_name":method_name, "method_name": method_under_test, 
                        "method_details": manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, True), 
-                       "test_method_code": source_code, "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER, "test_case":test_case, "package":package}
+                       "test_method_code": source_code, "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER, "test_case":test_case, "package":stripped_package}
             
             # Store replaced assertions for this method in the dictionary
             replaced_assertions_per_method[method_name] = replaced_assertions
             
             # print("..........................................................................")
             # time.sleep(0)
-
+            # print(context)
             for test_num in range(1, test_number + 1):
                 submits += 1
                 # whole_process(test_num, base_name, base_dir, repair, submits, total)
@@ -241,9 +240,14 @@ def prepare_test_cases(project_dir):
         
         # Print the modified Java test method
         # print(replaced_assertions_per_method)
-            
 
-    with open(project_dir + testsdb_file, 'w') as json_file:
+    testdb_out = project_dir + testsdb_file
+    # Check if the file exists
+    if os.path.exists(testdb_out):
+        # If it exists, delete it
+        os.remove(testdb_out)
+
+    with open(testdb_out, 'w') as json_file:
         json.dump(class_results, json_file, indent=4)  # Use indent for pretty formatting (optional)
 
     

@@ -333,7 +333,7 @@ def extract_code(string):
     return has_code, extracted_code, has_syntactic_error
 
 
-def extract_and_run(input_string, output_path, class_name, test_num, project_name, package, project_dir):
+def extract_and_run(input_string, output_path, class_name, test_num, method_name, project_name, package, project_dir):
     """
     Extract the code and run it
     :param project_name:
@@ -360,31 +360,37 @@ def extract_and_run(input_string, output_path, class_name, test_num, project_nam
         shutil.rmtree(temp_dir)
     os.makedirs(temp_dir)
 
-    # print("Project Name")
-    # print(project_name)
+    print("Project Name: " + project_name)
+    print("Class Name: " + class_name)
 
-    # print("Class Name")
-    # print(class_name)
+    out_dir = os.path.dirname(os.path.dirname(output_path))
 
-    export_method_test_case(os.path.abspath(temp_dir), class_name, "method_id", test_num, extracted_code)
-                            # change_class_name(result["source_code"], class_name, "method_id", test_num))
+    renamed_class = class_name + '_' + method_name + '_' + str(test_num) + string_tables.EVOORACLE_SIGNATURE
+    renamed_class_source_code = change_class_name(extracted_code, class_name, renamed_class)
+
+    test_file_name = export_method_test_case(out_dir, renamed_class, renamed_class_source_code)
 
     # run test
-    response_dir = os.path.abspath(os.path.dirname(output_path))
+    response_dir = os.path.abspath(out_dir)
     target_dir = os.path.abspath(project_dir)
-    Task.test(response_dir, target_dir)
+
+    # print("response_dir: " + response_dir)
+    # print("target_dir: " + target_dir)
+    # print("test_file_name: " + test_file_name)
+
+    Task.test(response_dir, target_dir, test_file_name, package, class_name)
 
     # 3. Read the result
-    if "compile_error.txt" in os.listdir(temp_dir):
-        with open(os.path.join(temp_dir, "compile_error.txt"), "r") as f:
+    if "compile_error.txt" in os.listdir(out_dir):
+        with open(os.path.join(out_dir, "compile_error.txt"), "r") as f:
             result["compile_error"] = f.read()
 
-    if "runtime_error.txt" in os.listdir(temp_dir):
-        with open(os.path.join(temp_dir, "runtime_error.txt"), "r") as f:
+    if "runtime_error.txt" in os.listdir(out_dir):
+        with open(os.path.join(out_dir, "runtime_error.txt"), "r") as f:
             result["runtime_error"] = f.read()
-    if "coverage.html" in os.listdir(temp_dir):
+    if "coverage.html" in os.listdir(out_dir):
         result["coverage_html"] = True
-    if "coverage.xml" in os.listdir(temp_dir):
+    if "coverage.xml" in os.listdir(out_dir):
         result["coverage_xml"] = True
 
     test_passed = False
@@ -413,22 +419,24 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
     :param total:
     :return:
     """
+
+    project_name = context.get("project_name")
+    test_class_name = context.get("test_class_name")
+    test_class_path = context.get("test_class_path")
+    method_name = context.get("method_name")
+
+    # context = {"project_name": project_name, "class_name": class_under_test, "method_name": method_under_test,
+    #                     "test_method_code": source_code}
+
     progress = '[' + str(submits) + ' / ' + str(total) + ']'
     # Create subdirectories for each test
-    save_dir = os.path.join(project_dir, str(test_num))
+    save_dir = os.path.join(os.path.dirname(test_class_path), str(test_num))
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     run_temp_dir = os.path.join(save_dir, "runtemp")
 
     steps, rounds = 0, 0
     
-    project_name = context.get("project_name")
-    test_class_name = context.get("test_class_name")
-    method_name = context.get("method_name")
-
-    # context = {"project_name": project_name, "class_name": class_under_test, "method_name": method_under_test,
-    #                     "test_method_code": source_code}
-
     try:
         while rounds < max_rounds:
             # 1. Ask LLM
@@ -437,54 +445,12 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
             print(progress, method_name, "test_" + str(test_num), "Asking " + model + "...", "rounds", rounds)
             llm_file_name = os.path.join(save_dir, str(steps) + "_LLM_" + str(rounds) + ".json")
             # Need to generate new messages
-            rounds = 1
+            # rounds = 1
             if rounds != 1:
-                last_round_result = get_latest_file(save_dir)
-                # with open(last_round_result, "r") as f:
-                #     last_round_result = json.load(f)
-                # last_raw = get_latest_file(save_dir, suffix="raw")
-                # with open(last_raw, "r") as f:
-                #     last_raw = json.load(f)
-
-                # # Prepare the error message
-                # context = {"class_name": context_d_1["class_name"], "method_name": context_d_1["focal_method"],
-                #            "unit_test": last_raw["source_code"], "method_code": context_d_1["information"]}
-                # # Required, cannot truncate
-
-                # # Adaptive generate error message
-                # messages = generate_messages(TEMPLATE_ERROR, context)
-                # allow_tokens = remain_prompt_tokens(messages)
-                # if allow_tokens < MIN_ERROR_TOKENS:
-                #     context["method_code"] = _remove_imports_context(context["method_code"])
-                #     messages = generate_messages(TEMPLATE_ERROR, context)
-                #     allow_tokens = remain_prompt_tokens(messages)
-                # if allow_tokens < MIN_ERROR_TOKENS:
-                #     context["method_code"] = context_d_3["full_fm"]
-                #     messages = generate_messages(TEMPLATE_ERROR, context)
-                #     allow_tokens = remain_prompt_tokens(messages)
-                # if allow_tokens < MIN_ERROR_TOKENS:
-                #     context["method_code"] = _remove_imports_context(context_d_3["full_fm"])
-                #     messages = generate_messages(TEMPLATE_ERROR, context)
-                #     allow_tokens = remain_prompt_tokens(messages)
-                # if allow_tokens >= MIN_ERROR_TOKENS:
-                #     if "compile_error" in last_round_result:
-                #         context["error_type"] = "compiling"
-                #         error_mes = process_error_message(last_round_result["compile_error"], allow_tokens)
-                #         context["error_message"] = error_mes
-                #     if "runtime_error" in last_round_result:
-                #         context["error_type"] = "running"
-                #         error_mes = process_error_message(last_round_result["runtime_error"], allow_tokens)
-                #         context["error_message"] = error_mes
-                # else:
-                #     print(progress, Fore.RED + method_id, "Tokens not enough, test fatal error...",
-                #           Style.RESET_ALL)  # Fatal error
-                #     break
-                # if "compile_error" not in last_round_result and "runtime_error" not in last_round_result:
-                #     print(progress, Fore.RED + method_id, "Timeout error, test fatal error...", Style.RESET_ALL)
-                #     break
-                # messages = generate_messages(TEMPLATE_ERROR, context)
-                # # print('-------------------')
-                # # print(context["error_message"])
+                trimmed_context = context
+                
+                trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
+                messages = generate_messages(TEMPLATE_NO_DEPS, trimmed_context)
             else:  # Direction_1 or Direction_3
                 messages = generate_messages(TEMPLATE_NO_DEPS, context)
                 # if not context_d_3["c_deps"] and not context_d_3["m_deps"]:  # No dependencies d_1
@@ -519,15 +485,27 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
             print(Fore.BLUE, messages, Style.RESET_ALL)
             
             # status = ask_chatgpt(messages, llm_file_name)
-            status = ask_openLLM(messages, llm_file_name)
-            # status = """@Test(timeout = 4000)
-            #             public void test000() throws Throwable {
-            #                 float float0 = NumberUtils.max(1.0F, (float) (-662L), 1.0F);
-            #                 assertEquals(float0, 1.0F);
-            #             }"""
+            # status = ask_openLLM(messages, llm_file_name)
+            status = """@Test(timeout = 4000)
+                        public void test00()  throws Throwable  {
+                            OpenMapRealMatrix openMapRealMatrix0 = new OpenMapRealMatrix(3695, 3695);
+                            Object object0 = new Object();
+                            openMapRealMatrix0.equals(object0);
+                            RectangularCholeskyDecomposition rectangularCholeskyDecomposition0 = new RectangularCholeskyDecomposition(openMapRealMatrix0, 3695);
+                        }"""
             if not status:
                 print(progress, Fore.RED + 'LLM Failed processing messages', Style.RESET_ALL)
-                break
+                
+                trimmed_context = context
+                
+                trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
+                messages = generate_messages(TEMPLATE_NO_DEPS, trimmed_context)
+                print(Fore.BLUE, messages, Style.RESET_ALL)
+            
+                # status = ask_chatgpt(messages, llm_file_name)
+                # status = ask_openLLM(messages, llm_file_name)
+                if not status:
+                    break
 
             with open(llm_file_name, "r") as f:
                 llm_result = json.load(f)
@@ -551,12 +529,12 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
             # print("Updated test source code:")
             # print(updated_source_code)
             
-            test_passed, fatal_error = extract_and_run(updated_source_code, raw_file_name, test_class_name, test_num,
+            test_passed, fatal_error = extract_and_run(updated_source_code, raw_file_name, test_class_name, test_num, context.get("method_name"),
                                                        project_name, context.get("package"), project_dir)
 
             if test_passed:
                 print(Fore.GREEN + "PASSED!!!")
-                print(progress, Fore.GREEN + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
+                print(progress, Fore.GREEN + method_name, "test_" + str(test_num), "steps", steps, "rounds", rounds,
                       "test passed",
                       Style.RESET_ALL)
                 break
@@ -594,13 +572,26 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
             print(progress, Fore.YELLOW + method_id, "test_" + str(test_num), "Test failed, fixing...", "rounds",
                   rounds,
                   Style.RESET_ALL)
-            if not repair:  # If we do not want to repair the code, we don't need to second round
-                break
+            # if not repair:  # If we do not want to repair the code, we don't need to second round
+            #     break
     except Exception as e:
         print(progress, Fore.RED + str(e), Style.RESET_ALL)
     if os.path.exists(run_temp_dir):
         run_temp_dir = os.path.abspath(run_temp_dir)
         shutil.rmtree(run_temp_dir)
+
+def trim_string_to_substring(original_string, substring):
+    # Find the index of the substring
+    substring_index = original_string.find(substring)
+
+    if substring_index != -1:
+        # Trim the string to keep everything before and including the substring
+        trimmed_string = original_string[:substring_index + len(substring)]
+    else:
+        # Substring not found, keep the original string as is
+        trimmed_string = original_string
+
+    return trimmed_string
 
 def whole_process(test_num, base_name, base_dir, repair, submits, total):
     """
