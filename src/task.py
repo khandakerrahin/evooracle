@@ -12,11 +12,13 @@ from colorama import Fore, init
 class Task:
 
     @staticmethod
-    def test(test_path, target_path):
+    def test(test_path, target_path, test_file_name, package, class_name):
         """
         Run test task, make sure the target project has been compiled and installed.(run `mvn compile install`)
         """
-        test_task = TestTask(test_path, target_path)
+        # print("test_path: " + test_path)
+        # print("target_path: " + target_path)
+        test_task = TestTask(test_path, target_path, test_file_name, package, class_name)
         return test_task.single_test()
 
     @staticmethod
@@ -38,11 +40,16 @@ class Task:
 
 class TestTask:
 
-    def __init__(self, test_path, target_path):
+    def __init__(self, test_path, target_path, test_file_name, package, class_name):
         init()  # colorama init
         self.test_path = test_path
         self.target_path = target_path
-        self.runner = TestRunner(test_path, target_path)
+        self.test_file_name = test_file_name
+        self.package = package
+        self.class_name = class_name
+        
+        
+        self.runner = TestRunner(test_path, target_path, test_file_name, package, class_name)
 
         # define the threshold for CPU utilization and available memory
         self.cpu_threshold = 80
@@ -55,8 +62,6 @@ class TestTask:
         """
         if check_java_version() != 11:
             raise Exception(Fore.RED + "Wrong java version! Need: java 11")
-        if self.target_path.endswith("_f") or self.target_path.endswith("_b"):  # defects4j project
-            return self.start_d4j()
         else:  # general project
             return self.runner.start_single_test()
 
@@ -173,10 +178,15 @@ class ParseTask:
         """
         # Create folders
         target_path = target_path.rstrip('/')
-        os.makedirs(self.output, exist_ok=True)
-        if target_path.endswith("_f") or target_path.endswith("_b"):
-            _, output_path = self.process_d4j_revisions(target_path, './scripts/focal_classes.json')
-            return output_path
+
+        out_dir = self.output
+        # Check if the directory exists
+        if os.path.exists(out_dir):
+            # If it exists, delete it and its contents
+            shutil.rmtree(out_dir)
+
+        os.makedirs(out_dir, exist_ok=True)
+        
         tot_m, output_path = self.find_classes(target_path)
         return output_path
 

@@ -4,11 +4,12 @@ import subprocess
 import re
 from datetime import datetime
 from config import *
+from colorama import Fore, Style, init
 
 
 class TestRunner:
 
-    def __init__(self, test_path, target_path, tool="cobertura"):
+    def __init__(self, test_path, target_path, test_file_name, package, class_name, tool="cobertura"):
         """
         :param tool: coverage tool (Only support cobertura or jacoco)
         :param test_path: test cases directory path e.g.:
@@ -19,6 +20,10 @@ class TestRunner:
         self.coverage_tool = tool
         self.test_path = test_path
         self.target_path = target_path
+        self.test_file_name = test_file_name
+        self.package = package
+        self.class_name = class_name
+        
 
         # Preprocess
         self.dependencies = self.make_dependency()
@@ -34,18 +39,10 @@ class TestRunner:
         tests directory path, e.g.:
         /data/share/TestGPT_ASE/result/scope_test%20230414210243%d3_1/1460%lang_1_f%ToStringBuilder%append%d3/5
         """
-        temp_dir = os.path.join(self.test_path, "temp")
-        compiled_test_dir = os.path.join(self.test_path, "runtemp")
-        os.makedirs(compiled_test_dir, exist_ok=True)
+        
         try:
-            self.instrument(compiled_test_dir, compiled_test_dir)
-            test_file = os.path.abspath(glob.glob(temp_dir + '/*.java')[0])
-            compiler_output = os.path.join(temp_dir, 'compile_error')
-            test_output = os.path.join(temp_dir, 'runtime_error')
-            if not self.run_single_test(test_file, compiled_test_dir, compiler_output, test_output):
-                return False
-            else:
-                self.report(compiled_test_dir, temp_dir)
+            self.run_single_test(self.test_file_name, self.test_path, self.target_path, self.package, self.class_name)
+            
         except Exception as e:
             print(e)
             return False
@@ -98,28 +95,40 @@ class TestRunner:
             print("\n")
         return total_compile, total_test_run
 
-    def run_single_test(self, test_file, compiled_test_dir, compiler_output, test_output):
+    def run_single_test(self, test_file, test_path, target_path, package, class_name):
         """
         Run a test case.
         :return: Whether it is successful or no.
         """
-        if not self.compile(test_file, compiled_test_dir, compiler_output):
-            return False
-        if os.path.basename(test_output) == 'runtime_error':
-            test_output_file = f"{test_output}.txt"
-        else:
-            test_output_file = f"{test_output}-{os.path.basename(test_file)}.txt"
-        cmd = self.java_cmd(compiled_test_dir, test_file)
-        try:
-            result = subprocess.run(cmd, timeout=TIMEOUT,
-                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            if result.returncode != 0:
-                self.TEST_RUN_ERROR += 1
-                self.export_runtime_output(result, test_output_file)
-                return False
-        except subprocess.TimeoutExpired:
-            # print(Fore.RED + "TIME OUT!", Style.RESET_ALL)
-            return False
+        # if not self.compile(test_file, compiled_test_dir, compiler_output):
+        #     return False
+        print(Fore.GREEN + "Test compiled successfully", Style.RESET_ALL)
+        print("test_file: "+test_file)
+        print("test_path: "+test_path)
+        print("target_path: "+target_path)
+        
+        # Define your commands
+        commands = [
+            "mvn compile",
+            "export EVOSUITE='java -jar {}/evosuite-1.0.6.jar'".format(target_path),
+            "mvn dependency:copy-dependencies",
+            "java -version",
+            # "export CLASSPATH=target/classes:evosuite-standalone-runtime-1.0.6.jar:evosuite-tests:target/dependency/junit-4.12.j/ar:target/dependency/hamcrest-core-1.3.jar",
+            # "javac {}".format(test_path + "/*.java"),
+            "javac -cp target/classes:evosuite-standalone-runtime-1.0.6.jar:evosuite-tests:target/dependency/junit-4.12.jar:target/dependency/hamcrest-core-1.3.jar {}".format(test_path + "/*.java"),
+            "java -cp target/classes:evosuite-standalone-runtime-1.0.6.jar:evosuite-tests:target/dependency/junit-4.12.jar:target/dependency/hamcrest-core-1.3.jar org.junit.runner.JUnitCore org.junit.runner.JUnitCore {}.{}".format(package, class_name)
+            # "$EVOSUITE",
+            # "$EVOSUITE -class tutorial.Stack -projectCP target/classes",
+            # "javac evosuite-tests/tutorial/*.java",
+            # "java org.junit.runner.JUnitCore tutorial.Stack_ESTest"
+        ]
+
+        # Run commands sequentially
+        for command in commands:
+            if not self.run_command(command, working_directory=target_path):
+                print("Command failed. Aborting.")
+                break
+        
         return True
 
     @staticmethod
@@ -153,6 +162,15 @@ class TestRunner:
             return False
         return True
 
+    def run_command(self, command, working_directory=None):
+        try:
+            subprocess.run(command, shell=True, check=True, cwd=working_directory)
+            print(f"Command '{command}' executed successfully.")
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"Error executing command '{command}': {e}")
+            return False
+    
     def process_single_repo(self):
         """
         Return the all build directories of target repository

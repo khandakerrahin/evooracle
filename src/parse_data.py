@@ -172,15 +172,21 @@ def parse_data(dir_path: str, db_out_path: str):
 
                     print(class_name, "FINISHED!")
                     break
-                
-                # Create the directory if it does not exist
-                output_dir = os.path.dirname(db_out_path)
-                if not os.path.exists(output_dir):
-                    os.makedirs(output_dir)
+    # Check if the file exists
+    if os.path.exists(db_out_path):
+        # If it exists, delete it
+        os.remove(db_out_path)
+    
+    # Create the directory if it does not exist
+    output_dir = os.path.dirname(db_out_path)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
-                # Write the list of parsed data to a JSON file
-                with open(db_out_path, "w") as json_output:
-                    json.dump(class_data_to_store, json_output, indent=4)
+    # Write the list of parsed data to a JSON file
+    with open(db_out_path, "w") as json_output:
+        json.dump(class_data_to_store, json_output, indent=4)
+                
+                
 
 if __name__ == '__main__':
     print("Only to be used from within.")

@@ -247,7 +247,7 @@ def add_timeout(test_case, timeout=8000):
         return test_case
 
 
-def export_method_test_case(output, class_name, m_id, test_num, method_test_case):
+def export_method_test_case(output, class_name, method_test_case):
     """
     Export test case to file.
     output : pathto/project/testcase.java
@@ -259,14 +259,13 @@ def export_method_test_case(output, class_name, m_id, test_num, method_test_case
         os.makedirs(output)
     with open(f, "w") as output_file:
         output_file.write(method_test_case)
+        return f
 
 
-def change_class_name(test_case, class_name, m_id, test_num):
+def change_class_name(test_case, old_name, new_name):
     """
     Change the class name in the test_case by given m_id.
     """
-    old_name = class_name + 'Test'
-    new_name = class_name + '_' + str(m_id) + '_' + str(test_num) + 'Test'
     return test_case.replace(old_name, new_name, 1)
 
 
@@ -307,8 +306,8 @@ def replace_assertions(source_code):
         def replacement(match):
             # Get the matched text
             matched_text = match.group(0)
-            print(f"Pattern: {pattern}")
-            print(f"Replaced: {matched_text}")
+            # print(f"Pattern: {pattern}")
+            # print(f"Replaced: {matched_text}")
             replaced_assertions.append(matched_text)
             return (string_tables.NL + string_tables.ASSERTION_PLACEHOLDER)
 
