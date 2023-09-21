@@ -485,14 +485,14 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
             print(Fore.BLUE, messages, Style.RESET_ALL)
             
             # status = ask_chatgpt(messages, llm_file_name)
-            # status = ask_openLLM(messages, llm_file_name)
-            status = """@Test(timeout = 4000)
-                        public void test00()  throws Throwable  {
-                            OpenMapRealMatrix openMapRealMatrix0 = new OpenMapRealMatrix(3695, 3695);
-                            Object object0 = new Object();
-                            openMapRealMatrix0.equals(object0);
-                            RectangularCholeskyDecomposition rectangularCholeskyDecomposition0 = new RectangularCholeskyDecomposition(openMapRealMatrix0, 3695);
-                        }"""
+            status = ask_openLLM(messages, llm_file_name)
+            # status = """@Test(timeout = 4000)
+            #             public void test00()  throws Throwable  {
+            #                 OpenMapRealMatrix openMapRealMatrix0 = new OpenMapRealMatrix(3695, 3695);
+            #                 Object object0 = new Object();
+            #                 openMapRealMatrix0.equals(object0);
+            #                 RectangularCholeskyDecomposition rectangularCholeskyDecomposition0 = new RectangularCholeskyDecomposition(openMapRealMatrix0, 3695);
+            #             }"""
             if not status:
                 print(progress, Fore.RED + 'LLM Failed processing messages', Style.RESET_ALL)
                 
@@ -503,7 +503,7 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
                 print(Fore.BLUE, messages, Style.RESET_ALL)
             
                 # status = ask_chatgpt(messages, llm_file_name)
-                # status = ask_openLLM(messages, llm_file_name)
+                status = ask_openLLM(messages, llm_file_name)
                 if not status:
                     break
 

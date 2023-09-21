@@ -217,9 +217,9 @@ def prepare_test_cases(project_dir):
             # prepare the context
             class_under_test, method_under_test = (focal_methods[0]).split(".")
             
-            # print("CUT: ", class_under_test)
-            # print("MUT: ", method_under_test)
-            # print()
+            print("CUT: ", class_under_test)
+            print("MUT: ", method_under_test)
+            print()
             
             context = {"project_name": project_name, "class_name": class_under_test, "test_class_path":test_class_path, "test_class_name": test_class_name, "test_method_name":method_name, "method_name": method_under_test, 
                        "method_details": manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, True), 
@@ -235,8 +235,8 @@ def prepare_test_cases(project_dir):
                 submits += 1
                 # whole_process(test_num, base_name, base_dir, repair, submits, total)
                 whole_process_with_LLM(project_dir, test_num, context, submits, total)
-                break
-            break
+                # break
+            # break
         
         # Print the modified Java test method
         # print(replaced_assertions_per_method)
