@@ -378,7 +378,7 @@ def extract_and_run(input_string, output_path, class_name, test_num, method_name
     # print("target_dir: " + target_dir)
     # print("test_file_name: " + test_file_name)
 
-    Task.test(response_dir, target_dir, test_file_name, package, class_name)
+    Task.test(response_dir, target_dir, test_file_name, package, renamed_class)
 
     # 3. Read the result
     if "compile_error.txt" in os.listdir(out_dir):
