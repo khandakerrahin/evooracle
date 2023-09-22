@@ -522,7 +522,7 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
             assertions = extract_assertions_from_string(input_string)
             
             print("LLM Response:")
-            print(assertions)
+            print(status)
 
             updated_source_code = re.sub(re.escape(string_tables.ASSERTION_PLACEHOLDER), assertions, context.get("test_case"))
 
