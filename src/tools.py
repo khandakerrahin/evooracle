@@ -278,7 +278,26 @@ def get_current_time():
     formatted_time = current_time.strftime("%H:%M:%S")
     return formatted_time
 
+def remove_all_assertions_but_last(source_code):
+    # Regular expression pattern to match assertions
+    assertion_pattern = r'(\w+\.)?(assert|assertTrue|assertNull|fail|assertFalse|assertNotEquals|assertEquals|assertArrayEquals|assertNotNull|assertNotSame|assertSame|assertThat)\s*\(.+?\);'
 
+    # Find all matches of the assertion pattern in the source_code
+    assertions = re.findall(assertion_pattern, source_code)
+
+    # If there are no assertions, return the source_code as is
+    if not assertions:
+        return source_code, []
+
+    # Initialize the replaced_assertions list
+    replaced_assertions = []
+
+    # Remove all but the last assertion
+    for i in range(len(assertions) - 1):
+        source_code = re.sub(assertion_pattern, "", source_code, count=1)
+        # replaced_assertions.append(assertions[i][0] + assertions[i][1] + "()")
+
+    return source_code
 
 def replace_assertions(source_code):
     # Regular expression pattern to match assertions
@@ -309,7 +328,7 @@ def replace_assertions(source_code):
             # print(f"Pattern: {pattern}")
             # print(f"Replaced: {matched_text}")
             replaced_assertions.append(matched_text)
-            return (string_tables.NL + string_tables.ASSERTION_PLACEHOLDER)
+            return (string_tables.ASSERTION_PLACEHOLDER)
 
         source_code = re.sub(pattern, replacement, source_code)
 
