@@ -447,17 +447,18 @@ class ClassParser():
         d_class_list = []
         instance2Class = {}
         for child in param_node.named_children:
-            class_index = 0
-            instance_index = 1
-            if 'final' in ClassParser.match_from_span(child.named_children[0], blob):
-                class_index = 1
-                instance_index = 2
-            class_name = ClassParser.match_from_span(child.named_children[class_index], blob)
-            if not class_name.islower():  # class type
-                d_class_list.append(class_name)
-            param_list.append(class_name)
-            class_instance = ClassParser.match_from_span(child.named_children[instance_index], blob)
-            instance2Class[class_instance] = class_name
+            if len(child.named_children) > 0:
+                class_index = 0
+                instance_index = 1
+                if 'final' in ClassParser.match_from_span(child.named_children[0], blob):
+                    class_index = 1
+                    instance_index = 2
+                class_name = ClassParser.match_from_span(child.named_children[class_index], blob)
+                if not class_name.islower():  # class type
+                    d_class_list.append(class_name)
+                param_list.append(class_name)
+                class_instance = ClassParser.match_from_span(child.named_children[instance_index], blob)
+                instance2Class[class_instance] = class_name
         return param_list, d_class_list, instance2Class
 
     def get_method_names(self, file):

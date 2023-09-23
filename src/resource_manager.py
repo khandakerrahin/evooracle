@@ -10,6 +10,13 @@ class ResourceManager:
         with open(self.json_file_path, 'r') as json_file:
             return json.load(json_file)
 
+    def get_class_details_from_projectname_classname(self, project_name, class_name):
+        filtered_entries = []
+        for entry in self.data:
+            if entry.get('project_name') == project_name and entry.get('class_name') == class_name:
+                return entry
+        return filtered_entries
+    
     def get_classes_with_contains_test(self, project_name):
         filtered_entries = []
         for entry in self.data:
@@ -32,7 +39,6 @@ class ResourceManager:
         return methods
     
     def get_details_by_project_class_and_method(self, project_name, class_name, method_name, onlyEssentials):
-        method_details = []
         for entry in self.data:
             if (
                 entry.get('project_name') == project_name
@@ -51,13 +57,13 @@ class ResourceManager:
                                 "is_public": method.get("is_public"),
                                 "return_type": method.get("return_type")
                             }
-                            method_details.append(details)
+                            return details
                         else:
                             # get all details
-                            method_details.append(method)
+                            return method
                         break
                     
-        print("method_details : "+ str(method_details))               
+        # print("method_details : "+ str(method_details))               
         return method_details
 
     def get_package_by_project_and_class(self, project_name, class_name):
