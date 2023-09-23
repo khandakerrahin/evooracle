@@ -64,7 +64,7 @@ class ResourceManager:
                         break
                     
         # print("method_details : "+ str(method_details))               
-        return method_details
+        return None
 
     def get_package_by_project_and_class(self, project_name, class_name):
         for entry in self.data:
