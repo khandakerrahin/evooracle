@@ -152,9 +152,9 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name):
     
     project_name = os.path.basename(os.path.normpath(project_dir))
     
-    print("Project_name: ", Fore.GREEN + project_name, Style.RESET_ALL)
-    print("Class_name: ", Fore.GREEN + class_name, Style.RESET_ALL)
-    print("Method_name: ", Fore.GREEN + method_name, Style.RESET_ALL)
+    print("Project Name: ", Fore.GREEN + project_name, Style.RESET_ALL)
+    print("Test Class Name: ", Fore.GREEN + class_name, Style.RESET_ALL)
+    print("Test Method Name: ", Fore.GREEN + method_name, Style.RESET_ALL)
     
     # delete the old result
     # remove_single_test_output_dirs(project_dir)
@@ -231,10 +231,18 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name):
     # print("is_public: ", is_public)
     # print("return_type: ", return_type)
 
+
+    print("SOURCE CODE: " + source_code)
+
+    source_code = remove_all_assertions_but_last(source_code)
+
+    print("SIMPLIFIED SOURCE CODE: " + source_code)
+
     # Regular expression pattern to match assertions
     source_code, replaced_assertions = replace_assertions(source_code)
 
-
+    print("UPDATED SOURCE CODE: " + source_code)
+    print("replaced_assertions: "+ '\n'.join(replaced_assertions))
     # prepare the test case
     test_case = package + string_tables.NL +  imports + string_tables.NL + signature + string_tables.NL + string_tables.LEFT_CURLY_BRACE + string_tables.NL + source_code + string_tables.NL + string_tables.RIGHT_CURLY_BRACE
 
@@ -245,8 +253,8 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name):
     # prepare the context
     class_under_test, method_under_test = (focal_methods[0]).split(".")
     
-    print("CUT: ", class_under_test)
-    print("MUT: ", method_under_test)
+    print("CUT: ", Fore.GREEN + class_under_test, Style.RESET_ALL)
+    print("MUT: ", Fore.GREEN + method_under_test, Style.RESET_ALL)
     print()
     
     context = {"project_name": project_name, "class_name": class_under_test, "test_class_path":test_class_path, "test_class_name": test_class_name, "test_method_name":method_name, "method_name": method_under_test, 
@@ -257,7 +265,7 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name):
     replaced_assertions_per_method[method_name] = replaced_assertions
     
     # print(context)
-    whole_process_with_LLM(project_dir, context, test_id)
+    # whole_process_with_LLM(project_dir, context, test_id)
     
     
     print("WHOLE PROCESS FINISHED")
