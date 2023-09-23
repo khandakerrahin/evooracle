@@ -408,15 +408,12 @@ def remain_prompt_tokens(messages):
     return MAX_PROMPT_TOKENS - get_messages_tokens(messages)
 
 
-def whole_process_with_LLM(project_dir, test_num, context, submits, total):
+def whole_process_with_LLM(project_dir, context, test_id):
     """
-    Multiprocess version of start_generation
-    :param test_num:
-    :param base_name:
-    :param base_dir:
-    :param repair:
-    :param submits:
-    :param total:
+    start_generation
+    :param project_dir:
+    :param context:
+    :param test_id:
     :return:
     """
 
@@ -424,13 +421,12 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
     test_class_name = context.get("test_class_name")
     test_class_path = context.get("test_class_path")
     method_name = context.get("method_name")
-
+    
     # context = {"project_name": project_name, "class_name": class_under_test, "method_name": method_under_test,
     #                     "test_method_code": source_code}
 
-    progress = '[' + str(submits) + ' / ' + str(total) + ']'
     # Create subdirectories for each test
-    save_dir = os.path.join(os.path.dirname(test_class_path), str(test_num))
+    save_dir = os.path.join(os.path.dirname(test_class_path), str(test_id))
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     run_temp_dir = os.path.join(save_dir, "runtemp")
@@ -442,7 +438,7 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
             # 1. Ask LLM
             steps += 1
             rounds += 1
-            print(progress, method_name, "test_" + str(test_num), "Asking " + model + "...", "rounds", rounds)
+            print(method_name, "test_" + str(test_id), "Asking " + model + "...", "rounds", rounds)
             llm_file_name = os.path.join(save_dir, str(steps) + "_LLM_" + str(rounds) + ".json")
             # Need to generate new messages
             # rounds = 1
@@ -494,7 +490,7 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
             #                 RectangularCholeskyDecomposition rectangularCholeskyDecomposition0 = new RectangularCholeskyDecomposition(openMapRealMatrix0, 3695);
             #             }"""
             if not status:
-                print(progress, Fore.RED + 'LLM Failed processing messages', Style.RESET_ALL)
+                print(Fore.RED + 'LLM Failed processing messages', Style.RESET_ALL)
                 
                 trimmed_context = context
                 
@@ -529,53 +525,53 @@ def whole_process_with_LLM(project_dir, test_num, context, submits, total):
             # print("Updated test source code:")
             # print(updated_source_code)
             
-            test_passed, fatal_error = extract_and_run(updated_source_code, raw_file_name, test_class_name, test_num, context.get("method_name"),
+            test_passed, fatal_error = extract_and_run(updated_source_code, raw_file_name, test_class_name, test_id, context.get("method_name"),
                                                        project_name, context.get("package"), project_dir)
 
             if test_passed:
                 print(Fore.GREEN + "PASSED!!!")
-                print(progress, Fore.GREEN + method_name, "test_" + str(test_num), "steps", steps, "rounds", rounds,
+                print(Fore.GREEN + method_name, "test_" + str(test_id), "steps", steps, "rounds", rounds,
                       "test passed",
                       Style.RESET_ALL)
                 break
 
-            if not os.path.exists(raw_file_name):
-                print(progress, Fore.RED + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
-                      "no code in raw result", Style.RESET_ALL)
-                break
-
-            # Open up the raw result
-            with open(get_latest_file(save_dir), "r") as f:
-                raw_result = json.load(f)
-
-            # 4. Start imports Repair
-            steps += 1
-            # print(progress, method_id, "test_" + str(test_num), "Fixing imports", "rounds", rounds)
-            imports_file_name = os.path.join(save_dir, str(steps) + "_imports_" + str(rounds) + ".json")
-            # run imports repair
-            source_code = raw_result["source_code"]
-            source_code = repair_imports(source_code, imports)
-            test_passed, fatal_error = extract_and_run(source_code, imports_file_name, class_name, method_id, test_num,
-                                                       project_name,
-                                                       package)
-            if test_passed:
-                print(progress, Fore.GREEN + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
-                      "test passed",
-                      Style.RESET_ALL)
-                break
-            if fatal_error:
-                print(progress, Fore.RED + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
-                      "fatal error",
-                      Style.RESET_ALL)
-                break
-
-            print(progress, Fore.YELLOW + method_id, "test_" + str(test_num), "Test failed, fixing...", "rounds",
-                  rounds,
-                  Style.RESET_ALL)
-            # if not repair:  # If we do not want to repair the code, we don't need to second round
+            # if not os.path.exists(raw_file_name):
+            #     print(progress, Fore.RED + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
+            #           "no code in raw result", Style.RESET_ALL)
             #     break
+
+            # # Open up the raw result
+            # with open(get_latest_file(save_dir), "r") as f:
+            #     raw_result = json.load(f)
+
+            # # 4. Start imports Repair
+            # steps += 1
+            # # print(progress, method_id, "test_" + str(test_num), "Fixing imports", "rounds", rounds)
+            # imports_file_name = os.path.join(save_dir, str(steps) + "_imports_" + str(rounds) + ".json")
+            # # run imports repair
+            # source_code = raw_result["source_code"]
+            # source_code = repair_imports(source_code, imports)
+            # test_passed, fatal_error = extract_and_run(source_code, imports_file_name, class_name, method_id, test_num,
+            #                                            project_name,
+            #                                            package)
+            # if test_passed:
+            #     print(progress, Fore.GREEN + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
+            #           "test passed",
+            #           Style.RESET_ALL)
+            #     break
+            # if fatal_error:
+            #     print(progress, Fore.RED + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
+            #           "fatal error",
+            #           Style.RESET_ALL)
+            #     break
+
+            # print(progress, Fore.YELLOW + method_id, "test_" + str(test_num), "Test failed, fixing...", "rounds",
+            #       rounds,
+            #       Style.RESET_ALL)
+            # # if not repair:  # If we do not want to repair the code, we don't need to second round
+            # #     break
     except Exception as e:
-        print(progress, Fore.RED + str(e), Style.RESET_ALL)
+        print(Fore.RED + str(e), Style.RESET_ALL)
     if os.path.exists(run_temp_dir):
         run_temp_dir = os.path.abspath(run_temp_dir)
         shutil.rmtree(run_temp_dir)
