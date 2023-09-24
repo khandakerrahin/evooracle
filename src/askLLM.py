@@ -44,22 +44,11 @@ def ask_openLLM(messages, save_path):
     :param save_path: The path to save the result.
     :return: [{"role":"user","content":"..."}]
     """
-    # Send a request to OpenAI
-    # Max prompt token exceeded, no need to send request.
-    if get_messages_tokens(messages) > MAX_PROMPT_TOKENS:
-        return False
     
     # Retry 5 times when error occurs
     max_try = 5
     while max_try:
         try:
-            # completion = openai.ChatCompletion.create(messages=messages,
-            #                                           model=model,
-            #                                           temperature=temperature,
-            #                                           top_p=top_p,
-            #                                           frequency_penalty=frequency_penalty,
-            #                                           presence_penalty=presence_penalty)
-
             completion = chain.run(messages)
 
             with open(save_path, "w") as f:
@@ -440,61 +429,26 @@ def whole_process_with_LLM(project_dir, context, test_id):
     steps, rounds = 0, 0
     
     try:
-        while rounds < max_rounds:
+        while rounds < max_attempts:
             # 1. Ask LLM
             steps += 1
             rounds += 1
             print(method_name, "test_" + str(test_id), "Asking " + model + "...", "rounds", rounds)
             llm_file_name = os.path.join(save_dir, str(steps) + "_LLM_" + str(rounds) + ".json")
-            # Need to generate new messages
-            # rounds = 1
+            
             if rounds != 1:
                 trimmed_context = context
                 
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
                 messages = generate_messages(TEMPLATE_NO_DEPS, trimmed_context)
-            else:  # Direction_1 or Direction_3
+            else:
                 messages = generate_messages(TEMPLATE_NO_DEPS, context)
-                # if not context_d_3["c_deps"] and not context_d_3["m_deps"]:  # No dependencies d_1
-                #     context = copy.deepcopy(context_d_1)
-                #     messages = generate_messages(TEMPLATE_NO_DEPS, context)
-                #     if remain_prompt_tokens(messages) < 0:  # Truncate information
-                #         context["information"] = _remove_imports_context(context["information"])
-                #         messages = generate_messages(TEMPLATE_NO_DEPS, context)
-                #         if remain_prompt_tokens(messages) < 0:  # Failed generating messages
-                #             messages = []
-                # else:  # Has dependencies d_3
-                #     context = copy.deepcopy(context_d_3)
-                #     messages = generate_messages(TEMPLATE_WITH_DEPS, context)
-                #     if remain_prompt_tokens(messages) < 0:  # Need Truncate information
-                #         context["full_fm"] = _remove_imports_context(context["full_fm"])
-                #         messages = generate_messages(TEMPLATE_WITH_DEPS, context)
-                #         if remain_prompt_tokens(messages) < 0:  # Failed generating messages
-                #             messages = []
+                
 
-                # if not messages:  # Turn to minimum messages
-                #     context = copy.deepcopy(context_d_1)  # use direction 1 as template
-                #     context["information"] = context_d_3["full_fm"]  # use full_fm d_3 as context
-                #     messages = generate_messages(TEMPLATE_NO_DEPS, context)
-                #     if remain_prompt_tokens(messages) < 0:
-                #         context["information"] = _remove_imports_context(context["information"])
-                #         messages = generate_messages(TEMPLATE_NO_DEPS, context)  # !! MINIMUM MESSAGES!!
-                #         if remain_prompt_tokens(messages) < 0:  # Failed generating messages
-                #             print(progress, Fore.RED + "Tokens not enough, test fatal error...", Style.RESET_ALL)
-                #             break
-                # # print(Fore.BLUE, messages[1]['content'], Style.RESET_ALL)
-
-            print(Fore.BLUE, messages, Style.RESET_ALL)
+            # print(Fore.BLUE, messages, Style.RESET_ALL)
             
-            # status = ask_chatgpt(messages, llm_file_name)
             status = ask_openLLM(messages, llm_file_name)
-            # status = """@Test(timeout = 4000)
-            #             public void test00()  throws Throwable  {
-            #                 OpenMapRealMatrix openMapRealMatrix0 = new OpenMapRealMatrix(3695, 3695);
-            #                 Object object0 = new Object();
-            #                 openMapRealMatrix0.equals(object0);
-            #                 RectangularCholeskyDecomposition rectangularCholeskyDecomposition0 = new RectangularCholeskyDecomposition(openMapRealMatrix0, 3695);
-            #             }"""
+            
             if not status:
                 print(Fore.RED + 'LLM Failed processing messages', Style.RESET_ALL)
                 
@@ -523,59 +477,29 @@ def whole_process_with_LLM(project_dir, context, test_id):
 
             assertions = extract_assertions_from_string(input_string)
             
-            print("LLM Response:")
-            print(status)
+            if assertions:
+                print("Assertion generate: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
+                print("LLM Response Assertion: " + Fore.GREEN + assertions, Style.RESET_ALL)
+                print()
+                
+                evooracle_source_code = re.sub(re.escape(string_tables.ASSERTION_PLACEHOLDER), assertions, context.get("test_case_with_placeholder"))
+                evosuite_source_code = context.get("evosuite_test_case")
+                # print("Updated test source code:")
+                # print(updated_source_code)
+                
+                test_passed, fatal_error = extract_and_run(evooracle_source_code, evosuite_source_code, raw_file_name, test_class_name, test_id, context.get("method_name"),
+                                                        project_name, context.get("package"), project_dir)
 
-            evooracle_source_code = re.sub(re.escape(string_tables.ASSERTION_PLACEHOLDER), assertions, context.get("test_case_with_placeholder"))
-            evosuite_source_code = context.get("evosuite_test_case")
-            # print("Updated test source code:")
-            # print(updated_source_code)
-            
-            test_passed, fatal_error = extract_and_run(evooracle_source_code, evosuite_source_code, raw_file_name, test_class_name, test_id, context.get("method_name"),
-                                                       project_name, context.get("package"), project_dir)
-
-            if test_passed:
-                print(Fore.GREEN + "PASSED!!!")
-                print(Fore.GREEN + method_name, "test_" + str(test_id), "steps", steps, "rounds", rounds,
-                      "test passed",
-                      Style.RESET_ALL)
+                if test_passed:
+                    print(Fore.GREEN + "PASSED!!!")
+                    print(Fore.GREEN + method_name, "test_" + str(test_id), "steps", steps, "rounds", rounds,
+                        "test passed",
+                        Style.RESET_ALL)
+                    break
                 break
+            else:
+                print("Assertion generate: " + Fore.RED + "FAILED", Style.RESET_ALL)  
 
-            # if not os.path.exists(raw_file_name):
-            #     print(progress, Fore.RED + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
-            #           "no code in raw result", Style.RESET_ALL)
-            #     break
-
-            # # Open up the raw result
-            # with open(get_latest_file(save_dir), "r") as f:
-            #     raw_result = json.load(f)
-
-            # # 4. Start imports Repair
-            # steps += 1
-            # # print(progress, method_id, "test_" + str(test_num), "Fixing imports", "rounds", rounds)
-            # imports_file_name = os.path.join(save_dir, str(steps) + "_imports_" + str(rounds) + ".json")
-            # # run imports repair
-            # source_code = raw_result["source_code"]
-            # source_code = repair_imports(source_code, imports)
-            # test_passed, fatal_error = extract_and_run(source_code, imports_file_name, class_name, method_id, test_num,
-            #                                            project_name,
-            #                                            package)
-            # if test_passed:
-            #     print(progress, Fore.GREEN + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
-            #           "test passed",
-            #           Style.RESET_ALL)
-            #     break
-            # if fatal_error:
-            #     print(progress, Fore.RED + method_id, "test_" + str(test_num), "steps", steps, "rounds", rounds,
-            #           "fatal error",
-            #           Style.RESET_ALL)
-            #     break
-
-            # print(progress, Fore.YELLOW + method_id, "test_" + str(test_num), "Test failed, fixing...", "rounds",
-            #       rounds,
-            #       Style.RESET_ALL)
-            # # if not repair:  # If we do not want to repair the code, we don't need to second round
-            # #     break
     except Exception as e:
         print(Fore.RED + str(e), Style.RESET_ALL)
     if os.path.exists(run_temp_dir):

@@ -299,6 +299,12 @@ def remove_all_assertions_but_last(source_code):
 
     return source_code
 
+def remove_empty_lines(input_text):
+    lines = input_text.split('\n')
+    non_empty_lines = [line for line in lines if line.strip()]
+    result = '\n'.join(non_empty_lines)
+    return result
+
 def replace_assertions(source_code):
     # Regular expression pattern to match assertions
     # Define the assertions to be replaced
