@@ -232,19 +232,23 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name):
     # print("return_type: ", return_type)
 
 
-    print("SOURCE CODE: " + source_code)
+    # print("SOURCE CODE: " + source_code)
 
     source_code = remove_all_assertions_but_last(source_code)
 
-    print("SIMPLIFIED SOURCE CODE: " + source_code)
+    # print("SIMPLIFIED SOURCE CODE: " + source_code)
+
+    # prepare the test case
+    evosuite_test_case = package + string_tables.NL +  imports + string_tables.NL + signature + string_tables.NL + string_tables.LEFT_CURLY_BRACE + string_tables.NL + source_code + string_tables.NL + string_tables.RIGHT_CURLY_BRACE
 
     # Regular expression pattern to match assertions
     source_code, replaced_assertions = replace_assertions(source_code)
 
-    print("UPDATED SOURCE CODE: " + source_code)
-    print("replaced_assertions: "+ '\n'.join(replaced_assertions))
+    # print("UPDATED SOURCE CODE: " + source_code)
+    # print("replaced_assertions: "+ '\n'.join(replaced_assertions))
+    
     # prepare the test case
-    test_case = package + string_tables.NL +  imports + string_tables.NL + signature + string_tables.NL + string_tables.LEFT_CURLY_BRACE + string_tables.NL + source_code + string_tables.NL + string_tables.RIGHT_CURLY_BRACE
+    test_case_with_placeholder = package + string_tables.NL +  imports + string_tables.NL + signature + string_tables.NL + string_tables.LEFT_CURLY_BRACE + string_tables.NL + source_code + string_tables.NL + string_tables.RIGHT_CURLY_BRACE
 
     test_method_details["source_code_with_placeholder"] = source_code
 
@@ -259,13 +263,13 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name):
     
     context = {"project_name": project_name, "class_name": class_under_test, "test_class_path":test_class_path, "test_class_name": test_class_name, "test_method_name":method_name, "method_name": method_under_test, 
             "method_details": manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, True), 
-            "test_method_code": source_code, "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER, "test_case":test_case, "package":stripped_package}
+            "test_method_code": source_code, "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER, "test_case_with_placeholder":test_case_with_placeholder, "package":stripped_package, "evosuite_test_case":evosuite_test_case}
     
     # Store replaced assertions for this method in the dictionary
     replaced_assertions_per_method[method_name] = replaced_assertions
     
     # print(context)
-    # whole_process_with_LLM(project_dir, context, test_id)
+    whole_process_with_LLM(project_dir, context, test_id)
     
     
     print("WHOLE PROCESS FINISHED")

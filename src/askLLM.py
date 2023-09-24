@@ -333,7 +333,7 @@ def extract_code(string):
     return has_code, extracted_code, has_syntactic_error
 
 
-def extract_and_run(input_string, output_path, class_name, test_num, method_name, project_name, package, project_dir):
+def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, class_name, test_num, method_name, project_name, package, project_dir):
     """
     Extract the code and run it
     :param project_name:
@@ -346,7 +346,7 @@ def extract_and_run(input_string, output_path, class_name, test_num, method_name
     """
     result = {}
     # 1. Extract the code
-    has_code, extracted_code, has_syntactic_error = extract_code(input_string)
+    has_code, extracted_code, has_syntactic_error = extract_code(evooracle_source_code)
     if not has_code:
         return False, True
     result["has_code"] = has_code
@@ -365,10 +365,15 @@ def extract_and_run(input_string, output_path, class_name, test_num, method_name
 
     out_dir = os.path.dirname(os.path.dirname(output_path))
 
-    renamed_class = class_name + '_' + method_name + '_' + str(test_num) + string_tables.EVOORACLE_SIGNATURE
-    renamed_class_source_code = change_class_name(extracted_code, class_name, renamed_class)
+    renamed_class_evooracle = class_name + '_' + method_name + '_' + str(test_num) + string_tables.EVOORACLE_SIGNATURE
+    renamed_class_source_code_evooracle = change_class_name(extracted_code, class_name, renamed_class_evooracle)
 
-    test_file_name = export_method_test_case(out_dir, renamed_class, renamed_class_source_code)
+    evooracle_test_file_name = export_method_test_case(out_dir, renamed_class_evooracle, renamed_class_source_code_evooracle)
+    
+    renamed_class_evosuite = class_name + '_' + method_name + '_' + str(test_num) + string_tables.EVOSUITE_SIGNATURE
+    renamed_class_source_code_evosuite = change_class_name(evosuite_source_code, class_name, renamed_class_evosuite)
+
+    evosuite_test_file_name = export_method_test_case(out_dir, renamed_class_evosuite, renamed_class_source_code_evosuite)
 
     # run test
     response_dir = os.path.abspath(out_dir)
@@ -378,7 +383,8 @@ def extract_and_run(input_string, output_path, class_name, test_num, method_name
     # print("target_dir: " + target_dir)
     # print("test_file_name: " + test_file_name)
 
-    Task.test(response_dir, target_dir, test_file_name, package, renamed_class)
+    Task.test(response_dir, target_dir, evooracle_test_file_name, package, renamed_class_evooracle)
+    Task.test(response_dir, target_dir, evosuite_test_file_name, package, renamed_class_evosuite)
 
     # 3. Read the result
     if "compile_error.txt" in os.listdir(out_dir):
@@ -520,12 +526,12 @@ def whole_process_with_LLM(project_dir, context, test_id):
             print("LLM Response:")
             print(status)
 
-            updated_source_code = re.sub(re.escape(string_tables.ASSERTION_PLACEHOLDER), assertions, context.get("test_case"))
-
+            evooracle_source_code = re.sub(re.escape(string_tables.ASSERTION_PLACEHOLDER), assertions, context.get("test_case_with_placeholder"))
+            evosuite_source_code = context.get("evosuite_test_case")
             # print("Updated test source code:")
             # print(updated_source_code)
             
-            test_passed, fatal_error = extract_and_run(updated_source_code, raw_file_name, test_class_name, test_id, context.get("method_name"),
+            test_passed, fatal_error = extract_and_run(evooracle_source_code, evosuite_source_code, raw_file_name, test_class_name, test_id, context.get("method_name"),
                                                        project_name, context.get("package"), project_dir)
 
             if test_passed:
