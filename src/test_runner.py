@@ -103,9 +103,9 @@ class TestRunner:
         # if not self.compile(test_file, compiled_test_dir, compiler_output):
         #     return False
         print(Fore.GREEN + "Test compiled successfully", Style.RESET_ALL)
-        print("test_file: "+test_file)
-        print("test_path: "+test_path)
-        print("target_path: "+target_path)
+        # print("test_file: "+test_file)
+        # print("test_path: "+test_path)
+        # print("target_path: "+target_path)
         
         # Define your commands
         commands = [
@@ -124,6 +124,7 @@ class TestRunner:
         ]
         # Run commands sequentially
         for command in commands:
+            break
             if not self.run_command(command, working_directory=target_path):
                 print("Command failed. Aborting.")
                 break

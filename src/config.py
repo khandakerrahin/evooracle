@@ -6,7 +6,7 @@ config.read("../config/config.ini")
 
 process_number = eval(config.get("DEFAULT", "process_number"))
 test_number = eval(config.get("DEFAULT", "test_number"))
-max_rounds = eval(config.get("DEFAULT", "max_rounds"))
+max_attempts = eval(config.get("DEFAULT", "max_attempts"))
 MAX_PROMPT_TOKENS = eval(config.get("DEFAULT", "MAX_PROMPT_TOKENS"))
 MIN_ERROR_TOKENS = eval(config.get("DEFAULT", "MIN_ERROR_TOKENS"))
 TIMEOUT = eval(config.get("DEFAULT", "TIMEOUT"))
