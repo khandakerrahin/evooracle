@@ -102,7 +102,7 @@ class TestRunner:
         """
         # if not self.compile(test_file, compiled_test_dir, compiler_output):
         #     return False
-        print(Fore.GREEN + "Test compiled successfully", Style.RESET_ALL)
+        print("Compile: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
         # print("test_file: "+test_file)
         # print("test_path: "+test_path)
         # print("target_path: "+target_path)
@@ -110,7 +110,7 @@ class TestRunner:
         # Define your commands
         commands = [
             "mvn compile",
-            "export EVOSUITE='java -jar {}/evosuite-1.0.6.jar'".format(target_path),
+            # "export EVOSUITE='java -jar {}/evosuite-1.0.6.jar'".format(target_path),
             "mvn dependency:copy-dependencies",
             "java -version",
             # "export CLASSPATH=target/classes:evosuite-standalone-runtime-1.0.6.jar:evosuite-tests:target/dependency/junit-4.12.j/ar:target/dependency/hamcrest-core-1.3.jar",

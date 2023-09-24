@@ -455,8 +455,8 @@ def whole_process_with_LLM(project_dir, context, test_id):
             
             if assertions:
                 print("Assertion generate: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
-                print("LLM Response Assertion: " + Fore.GREEN + assertions, Style.RESET_ALL)
-                print()
+                # print("LLM Response Assertion: " + Fore.GREEN + assertions, Style.RESET_ALL)
+                # print()
                 
                 evooracle_source_code = re.sub(re.escape(string_tables.ASSERTION_PLACEHOLDER), assertions, context.get("test_case_with_placeholder"))
                 evosuite_source_code = context.get("evosuite_test_case")
