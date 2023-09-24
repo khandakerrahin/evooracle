@@ -37,34 +37,17 @@ llm = GPT4All(model=PATH, backend="gptj", callbacks=callbacks, verbose=True, tem
 template = PromptTemplate(input_variables=['action'], template="""{action}""")
 chain = LLMChain(llm=llm, prompt=template, verbose=True) 
 
-def ask_openLLM(messages, save_path):
-    """
-    Send messages to Open Source LLM, and save its response.
-    :param messages: The messages to send to LLM.
-    :param save_path: The path to save the result.
-    :return: [{"role":"user","content":"..."}]
-    """
-    
+def ask_openLLM(messages):
     # Retry 5 times when error occurs
     max_try = 5
     while max_try:
         try:
             completion = chain.run(messages)
-
-            with open(save_path, "w") as f:
-                json.dump(completion, f)
-            return True
+            return completion
         except Exception as e:
             print(Fore.RED + str(e), Style.RESET_ALL)
-            if "This model's maximum context length is 4097 tokens." in str(e):
-                break
-            time.sleep(10)
-            # If rate limit reached we wait a random sleep time
-            if "Rate limit reached" in str(e):
-                sleep_time = random.randint(60, 120)
-                time.sleep(sleep_time)
         max_try -= 1
-    return False
+    return ""
 
 def ask_chatgpt(messages, save_path):
     """
@@ -349,8 +332,8 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
         shutil.rmtree(temp_dir)
     os.makedirs(temp_dir)
 
-    print("Project Name: " + project_name)
-    print("Class Name: " + class_name)
+    # print("Project Name: " + project_name)
+    # print("Class Name: " + class_name)
 
     out_dir = os.path.dirname(os.path.dirname(output_path))
 
@@ -417,8 +400,8 @@ def whole_process_with_LLM(project_dir, context, test_id):
     test_class_path = context.get("test_class_path")
     method_name = context.get("method_name")
     
-    # context = {"project_name": project_name, "class_name": class_under_test, "method_name": method_under_test,
-    #                     "test_method_code": source_code}
+    # context = {"project_name", "class_name", "test_class_path", "test_class_name", "test_method_name", "method_name", 
+    #               "method_details", "test_method_code", "assertion_placeholder", "test_case_with_placeholder", "package", "evosuite_test_case"}
 
     # Create subdirectories for each test
     save_dir = os.path.join(os.path.dirname(test_class_path), str(test_id))
@@ -436,35 +419,28 @@ def whole_process_with_LLM(project_dir, context, test_id):
             print(method_name, "test_" + str(test_id), "Asking " + model + "...", "rounds", rounds)
             llm_file_name = os.path.join(save_dir, str(steps) + "_LLM_" + str(rounds) + ".json")
             
-            if rounds != 1:
+            # context = {"project_name", "class_name", "test_class_path", "test_class_name", "test_method_name", "method_name", 
+            #           "method_details", "test_method_code", "assertion_placeholder", "test_case_with_placeholder", "package", "evosuite_test_case"
+            if rounds > 2:
+                # Third round : super trimmed prompt
+                trimmed_context = context
+                
+                trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
+                messages = generate_messages(TEMPLATE_NO_DEPS, trimmed_context)
+            if rounds > 1:
+                # Second round : trimmed prompt
                 trimmed_context = context
                 
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
                 messages = generate_messages(TEMPLATE_NO_DEPS, trimmed_context)
             else:
+                # first round : normal prompt
                 messages = generate_messages(TEMPLATE_NO_DEPS, context)
-                
 
             # print(Fore.BLUE, messages, Style.RESET_ALL)
             
-            status = ask_openLLM(messages, llm_file_name)
-            
-            if not status:
-                print(Fore.RED + 'LLM Failed processing messages', Style.RESET_ALL)
-                
-                trimmed_context = context
-                
-                trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
-                messages = generate_messages(TEMPLATE_NO_DEPS, trimmed_context)
-                print(Fore.BLUE, messages, Style.RESET_ALL)
-            
-                # status = ask_chatgpt(messages, llm_file_name)
-                status = ask_openLLM(messages, llm_file_name)
-                if not status:
-                    break
-
-            with open(llm_file_name, "r") as f:
-                llm_result = json.load(f)
+            print("Attempt: " + Fore.YELLOW + str(rounds), Style.RESET_ALL)  
+            llm_result = ask_openLLM(messages)
 
             # 2. Extract information from LLM, and RUN save the result
             steps += 1
