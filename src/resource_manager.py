@@ -53,15 +53,12 @@ class ResourceManager:
                                 "signature": method.get("signature"),
                                 "parameters": method.get("parameters"),
                                 "dependencies": method.get("dependencies"),
-                                "use_field": method.get("use_field"),
-                                "is_public": method.get("is_public"),
                                 "return_type": method.get("return_type")
                             }
                             return details
                         else:
                             # get all details
                             return method
-                        break
                     
         # print("method_details : "+ str(method_details))               
         return None

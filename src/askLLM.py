@@ -426,16 +426,16 @@ def whole_process_with_LLM(project_dir, context, test_id):
                 trimmed_context = context
                 
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
-                messages = generate_messages(TEMPLATE_NO_DEPS, trimmed_context)
+                messages = generate_messages(TEMPLATE_BASIC, trimmed_context)
             if rounds > 1:
                 # Second round : trimmed prompt
                 trimmed_context = context
                 
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
-                messages = generate_messages(TEMPLATE_NO_DEPS, trimmed_context)
+                messages = generate_messages(TEMPLATE_BASIC, trimmed_context)
             else:
                 # first round : normal prompt
-                messages = generate_messages(TEMPLATE_NO_DEPS, context)
+                messages = generate_messages(TEMPLATE_BASIC, context)
 
             # print(Fore.BLUE, messages, Style.RESET_ALL)
             
