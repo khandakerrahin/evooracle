@@ -90,7 +90,7 @@ def prepare_test_cases_entries(project_dir):
     if not os.path.exists(csv_entries_file):
         # If it doesn't exist, create the file with a header row
         with open(csv_entries_file, mode='w', newline='') as csv_file:
-            fieldnames = ["ID"] + ["project_dir", "project_name", "class_name", "method_name"]
+            fieldnames = ["ID"] + ["project_dir", "class_name", "method_name"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -105,7 +105,7 @@ def prepare_test_cases_entries(project_dir):
     new_id = last_id + 1
 
     with open(csv_entries_file, mode='a', newline='') as csv_file:
-        fieldnames = ["ID"] + ["project_dir", "project_name", "class_name", "method_name"]
+        fieldnames = ["ID"] + ["project_dir", "class_name", "method_name"]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         
         # Write the header row
@@ -131,7 +131,6 @@ def prepare_test_cases_entries(project_dir):
                 writer.writerow({
                     "ID": new_id,
                     "project_dir": project_dir,
-                    "project_name": project_name,
                     "class_name": class_name,
                     "method_name": method_name
                 })
@@ -139,7 +138,7 @@ def prepare_test_cases_entries(project_dir):
             
         print("CSV generation: ", Fore.GREEN + "SUCCESS", Style.RESET_ALL)
 
-def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name):
+def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, consider_dev_comments):
     """
     - Get test details
     - Replaces Assertions
@@ -282,15 +281,15 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name):
         with open(final_result_file, mode='w', newline='') as csv_file:
             # test_id, time, attempts, assertion_generated, is_compiled, is_run, mutation_score, CUT, MUT, project_dir, eo_assertions, 
             fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "is_compiled", "is_run", 
-                          "eo_mutation_score", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", "model", "temperature", 
-                          "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", "repeat_last_n"]
+                          "eo_mutation_score", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", "used_developer_comments", "model", "temperature", 
+                          "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", "repeat_last_n", "prompts_and_responses"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
 
     # Get the current time in milliseconds
     start_time = time.perf_counter()
     
-    result = whole_process_with_LLM(project_dir, context, test_id, llm_name)
+    result = whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev_comments)
     
     end_time = time.perf_counter()
 
@@ -298,8 +297,8 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name):
     
     with open(final_result_file, mode='a', newline='') as csv_file:
         fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "is_compiled", "is_run", 
-                          "eo_mutation_score", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", "model", "temperature", 
-                          "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", "repeat_last_n"]
+                          "eo_mutation_score", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", "used_developer_comments", "model", "temperature", 
+                          "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", "repeat_last_n", "prompts_and_responses"]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         
         writer.writerow({
@@ -324,6 +323,8 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name):
             "n_batch": n_batch,
             "repeat_penalty": repeat_penalty,
             "repeat_last_n": repeat_last_n,
+            "used_developer_comments": consider_dev_comments,
+            "prompts_and_responses": result["prompts_and_responses"]
         })
     
 

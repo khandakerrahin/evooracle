@@ -326,11 +326,15 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
         "is_run": False,
         "es_mutation_score": 0,
         "eo_mutation_score": 0,
+        "prompts_and_responses": None,
     }
+
+    prompts_and_responses = []
+
     # 1. Extract the code
     has_code, extracted_code, has_syntactic_error = extract_code(evooracle_source_code)
     if not has_code:
-        return False, True
+        return evo_result
     result["has_code"] = has_code
     result["source_code"] = extracted_code
     if package:
@@ -381,7 +385,7 @@ def remain_prompt_tokens(messages):
     return MAX_PROMPT_TOKENS - get_messages_tokens(messages)
 
 
-def whole_process_with_LLM(project_dir, context, test_id, llm_name):
+def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev_comments):
     """
     start_generation
     :param project_dir:
@@ -417,8 +421,16 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name):
                 "es_mutation_score": 0,
                 "eo_mutation_score": 0,
                 "eo_assertions": None,
+                "prompts_and_responses": None,
             }
     
+    prompts_and_responses = []
+
+    if consider_dev_comments:
+        prompt_template = TEMPLATE_WITH_DEV_COMMENTS
+    else:
+        prompt_template = TEMPLATE_BASIC
+
     try:
         while rounds < max_attempts:
             # 1. Ask LLM
@@ -438,7 +450,7 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name):
                     trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 300)
 
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
-                messages = generate_messages(TEMPLATE_WITH_DEV_COMMENTS, trimmed_context)
+                messages = generate_messages(prompt_template, trimmed_context)
             if rounds > 1:
                 # Second round : trimmed prompt
                 trimmed_context = context
@@ -448,16 +460,17 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name):
                     trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 300)
 
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
-                messages = generate_messages(TEMPLATE_WITH_DEV_COMMENTS, trimmed_context)
+                messages = generate_messages(prompt_template, trimmed_context)
             else:
                 # first round : normal prompt
-                messages = generate_messages(TEMPLATE_WITH_DEV_COMMENTS, context)
+                messages = generate_messages(prompt_template, context)
 
             # print(Fore.BLUE, messages, Style.RESET_ALL)
             
             print("Attempt: " + Fore.YELLOW + str(rounds), Style.RESET_ALL)  
             llm_result = ask_openLLM(messages)
 
+            prompts_and_responses.append({"prompt":messages,"response":llm_result})
             # 2. Extract information from LLM, and RUN save the result
             steps += 1
 
@@ -472,7 +485,7 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name):
                 
                 if not assertions.endswith(";"):
                     assertions += ";"
-                    
+
                 evooracle_source_code = re.sub(re.escape(string_tables.ASSERTION_PLACEHOLDER), assertions, context.get("test_case_with_placeholder"))
                 evosuite_source_code = context.get("evosuite_test_case")
                 # print("Updated test source code:")
@@ -491,7 +504,7 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name):
             else:
                 print("Assertion generate: " + Fore.RED + "FAILED", Style.RESET_ALL)  
         
-        result["attempts"] = str(rounds)
+        result["attempts"] = rounds
 
     except Exception as e:
         print(Fore.RED + str(e), Style.RESET_ALL)
@@ -501,8 +514,10 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name):
     assertion_generation_time = (end_time - start_time) * 1000
 
     result["assertion_generation_time"] = assertion_generation_time
+    result["prompts_and_responses"] = prompts_and_responses
 
     return result
+
 def trim_string_to_substring(original_string, substring):
     # Find the index of the substring
     substring_index = original_string.find(substring)
@@ -570,7 +585,7 @@ def whole_process(test_num, base_name, base_dir, repair, submits, total):
         return strings
 
     try:
-        while rounds < max_rounds:
+        while rounds < max_attempts:
             # 1. Ask LLM
             steps += 1
             rounds += 1
