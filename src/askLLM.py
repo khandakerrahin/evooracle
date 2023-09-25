@@ -42,6 +42,7 @@ template = PromptTemplate(input_variables=['action'], template="""{action}""")
 chain = LLMChain(llm=llm, prompt=template, verbose=True) 
 
 def ask_openLLM(messages):
+    # return 'assertTrue(nodeInstaller4.getNodeVersion().equals("/node"));\n  assertFalse(nodeInstaller4.getNodeVersion().equals("/node"));\n  assertSame(nodeInstaller4.getNodeVersion().equals("/node"));'
     # Retry 5 times when error occurs
     max_try = 5
     while max_try:
@@ -476,13 +477,15 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
 
             raw_file_name = os.path.join(save_dir, str(steps) + "_raw_" + str(rounds) + ".json")
 
-            assertions = extract_assertions_from_string(llm_result)
+            assertions = extract_first_assertion_from_string(llm_result)
             
             if assertions:
                 print("Assertion generate: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
                 # print("LLM Response Assertion: " + Fore.GREEN + assertions, Style.RESET_ALL)
                 # print()
                 
+                end_time = time.perf_counter()
+
                 if not assertions.endswith(";"):
                     assertions += ";"
 
@@ -502,14 +505,16 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
                 
                 break
             else:
-                print("Assertion generate: " + Fore.RED + "FAILED", Style.RESET_ALL)  
+                print("Assertion generate: " + Fore.RED + "FAILED", Style.RESET_ALL)
+                end_time = time.perf_counter()
         
         result["attempts"] = rounds
 
     except Exception as e:
         print(Fore.RED + str(e), Style.RESET_ALL)
+        end_time = time.perf_counter()
     
-    end_time = time.perf_counter()
+    # end_time = time.perf_counter()
 
     assertion_generation_time = (end_time - start_time) * 1000
 

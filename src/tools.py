@@ -368,3 +368,29 @@ def extract_assertions_from_string(input_string):
 
     extracted_assertions = '\n'.join(extracted_assertions)
     return extracted_assertions
+
+def extract_first_assertion_from_string(input_string):
+    # Regular expression pattern to match assertions
+    assertion_patterns = [
+        r'(\w+\.)?assert\s*\(.+?\);',           # Matches ClassName.assert(...)
+        r'(\w+\.)?assertTrue\s*\(.+?\);',       # Matches ClassName.assertTrue(...)
+        r'(\w+\.)?assertNull\s*\(.+?\);',       # Matches ClassName.assertNull(...)
+        r'(\w+\.)?fail\s*\(.+?\);',             # Matches ClassName.fail(...)
+        r'(\w+\.)?assertFalse\s*\(.+?\);',      # Matches ClassName.assertFalse(...)
+        r'(\w+\.)?assertNotEquals\s*\(.+?\);',  # Matches ClassName.assertNotEquals(...)
+        r'(\w+\.)?assertEquals\s*\(.+?\);',     # Matches ClassName.assertEquals(...)
+        r'(\w+\.)?assertArrayEquals\s*\(.+?\);',# Matches ClassName.assertArrayEquals(...)
+        r'(\w+\.)?assertNotNull\s*\(.+?\);',    # Matches ClassName.assertNotNull(...)
+        r'(\w+\.)?assertNotSame\s*\(.+?\);',    # Matches ClassName.assertNotSame(...)
+        r'(\w+\.)?assertSame\s*\(.+?\);',       # Matches ClassName.assertSame(...)
+        r'(\w+\.)?assertThat\s*\(.+?\);',       # Matches ClassName.assertThat(...)
+    ]
+
+    # Iterate through each pattern and find matches in the input string
+    for pattern in assertion_patterns:
+        match = re.search(pattern, input_string)
+        if match:
+            return match.group(0)
+
+    
+    return ""
