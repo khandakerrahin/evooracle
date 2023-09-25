@@ -20,44 +20,22 @@ def clear_dataset(project_dir):
     if os.path.exists(ds_dir):
         shutil.rmtree(ds_dir)
 
-def run(test_id, project_dir, class_name, method_name):
-    
-    # Clear previous entries from DB
-    # drop_table()
-
-    # Create the table
-    # create_table()
-
-    # Parse project
-    # info_path = Task.parse(project_dir)
-
-    # # Parse data
-    # parse_data(info_path, (project_dir+db_file))
-
-    # clear last dataset
-    # clear_dataset()
-
-    # # Export data for multi-process
-    # export_data()
-
-    project_name = os.path.basename(os.path.normpath(project_dir))
-
+def run(test_id, project_dir, class_name, method_name, llm_name):
     # Start the whole process
-    prepare_test_cases(test_id, project_dir, class_name, method_name)
-    # prepare_test_cases_entries(project_dir)
-    # Export the result
-    # result_analysis()
+    prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name)
+    
 
 if __name__ == '__main__':
     project_dir = default_project_dir
     # Check if a command-line argument (project_dir) is provided
-    if len(sys.argv) > 4:
+    if len(sys.argv) > 5:
         test_id = sys.argv[1]
         project_dir = sys.argv[2]
         class_name = sys.argv[3]
         method_name = sys.argv[4]
+        llm_name = sys.argv[5]
         
-        run(test_id, project_dir, class_name, method_name)
+        run(test_id, project_dir, class_name, method_name, llm_name)
     else:
         print(Fore.RED + "Run failed, missing arguments.", Style.RESET_ALL)        
     

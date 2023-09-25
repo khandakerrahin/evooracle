@@ -1,5 +1,7 @@
 import copy
+import csv
 import os.path
+import sys
 import time
 import openai
 from tools import *
@@ -9,6 +11,8 @@ import javalang
 import jinja2
 from colorama import Fore, Style, init
 from task import Task
+import time
+
 
 # Import depdencies 
 from langchain.llms import GPT4All, OpenAI
@@ -25,14 +29,14 @@ init()
 env = jinja2.Environment(loader=jinja2.FileSystemLoader('../prompt'))
 
 # BASE_PATH = '/home/shaker/models/GPT4All/'
-BASE_PATH = '/media/shaker/infinity/llms/'
+BASE_PATH = LLM_BASE_PATH
 # PATH = f'{BASE_PATH}{"ggml-gpt4all-l13b-snoozy.bin"}'
-PATH = f'{BASE_PATH}{model}'
+PATH = f'{BASE_PATH}{sys.argv[5]}'
 
 # Callbacks support token-wise streaming
 callbacks = [StreamingStdOutCallbackHandler()]
 
-llm = GPT4All(model=PATH, backend="gptj", callbacks=callbacks, verbose=True, temp=0.1, n_predict=4096, top_p=.95, top_k=40, n_batch=9, repeat_penalty=1.1, repeat_last_n=1.1)
+llm = GPT4All(model=PATH, backend="gptj", callbacks=callbacks, verbose=True, temp=temperature, n_predict=n_predict, top_p=top_p, top_k=top_k, n_batch=n_batch, repeat_penalty=repeat_penalty, repeat_last_n=repeat_last_n)
 
 template = PromptTemplate(input_variables=['action'], template="""{action}""")
 chain = LLMChain(llm=llm, prompt=template, verbose=True) 
@@ -317,6 +321,12 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
     :return:
     """
     result = {}
+    evo_result = {
+        "is_compiled": False,
+        "is_run": False,
+        "es_mutation_score": 0,
+        "eo_mutation_score": 0,
+    }
     # 1. Extract the code
     has_code, extracted_code, has_syntactic_error = extract_code(evooracle_source_code)
     if not has_code:
@@ -355,38 +365,23 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
     # print("target_dir: " + target_dir)
     # print("test_file_name: " + test_file_name)
 
-    Task.test(response_dir, target_dir, evooracle_test_file_name, package, renamed_class_evooracle)
-    Task.test(response_dir, target_dir, evosuite_test_file_name, package, renamed_class_evosuite)
+    test_result_eo_c, test_result_eo_r, test_result_eo_ms = Task.test(response_dir, target_dir, evooracle_test_file_name, package, renamed_class_evooracle)
+    test_result_es_c, test_result_es_r, test_result_es_ms = Task.test(response_dir, target_dir, evosuite_test_file_name, package, renamed_class_evosuite)
 
     # 3. Read the result
-    if "compile_error.txt" in os.listdir(out_dir):
-        with open(os.path.join(out_dir, "compile_error.txt"), "r") as f:
-            result["compile_error"] = f.read()
-
-    if "runtime_error.txt" in os.listdir(out_dir):
-        with open(os.path.join(out_dir, "runtime_error.txt"), "r") as f:
-            result["runtime_error"] = f.read()
-    if "coverage.html" in os.listdir(out_dir):
-        result["coverage_html"] = True
-    if "coverage.xml" in os.listdir(out_dir):
-        result["coverage_xml"] = True
-
-    test_passed = False
-    if "coverage_xml" in result or "coverage_html" in result:
-        test_passed = True
-
-    # 4. Save the result
-    with open(output_path, "w") as f:
-        json.dump(result, f)
-
-    return test_passed, False
+    evo_result["is_compiled"] = test_result_eo_c
+    evo_result["is_run"] = test_result_eo_r
+    evo_result["eo_mutation_score"] = test_result_eo_ms
+    evo_result["es_mutation_score"] = test_result_es_ms
+    
+    return evo_result
 
 
 def remain_prompt_tokens(messages):
     return MAX_PROMPT_TOKENS - get_messages_tokens(messages)
 
 
-def whole_process_with_LLM(project_dir, context, test_id):
+def whole_process_with_LLM(project_dir, context, test_id, llm_name):
     """
     start_generation
     :param project_dir:
@@ -407,17 +402,29 @@ def whole_process_with_LLM(project_dir, context, test_id):
     save_dir = os.path.join(os.path.dirname(test_class_path), str(test_id))
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
-    run_temp_dir = os.path.join(save_dir, "runtemp")
-
+    
     steps, rounds = 0, 0
+
+    # Get the current time in milliseconds
+    start_time = time.perf_counter()
+    
+    result = {
+                "attempts": 0, 
+                "assertion_generated": False,
+                "assertion_generation_time": 0,
+                "is_compiled": False,
+                "is_run": False,
+                "es_mutation_score": 0,
+                "eo_mutation_score": 0,
+                "eo_assertions": None,
+            }
     
     try:
         while rounds < max_attempts:
             # 1. Ask LLM
             steps += 1
             rounds += 1
-            print(method_name, "test_" + str(test_id), "Asking " + model + "...", "rounds", rounds)
-            llm_file_name = os.path.join(save_dir, str(steps) + "_LLM_" + str(rounds) + ".json")
+            print(method_name, "test_" + str(test_id), "Asking " + llm_name + "...", "rounds", rounds)
             
             # context = {"project_name", "class_name", "test_class_path", "test_class_name", "test_method_name", "method_name", 
             #           "method_details", "test_method_code", "assertion_placeholder", "test_case_with_placeholder", "package", "evosuite_test_case", "developer_comments"
@@ -456,41 +463,46 @@ def whole_process_with_LLM(project_dir, context, test_id):
 
             raw_file_name = os.path.join(save_dir, str(steps) + "_raw_" + str(rounds) + ".json")
 
-            # extract the test and save the result in raw_file_name
-            # input_string = gpt_result["choices"][0]['message']["content"]
-            input_string = llm_result
-
-            assertions = extract_assertions_from_string(input_string)
+            assertions = extract_assertions_from_string(llm_result)
             
             if assertions:
                 print("Assertion generate: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
                 # print("LLM Response Assertion: " + Fore.GREEN + assertions, Style.RESET_ALL)
                 # print()
                 
+                if not assertions.endswith(";"):
+                    assertions += ";"
+                    
                 evooracle_source_code = re.sub(re.escape(string_tables.ASSERTION_PLACEHOLDER), assertions, context.get("test_case_with_placeholder"))
                 evosuite_source_code = context.get("evosuite_test_case")
                 # print("Updated test source code:")
                 # print(updated_source_code)
                 
-                test_passed, fatal_error = extract_and_run(evooracle_source_code, evosuite_source_code, raw_file_name, test_class_name, test_id, context.get("method_name"),
+                evo_result = extract_and_run(evooracle_source_code, evosuite_source_code, raw_file_name, test_class_name, test_id, context.get("method_name"),
                                                         project_name, context.get("package"), project_dir)
-
-                if test_passed:
-                    print(Fore.GREEN + "PASSED!!!")
-                    print(Fore.GREEN + method_name, "test_" + str(test_id), "steps", steps, "rounds", rounds,
-                        "test passed",
-                        Style.RESET_ALL)
-                    break
+                result["assertion_generated"] = True
+                result["is_compiled"] = evo_result["is_compiled"]
+                result["is_run"] = evo_result["is_run"]
+                result["es_mutation_score"] = evo_result["es_mutation_score"]
+                result["eo_mutation_score"] = evo_result["eo_mutation_score"]
+                result["eo_assertions"] = assertions
+                
                 break
             else:
                 print("Assertion generate: " + Fore.RED + "FAILED", Style.RESET_ALL)  
+        
+        result["attempts"] = str(rounds)
 
     except Exception as e:
         print(Fore.RED + str(e), Style.RESET_ALL)
-    if os.path.exists(run_temp_dir):
-        run_temp_dir = os.path.abspath(run_temp_dir)
-        shutil.rmtree(run_temp_dir)
+    
+    end_time = time.perf_counter()
 
+    assertion_generation_time = (end_time - start_time) * 1000
+
+    result["assertion_generation_time"] = assertion_generation_time
+
+    return result
 def trim_string_to_substring(original_string, substring):
     # Find the index of the substring
     substring_index = original_string.find(substring)
