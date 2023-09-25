@@ -200,6 +200,10 @@ class ClassParser():
             'documentation': '',  # Added field for documentation
         }
 
+        # Extract comments/documentation
+        preceding_comments = ClassParser.get_preceding_comments(function_node, blob)
+        metadata['documentation'] = preceding_comments
+
         # Parameters
         full_parameter_list, dependent_classes, instance_2_classes = ClassParser.get_method_name_and_params(
             function_node, metadata, blob)
@@ -265,40 +269,37 @@ class ClassParser():
 
         # Check if the method is a test method based on the presence of "@Test" signature
         metadata["is_test_method"] = True if "@test" in metadata['m_sig'].lower() else False
-
-        # Parse and store comments/documentation
-        comments = ClassParser.extract_comments(function_node, blob)
-        metadata['documentation'] = comments
-        print("comments: " + "".join(comments))
+        
         return metadata
-
+    
     @staticmethod
-    def extract_comments(node, blob: str):
+    def get_preceding_comments(node, blob: str):
         """
-        Extract comments/documentation associated with a node.
+        Extract preceding comments/documentation (including JavaDoc-style comments) for a node
         """
         comments = []
-        inside_doc_comment = False
-        doc_comment = ""
-        
-        for token in node.children:
-            token_text = ClassParser.match_from_span(token, blob).strip()
-            
-            if token.type == 'comment':
-                if token_text.startswith("/**"):
-                    inside_doc_comment = True
-                    doc_comment = token_text
-                elif inside_doc_comment:
-                    doc_comment += " " + token_text
-                    if token_text.endswith("*/"):
-                        inside_doc_comment = False
-                        comments.append(doc_comment)
+        in_comment_block = False
+        for line_num, line in enumerate(blob.split('\n')):
+            if line_num >= node.start_point[0]:
+                break  # Stop when reaching the line of the node
+            if in_comment_block:
+                if '*/' in line:
+                    in_comment_block = False
+                comments.append(line.strip())
+            elif '/*' in line:
+                if '*/' in line:
+                    comments.append(line.strip())
                 else:
-                    comments.append(token_text)
-        
-        return comments
+                    in_comment_block = True
+                    comments.append(line.strip())
+            elif '//' in line:
+                comments.append(line.strip().split('//')[1].strip())
 
-
+        # Filter out empty lines and trim comments
+        comments = [comment for comment in comments if comment]
+        # if comments:
+        #     print('\n'.join(comments))
+        return '\n'.join(comments)
 
     @staticmethod
     def get_method_invocation_name(invocation_node, blob: str) -> str:

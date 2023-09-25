@@ -195,7 +195,6 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name):
     replaced_assertions_per_method = {}
 
     test_method_details = manager.get_details_by_project_class_and_method(project_name, test_class_name, method_name, False)
-    
     focal_methods = test_method_details["focal_methods"]
     source_code = test_method_details["source_code"]
     
@@ -263,9 +262,16 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name):
     print("MUT: ", Fore.GREEN + method_under_test, Style.RESET_ALL)
     print()
     
+    method_under_test_details = manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, False)
+
+    print(method_under_test_details)
+
+    dev_comments = method_under_test_details.get("dev_comments")
+
     context = {"project_name": project_name, "class_name": class_under_test, "test_class_path":test_class_path, "test_class_name": test_class_name, "test_method_name":method_name, "method_name": method_under_test, 
             "method_details": manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, True), 
-            "test_method_code": source_code, "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER, "test_case_with_placeholder":test_case_with_placeholder, "package":stripped_package, "evosuite_test_case":evosuite_test_case}
+            "test_method_code": source_code, "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER, "test_case_with_placeholder":test_case_with_placeholder, 
+            "package":stripped_package, "evosuite_test_case":evosuite_test_case, "developer_comments":dev_comments}
     
     # Store replaced assertions for this method in the dictionary
     replaced_assertions_per_method[method_name] = replaced_assertions
