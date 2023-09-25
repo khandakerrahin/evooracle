@@ -139,7 +139,7 @@ def prepare_test_cases_entries(project_dir):
             
         print("CSV generation: ", Fore.GREEN + "SUCCESS", Style.RESET_ALL)
 
-def prepare_test_cases(test_id, project_dir, class_name, method_name):
+def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name):
     """
     - Get test details
     - Replaces Assertions
@@ -264,7 +264,7 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name):
     
     method_under_test_details = manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, False)
 
-    print(method_under_test_details)
+    # print(method_under_test_details)
 
     dev_comments = method_under_test_details.get("dev_comments")
 
@@ -276,10 +276,61 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name):
     # Store replaced assertions for this method in the dictionary
     replaced_assertions_per_method[method_name] = replaced_assertions
     
-    # print(context)
-    whole_process_with_LLM(project_dir, context, test_id)
+    # open file to write results
+    if not os.path.exists(final_result_file):
+        # If it doesn't exist, create the file with a header row
+        with open(final_result_file, mode='w', newline='') as csv_file:
+            # test_id, time, attempts, assertion_generated, is_compiled, is_run, mutation_score, CUT, MUT, project_dir, eo_assertions, 
+            fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "is_compiled", "is_run", 
+                          "eo_mutation_score", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", "model", "temperature", 
+                          "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", "repeat_last_n"]
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writeheader()
+
+    # Get the current time in milliseconds
+    start_time = time.perf_counter()
     
+    result = whole_process_with_LLM(project_dir, context, test_id, llm_name)
     
+    end_time = time.perf_counter()
+
+    total_time = (end_time - start_time) * 1000
+    
+    with open(final_result_file, mode='a', newline='') as csv_file:
+        fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "is_compiled", "is_run", 
+                          "eo_mutation_score", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", "model", "temperature", 
+                          "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", "repeat_last_n"]
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        
+        writer.writerow({
+            "test_id": test_id, 
+            "total_time": total_time,
+            "assertion_generation_time": result["assertion_generation_time"],
+            "attempts": result["attempts"], 
+            "assertion_generated": result["assertion_generated"],
+            "is_compiled": result["is_compiled"],
+            "is_run": result["is_run"],
+            "es_mutation_score": result["es_mutation_score"],
+            "eo_mutation_score": result["eo_mutation_score"],
+            "CUT": class_under_test,
+            "MUT": method_under_test,
+            "project_dir": project_dir,
+            "eo_assertions": result["eo_assertions"],
+            "model": llm_name,
+            "temperature": temperature, 
+            "n_predict": n_predict, 
+            "top_p": top_p,
+            "top_k": top_k,
+            "n_batch": n_batch,
+            "repeat_penalty": repeat_penalty,
+            "repeat_last_n": repeat_last_n,
+        })
+    
+
+
+ 
+        print("Result generation: ", Fore.GREEN + "SUCCESS", Style.RESET_ALL)
+
     print("WHOLE PROCESS FINISHED")
 
 def start_generation(project_dir, sql_query, multiprocess=True, repair=True, confirmed=False):

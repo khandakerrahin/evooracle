@@ -41,12 +41,11 @@ class TestRunner:
         """
         
         try:
-            self.run_single_test(self.test_file_name, self.test_path, self.target_path, self.package, self.class_name)
+            return self.run_single_test(self.test_file_name, self.test_path, self.target_path, self.package, self.class_name)
             
         except Exception as e:
             print(e)
-            return False
-        return True
+            return None, None, None
 
     def start_all_test(self):
         """
@@ -102,17 +101,19 @@ class TestRunner:
         """
         # if not self.compile(test_file, compiled_test_dir, compiler_output):
         #     return False
-        print("Compile: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
         # print("test_file: "+test_file)
         # print("test_path: "+test_path)
         # print("target_path: "+target_path)
+        is_compiled = False
+        is_run = False
+        mutation_score = 0
         
         # Define your commands
         commands = [
-            "mvn compile",
+            # "mvn compile",
             # "export EVOSUITE='java -jar {}/evosuite-1.0.6.jar'".format(target_path),
-            "mvn dependency:copy-dependencies",
-            "java -version",
+            # "mvn dependency:copy-dependencies",
+            # "java -version",
             # "export CLASSPATH=target/classes:evosuite-standalone-runtime-1.0.6.jar:evosuite-tests:target/dependency/junit-4.12.j/ar:target/dependency/hamcrest-core-1.3.jar",
             # "javac {}".format(test_path + "/*.java"),
             "javac -cp target/classes:evosuite-standalone-runtime-1.0.6.jar:evosuite-tests:target/dependency/junit-4.12.jar:target/dependency/hamcrest-core-1.3.jar {}".format(test_file),
@@ -123,13 +124,26 @@ class TestRunner:
             # "java org.junit.runner.JUnitCore tutorial.Stack_ESTest"
         ]
         # Run commands sequentially
-        for command in commands:
-            break
-            if not self.run_command(command, working_directory=target_path):
-                print("Command failed. Aborting.")
-                break
+        # for command in commands:
+        #     if not self.run_command(command, working_directory=target_path):
+        #         print("Command failed. Aborting.")
+        #         break
         
-        return True
+        # COMPILING
+        if self.run_command(commands[0], working_directory=target_path):
+            print("Compile: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
+            is_compiled = True
+            
+            # RUNNING
+            if self.run_command(commands[1], working_directory=target_path):
+                print("RUN: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
+                is_run = True
+            else:
+                print("RUN: " + Fore.RED + "FAIL", Style.RESET_ALL)
+        else:
+            print("Compile: " + Fore.RED + "FAIL", Style.RESET_ALL)
+        
+        return is_compiled, is_run, mutation_score
 
     @staticmethod
     def export_runtime_output(result, test_output_file):
