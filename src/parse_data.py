@@ -9,7 +9,7 @@ Date: 2023-09-13
 import json
 import os
 from db_operations import database
-
+from colorama import Fore, Style, init
 
 def parse_data(dir_path: str, db_out_path: str):
     """
@@ -79,6 +79,7 @@ def parse_data(dir_path: str, db_out_path: str):
                         use_field = method_data['use_field']
                         parameters = method_data['parameters']
                         is_test_method = method_data['is_test_method']
+                        dev_comments = method_data['documentation']
 
                         if is_test_method:
                             focal_method_names = method_data['focal_methods']
@@ -131,7 +132,8 @@ def parse_data(dir_path: str, db_out_path: str):
                                 "is_test_method": is_test_method,
                                 "is_get_set": is_get_set,
                                 "is_public": is_public,
-                                "return_type": return_type
+                                "return_type": return_type,
+                                "dev_comments": dev_comments,
                             }
                         
                         method_data_to_store.append(method_entry)
@@ -170,7 +172,8 @@ def parse_data(dir_path: str, db_out_path: str):
                     
                     class_data_to_store.append(class_entry)
 
-                    print(class_name, "FINISHED!")
+                    print(class_name + ": ", Fore.GREEN + "DONE", Style.RESET_ALL)
+                    
                     break
     # Check if the file exists
     if os.path.exists(db_out_path):

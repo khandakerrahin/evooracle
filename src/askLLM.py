@@ -401,7 +401,7 @@ def whole_process_with_LLM(project_dir, context, test_id):
     method_name = context.get("method_name")
     
     # context = {"project_name", "class_name", "test_class_path", "test_class_name", "test_method_name", "method_name", 
-    #               "method_details", "test_method_code", "assertion_placeholder", "test_case_with_placeholder", "package", "evosuite_test_case"}
+    #               "method_details", "test_method_code", "assertion_placeholder", "test_case_with_placeholder", "package", "evosuite_test_case", "developer_comments"}
 
     # Create subdirectories for each test
     save_dir = os.path.join(os.path.dirname(test_class_path), str(test_id))
@@ -426,16 +426,16 @@ def whole_process_with_LLM(project_dir, context, test_id):
                 trimmed_context = context
                 
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
-                messages = generate_messages(TEMPLATE_BASIC, trimmed_context)
+                messages = generate_messages(TEMPLATE_WITH_DEV_COMMENTS, trimmed_context)
             if rounds > 1:
                 # Second round : trimmed prompt
                 trimmed_context = context
                 
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
-                messages = generate_messages(TEMPLATE_BASIC, trimmed_context)
+                messages = generate_messages(TEMPLATE_WITH_DEV_COMMENTS, trimmed_context)
             else:
                 # first round : normal prompt
-                messages = generate_messages(TEMPLATE_BASIC, context)
+                messages = generate_messages(TEMPLATE_WITH_DEV_COMMENTS, context)
 
             # print(Fore.BLUE, messages, Style.RESET_ALL)
             
