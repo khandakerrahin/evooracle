@@ -9,6 +9,8 @@ In the following the test case, replace the `{{ assertion_placeholder }}` with o
 ```
 {{ test_method_code }}
 ```
-Write the assertion statement using python assertion pattern r'(\w+\.)?(assert|assertTrue|assertNull|fail|assertFalse|assertNotEquals|assertEquals|assertArrayEquals|assertNotNull|assertNotSame|assertSame|assertThat)\s*\(.+?\);'.
+Write the assertion statement using following pattern:
+```r'(\w+\.)?(assert|assertTrue|assertNull|fail|assertFalse|assertNotEquals|assertEquals|assertArrayEquals|assertNotNull|assertNotSame|assertSame|assertThat)\s*\(.+?\);'```
+Assertion must end with ```;```
 ### Response:
 '''
