@@ -179,13 +179,13 @@ class ClassParser():
     @staticmethod
     def get_function_metadata(class_identifier, function_node, class_fields, blob: str):
         """
-        Extract method-level metadata
+        Extract method-level metadata, including comments/documentation.
         """
         metadata = {
             'method_name': '',
             'm_sig': '',
-            'is_test_method' : False,  # Initialize is_test_method to False
-            'focal_methods': [],  # List to store the Method Under Test (MUT)
+            'is_test_method': False,
+            'focal_methods': [],
             'class': '',
             'source_code': '',
             'parameters': '',
@@ -197,28 +197,37 @@ class ClassParser():
             'use_field': '',
             'is_get_set': '',
             'm_deps': '',
+            'documentation': '',  # Added field for documentation
         }
+
+        # Extract comments/documentation
+        preceding_comments = ClassParser.get_preceding_comments(function_node, blob)
+        metadata['documentation'] = preceding_comments
+
         # Parameters
         full_parameter_list, dependent_classes, instance_2_classes = ClassParser.get_method_name_and_params(
             function_node, metadata, blob)
         full_parameters = ' '.join(full_parameter_list)
+
         # Add field dependencies
         dependent_classes, instance_2_classes = ClassParser.get_field_dependencies(dependent_classes,
-                                                                                   instance_2_classes, class_fields)
-        # Body
+                                                                                instance_2_classes, class_fields)
+
+        # Method body
         metadata['source_code'] = ClassParser.match_from_span(function_node, blob)
         metadata['class'] = class_identifier
-        # is getter or setter
+
+        # Check if it's a getter or setter
         metadata['is_get_set'] = ClassParser.is_gs(function_node, class_fields)
-        # use fields or not
+
+        # Determine if the method uses any fields of the class
         if metadata['is_get_set']:
             metadata['use_field'] = True
         else:
-            metadata['use_field'] = ClassParser.use_fields(function_node.child_by_field_name('body'), class_fields,
-                                                           blob)
-        # Constructor
+            metadata['use_field'] = ClassParser.use_fields(function_node.child_by_field_name('body'), class_fields, blob)
+
+        # Check if it's a constructor
         metadata['is_constructor'] = False
-        # if "constructor" in function_node.type:
         if function_node.type == 'constructor_declaration':
             metadata['is_get_set'] = False
             metadata['is_constructor'] = True
@@ -236,35 +245,61 @@ class ClassParser():
             object_node = invocation.child_by_field_name('object')
             if object_node is not None:
                 object_name = ClassParser.match_from_span(object_node, blob)
+
                 # Append the class name and method name in the format "Class.method" to focal_methods
                 metadata['focal_methods'].append(f'{object_name}.{method_invocation_name}')
-            # else: 
-                # TODO check and process if not assersions
-                # Skipping this for now as considering as Assertions now
+            else:
                 # If object_node is None, it means the method is invoked without an object (e.g., static method)
                 # In that case, append only the method name to focal_methods
-                # metadata['focal_methods'].append(method_invocation_name)
-            
-        # Method Invocations
-        ClassParser.get_method_m_deps(function_node, metadata, dependent_classes, instance_2_classes, blob)
+                metadata['focal_methods'].append(method_invocation_name)
+
         # Modifiers and Return Value
         for child in function_node.children:
             if child.type == "modifiers":
                 metadata['modifiers'] = ' '.join(ClassParser.match_from_span(child, blob).split())
             if "type" in child.type:
                 metadata['return'] = ClassParser.match_from_span(child, blob)
+
         # Signature
         metadata['signature'] = '{} {}{}'.format(metadata['return'], metadata['method_name'], full_parameters)
         metadata['m_sig'] = '{} {} {}{}'.format(metadata['modifiers'], metadata['return'], metadata['method_name'],
                                                 full_parameters)
         metadata['class_method_signature'] = '{}.{}{}'.format(class_identifier, metadata['method_name'],
-                                                              full_parameters)
+                                                            full_parameters)
 
         # Check if the method is a test method based on the presence of "@Test" signature
         metadata["is_test_method"] = True if "@test" in metadata['m_sig'].lower() else False
-
         
         return metadata
+    
+    @staticmethod
+    def get_preceding_comments(node, blob: str):
+        """
+        Extract preceding comments/documentation (including JavaDoc-style comments) for a node
+        """
+        comments = []
+        in_comment_block = False
+        for line_num, line in enumerate(blob.split('\n')):
+            if line_num >= node.start_point[0]:
+                break  # Stop when reaching the line of the node
+            if in_comment_block:
+                if '*/' in line:
+                    in_comment_block = False
+                comments.append(line.strip())
+            elif '/*' in line:
+                if '*/' in line:
+                    comments.append(line.strip())
+                else:
+                    in_comment_block = True
+                    comments.append(line.strip())
+            elif '//' in line:
+                comments.append(line.strip().split('//')[1].strip())
+
+        # Filter out empty lines and trim comments
+        comments = [comment for comment in comments if comment]
+        # if comments:
+        #     print('\n'.join(comments))
+        return '\n'.join(comments)
 
     @staticmethod
     def get_method_invocation_name(invocation_node, blob: str) -> str:
