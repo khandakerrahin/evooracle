@@ -420,17 +420,26 @@ def whole_process_with_LLM(project_dir, context, test_id):
             llm_file_name = os.path.join(save_dir, str(steps) + "_LLM_" + str(rounds) + ".json")
             
             # context = {"project_name", "class_name", "test_class_path", "test_class_name", "test_method_name", "method_name", 
-            #           "method_details", "test_method_code", "assertion_placeholder", "test_case_with_placeholder", "package", "evosuite_test_case"
+            #           "method_details", "test_method_code", "assertion_placeholder", "test_case_with_placeholder", "package", "evosuite_test_case", "developer_comments"
             if rounds > 2:
                 # Third round : super trimmed prompt
                 trimmed_context = context
-                
+
+                if len(context.get("developer_comments")) > 500:
+                    trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 500)
+                elif len(context.get("developer_comments")) > 300:
+                    trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 300)
+
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
                 messages = generate_messages(TEMPLATE_WITH_DEV_COMMENTS, trimmed_context)
             if rounds > 1:
                 # Second round : trimmed prompt
                 trimmed_context = context
-                
+                if len(context.get("developer_comments")) > 500:
+                    trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 500)
+                elif len(context.get("developer_comments")) > 300:
+                    trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 300)
+
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
                 messages = generate_messages(TEMPLATE_WITH_DEV_COMMENTS, trimmed_context)
             else:
@@ -492,6 +501,15 @@ def trim_string_to_substring(original_string, substring):
     else:
         # Substring not found, keep the original string as is
         trimmed_string = original_string
+
+    return trimmed_string
+
+def trim_string_to_desired_length(original_string, cutoff_length):
+    # Trim the string
+    trimmed_string = original_string[:cutoff_length]
+
+    # Print the trimmed string
+    print(trimmed_string)
 
     return trimmed_string
 
