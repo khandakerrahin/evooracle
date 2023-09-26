@@ -313,6 +313,17 @@ def get_MUT_from_string(input_string):
     else:
         return input_string  # Return the original string if there's no second part or it can't be split
 
+def remove_key_value_pair_from_json(data, key):
+    # Iterate through the list of dictionaries and remove key-value pairs
+    for item in data:
+        # Remove the 'dependencies' key if it exists in the current dictionary
+        if key in item:
+            del item[key]
+
+    # Convert the modified data back to JSON (if needed)
+    json_data = json.dumps(data)
+    return json_data
+    
 def remove_empty_lines(input_text):
     lines = input_text.split('\n')
     non_empty_lines = [line for line in lines if line.strip()]

@@ -42,7 +42,8 @@ template = PromptTemplate(input_variables=['action'], template="""{action}""")
 chain = LLMChain(llm=llm, prompt=template, verbose=True) 
 
 def ask_openLLM(messages):
-    return 'assertTrue(nodeInstaller4.getNodeVersion().equals("/node"));\n  assertFalse(nodeInstaller4.getNodeVersion().equals("/node"));\n  assertSame(nodeInstaller4.getNodeVersion().equals("/node"));'
+    # return "failed"
+    # return 'assertTrue(nodeInstaller4.getNodeVersion().equals("/node"));\n  assertFalse(nodeInstaller4.getNodeVersion().equals("/node"));\n  assertSame(nodeInstaller4.getNodeVersion().equals("/node"));'
     # Retry 5 times when error occurs
     max_try = 5
     while max_try:
@@ -434,47 +435,86 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
     
     prompts_and_responses = []
 
-    if consider_dev_comments:
-        prompt_template = TEMPLATE_WITH_DEV_COMMENTS
-    else:
-        prompt_template = TEMPLATE_BASIC
+    # if consider_dev_comments:
+    #     prompt_template = TEMPLATE_WITH_DEV_COMMENTS
+    # else:
+    #     prompt_template = TEMPLATE_BASIC
 
+    prompt_template = TEMPLATE_BASIC
+
+    if not consider_dev_comments:
+        context["method_details"] = remove_key_value_pair_from_json(context.get("method_details"), "dev_comments")
+
+        # print("AFTER REMOVING DEV COMMENTS:")
+        # print(context["method_details"])
+    
     try:
         while rounds < max_attempts:
             # 1. Ask LLM
             steps += 1
             rounds += 1
-            print(method_name, "test_" + str(test_id), "Asking " + llm_name + "...", "rounds", rounds)
-            
+            # print(method_name, "test_" + str(test_id), "Asking " + llm_name + "...", "rounds", rounds)
+            print("test_" + str(test_id), "Asking " + llm_name + "...", "rounds", rounds)
+
             # context = {"project_name", "class_name", "test_class_path", "test_class_name", "test_method_name", "method_name", 
             #           "method_details", "test_method_code", "assertion_placeholder", "test_case_with_placeholder", "package", "evosuite_test_case", "developer_comments"
+            
+            
+            # if rounds > 2:
+            #     # Third round : super trimmed prompt
+            #     trimmed_context = context
+
+            #     if len(context.get("developer_comments")) > 500:
+            #         trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 500)
+            #     elif len(context.get("developer_comments")) > 300:
+            #         trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 300)
+
+            #     trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
+            #     messages = generate_messages(prompt_template, trimmed_context)
+            # if rounds > 1:
+            #     # Second round : trimmed prompt
+            #     trimmed_context = context
+            #     if len(context.get("developer_comments")) > 500:
+            #         trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 500)
+            #     elif len(context.get("developer_comments")) > 300:
+            #         trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 300)
+
+            #     trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
+            #     messages = generate_messages(prompt_template, trimmed_context)
+            # else:
+            #     # first round : normal prompt
+            #     messages = generate_messages(prompt_template, context)
+
+            # print(Fore.BLUE, messages, Style.RESET_ALL)
+
             if rounds > 2:
                 # Third round : super trimmed prompt
                 trimmed_context = context
 
-                if len(context.get("developer_comments")) > 500:
-                    trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 500)
-                elif len(context.get("developer_comments")) > 300:
-                    trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 300)
+                if len(context.get("method_details")) > 3:
+                    trimmed_context["method_details"] = trim_list_to_desired_size(context.get("method_details"), 3)
+                elif len(context.get("method_details")) > 2:
+                    trimmed_context["method_details"] = trim_list_to_desired_size(context.get("method_details"), 2)
 
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
                 messages = generate_messages(prompt_template, trimmed_context)
             if rounds > 1:
                 # Second round : trimmed prompt
                 trimmed_context = context
-                if len(context.get("developer_comments")) > 500:
-                    trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 500)
-                elif len(context.get("developer_comments")) > 300:
-                    trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 300)
+                if len(context.get("method_details")) > 5:
+                    trimmed_context["method_details"] = trim_list_to_desired_size(context.get("method_details"), 5)
+                elif len(context.get("method_details")) > 3:
+                    trimmed_context["method_details"] = trim_list_to_desired_size(context.get("method_details"), 3)
 
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
                 messages = generate_messages(prompt_template, trimmed_context)
+                
             else:
                 # first round : normal prompt
                 messages = generate_messages(prompt_template, context)
+                
+            print("Prompt: " + Fore.YELLOW + messages, Style.RESET_ALL)  
 
-            # print(Fore.BLUE, messages, Style.RESET_ALL)
-            
             print("Attempt: " + Fore.YELLOW + str(rounds), Style.RESET_ALL)  
             llm_result = ask_openLLM(messages)
 
@@ -554,6 +594,17 @@ def trim_string_to_desired_length(original_string, cutoff_length):
     print(trimmed_string)
 
     return trimmed_string
+
+def trim_list_to_desired_size(original_list, cutoff_length):
+    try:
+        if not isinstance(original_list, list):
+            original_list = json.loads(original_list)
+        
+        while len(original_list) > cutoff_length:
+            original_list.pop()  
+        return original_list
+    except json.JSONDecodeError:
+        return original_list
 
 def whole_process(test_num, base_name, base_dir, repair, submits, total):
     """

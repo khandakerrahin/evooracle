@@ -1,8 +1,5 @@
 """
 This class will process all the test files: extract test cases, replace assertions, prepares contexts.
-It will automatically create a new folder inside dataset as well as result folder.
-The folder format is "scope_test_YYYYMMDDHHMMSS_Direction".
-The dataset folder will contain all the information in the direction.
 """
 import time
 from resource_manager import ResourceManager
@@ -258,8 +255,6 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
     # overriding the CUT from DB Json to Test Filename
     class_under_test = get_CUT_from_test_class_name(test_class_name)
 
-    method_under_test = ""
-
     # prepare the context
     MUT_list = set()  # Create an empty set to store unique MUT
     
@@ -268,24 +263,30 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
         MUT_list.add(mut)
 
     MUT_list = list(MUT_list)
+    
+    method_details_list = []
 
+    for MUT in MUT_list:
+        method_details = manager.get_details_by_project_class_and_method(project_name, class_under_test, MUT, True)
+        if method_details:
+            method_details_list.append(method_details)
     
     # print("CUT: ", Fore.GREEN + class_under_test, Style.RESET_ALL)
-    print("MUT: ", Fore.YELLOW + "\n".join(MUT_list), Style.RESET_ALL)
+    # print("MUT: \n", Fore.YELLOW + "\n".join(MUT_list), Style.RESET_ALL)
     # print()
     
-    method_under_test_details = manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, False)
+    # method_under_test_details = manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, False)
 
-    # print(method_under_test_details)
-    if method_under_test_details:
-        dev_comments = method_under_test_details.get("dev_comments")
-    else:
-        dev_comments = None
+    # # print(method_under_test_details)
+    # if method_under_test_details:
+    #     dev_comments = method_under_test_details.get("dev_comments")
+    # else:
+    #     dev_comments = None
 
-    context = {"project_name": project_name, "class_name": class_under_test, "test_class_path":test_class_path, "test_class_name": test_class_name, "test_method_name":method_name, "method_name": method_under_test, 
-            "method_details": manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, True), 
-            "test_method_code": source_code, "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER, "test_case_with_placeholder":test_case_with_placeholder, 
-            "package":stripped_package, "evosuite_test_case":evosuite_test_case, "developer_comments":dev_comments}
+    context = {"project_name": project_name, "class_name": class_under_test, "test_class_path":test_class_path, "test_class_name": test_class_name, 
+           "test_method_name":method_name, "method_details": method_details_list, "test_method_code": source_code, 
+            "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER, "test_case_with_placeholder":test_case_with_placeholder, 
+            "package":stripped_package, "evosuite_test_case":evosuite_test_case}
     
     # Store replaced assertions for this method in the dictionary
     replaced_assertions_per_method[method_name] = replaced_assertions
@@ -318,7 +319,7 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
         "eo_assertions": None,
         "prompts_and_responses": None,
     }
-    # result = whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev_comments)
+    result = whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev_comments)
     
     end_time = time.perf_counter()
 
@@ -346,7 +347,7 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
             "es_is_run": result["es_is_run"],
             "es_mutation_score": result["es_mutation_score"],
             "CUT": class_under_test,
-            "MUT": method_under_test,
+            "MUT": method_details_list,
             "project_dir": project_dir,
             "eo_assertions": result["eo_assertions"],
             "model": llm_name,
