@@ -1,5 +1,6 @@
 import json
 from tools import *
+from colorama import Fore, Style, init
 
 class ResourceManager:
     def __init__(self, json_file_path):
@@ -53,14 +54,23 @@ class ResourceManager:
                                 "signature": method.get("signature"),
                                 "parameters": method.get("parameters"),
                                 "dependencies": method.get("dependencies"),
-                                "return_type": method.get("return_type")
+                                "return_type": method.get("return_type"),
+                                "dev_comments": method.get("dev_comments"),
                             }
                             return details
                         else:
                             # get all details
                             return method
-                    
-        # print("method_details : "+ str(method_details))               
+                
+                # If method was not found, it will arrive here
+                # print(method_name + Fore.YELLOW + " : NOT FOUND ", Style.RESET_ALL + " in " + class_name)
+                # Let's check if the method is available in Super class
+                super_class = entry.get('super_class')
+                if super_class:
+                    # print(method_name + ": SUPER CLASS: ", Fore.YELLOW + super_class, Style.RESET_ALL)
+                    return ResourceManager.get_details_by_project_class_and_method(self, project_name, super_class, method_name, onlyEssentials)
+                # else:
+                #     print(method_name + Fore.YELLOW + ": NO SUPER CLASS FOUND", Style.RESET_ALL)
         return None
 
     def get_package_by_project_and_class(self, project_name, class_name):

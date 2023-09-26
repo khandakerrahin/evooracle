@@ -1,8 +1,5 @@
 """
 This class will process all the test files: extract test cases, replace assertions, prepares contexts.
-It will automatically create a new folder inside dataset as well as result folder.
-The folder format is "scope_test_YYYYMMDDHHMMSS_Direction".
-The dataset folder will contain all the information in the direction.
 """
 import time
 from resource_manager import ResourceManager
@@ -14,6 +11,7 @@ from task import Task
 from colorama import Fore, Style, init
 import csv
 import os
+from datetime import datetime
 
 init()
 # db = database()
@@ -254,23 +252,41 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
 
     # focal_methods = json.loads(focal_method_name)
     
+    # overriding the CUT from DB Json to Test Filename
+    class_under_test = get_CUT_from_test_class_name(test_class_name)
+
     # prepare the context
-    class_under_test, method_under_test = (focal_methods[0]).split(".")
+    MUT_list = set()  # Create an empty set to store unique MUT
     
-    print("CUT: ", Fore.GREEN + class_under_test, Style.RESET_ALL)
-    print("MUT: ", Fore.GREEN + method_under_test, Style.RESET_ALL)
-    print()
+    for focal_method in focal_methods:
+        mut = get_MUT_from_string(focal_method)
+        MUT_list.add(mut)
+
+    MUT_list = list(MUT_list)
     
-    method_under_test_details = manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, False)
+    method_details_list = []
 
-    # print(method_under_test_details)
+    for MUT in MUT_list:
+        method_details = manager.get_details_by_project_class_and_method(project_name, class_under_test, MUT, True)
+        if method_details:
+            method_details_list.append(method_details)
+    
+    # print("CUT: ", Fore.GREEN + class_under_test, Style.RESET_ALL)
+    # print("MUT: \n", Fore.YELLOW + "\n".join(MUT_list), Style.RESET_ALL)
+    # print()
+    
+    # method_under_test_details = manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, False)
 
-    dev_comments = method_under_test_details.get("dev_comments")
+    # # print(method_under_test_details)
+    # if method_under_test_details:
+    #     dev_comments = method_under_test_details.get("dev_comments")
+    # else:
+    #     dev_comments = None
 
-    context = {"project_name": project_name, "class_name": class_under_test, "test_class_path":test_class_path, "test_class_name": test_class_name, "test_method_name":method_name, "method_name": method_under_test, 
-            "method_details": manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, True), 
-            "test_method_code": source_code, "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER, "test_case_with_placeholder":test_case_with_placeholder, 
-            "package":stripped_package, "evosuite_test_case":evosuite_test_case, "developer_comments":dev_comments}
+    context = {"project_name": project_name, "class_name": class_under_test, "test_class_path":test_class_path, "test_class_name": test_class_name, 
+           "test_method_name":method_name, "method_details": method_details_list, "test_method_code": source_code, 
+            "assertion_placeholder": string_tables.ASSERTION_PLACEHOLDER, "test_case_with_placeholder":test_case_with_placeholder, 
+            "package":stripped_package, "evosuite_test_case":evosuite_test_case}
     
     # Store replaced assertions for this method in the dictionary
     replaced_assertions_per_method[method_name] = replaced_assertions
@@ -280,25 +296,42 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
         # If it doesn't exist, create the file with a header row
         with open(final_result_file, mode='w', newline='') as csv_file:
             # test_id, time, attempts, assertion_generated, is_compiled, is_run, mutation_score, CUT, MUT, project_dir, eo_assertions, 
-            fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "is_compiled", "is_run", 
-                          "eo_mutation_score", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", "used_developer_comments", "model", "temperature", 
-                          "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", "repeat_last_n", "prompts_and_responses"]
+            fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "eo_is_compiled", "eo_is_run", 
+                          "eo_mutation_score", "eo_test_path", "es_is_compiled", "es_is_run", "es_mutation_score", "es_test_path", "CUT", "MUT", "project_dir", 
+                          "eo_assertion", "es_assertion", "used_developer_comments", "model", "temperature", "n_predict", "top_p", "top_k", "n_batch", 
+                          "repeat_penalty", "repeat_last_n", "timestamp", "prompts_and_responses"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
 
     # Get the current time in milliseconds
     start_time = time.perf_counter()
     
+    result = {
+        "assertion_generation_time": None,
+        "attempts": None, 
+        "assertion_generated": None,
+        "eo_is_compiled": None,
+        "eo_is_run": None,
+        "eo_mutation_score": None,
+        "es_is_compiled": None,
+        "es_is_run": None,
+        "es_mutation_score": None,
+        "eo_assertions": None,
+        "prompts_and_responses": None,
+    }
     result = whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev_comments)
     
     end_time = time.perf_counter()
 
     total_time = (end_time - start_time) * 1000
-    
+    # Get the current timestamp as a string
+    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     with open(final_result_file, mode='a', newline='') as csv_file:
-        fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "is_compiled", "is_run", 
-                          "eo_mutation_score", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", "used_developer_comments", "model", "temperature", 
-                          "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", "repeat_last_n", "prompts_and_responses"]
+        fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "eo_is_compiled", "eo_is_run", 
+                          "eo_mutation_score", "eo_test_path", "es_is_compiled", "es_is_run", "es_mutation_score", "es_test_path", "CUT", "MUT", "project_dir", 
+                          "eo_assertion", "es_assertion", "used_developer_comments", "model", "temperature", "n_predict", "top_p", "top_k", "n_batch", 
+                          "repeat_penalty", "repeat_last_n", "timestamp", "prompts_and_responses"]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         
         writer.writerow({
@@ -307,14 +340,19 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
             "assertion_generation_time": result["assertion_generation_time"],
             "attempts": result["attempts"], 
             "assertion_generated": result["assertion_generated"],
-            "is_compiled": result["is_compiled"],
-            "is_run": result["is_run"],
-            "es_mutation_score": result["es_mutation_score"],
+            "eo_is_compiled": result["eo_is_compiled"],
+            "eo_is_run": result["eo_is_run"],
             "eo_mutation_score": result["eo_mutation_score"],
+            "eo_test_path": result["eo_test_path"],
+            "es_is_compiled": result["es_is_compiled"],
+            "es_is_run": result["es_is_run"],
+            "es_mutation_score": result["es_mutation_score"],
+            "es_test_path": result["es_test_path"],
             "CUT": class_under_test,
-            "MUT": method_under_test,
+            "MUT": method_details_list,
             "project_dir": project_dir,
-            "eo_assertions": result["eo_assertions"],
+            "eo_assertion": result["eo_assertions"],
+            "es_assertion": ''.join(replaced_assertions),
             "model": llm_name,
             "temperature": temperature, 
             "n_predict": n_predict, 
@@ -324,11 +362,9 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
             "repeat_penalty": repeat_penalty,
             "repeat_last_n": repeat_last_n,
             "used_developer_comments": consider_dev_comments,
-            "prompts_and_responses": result["prompts_and_responses"]
+            "prompts_and_responses": result["prompts_and_responses"],
+            "timestamp": current_time,
         })
-    
-
-
  
         print("Result generation: ", Fore.GREEN + "SUCCESS", Style.RESET_ALL)
 

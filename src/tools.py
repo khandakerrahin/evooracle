@@ -299,6 +299,31 @@ def remove_all_assertions_but_last(source_code):
 
     return source_code
 
+def get_CUT_from_test_class_name(input_string):
+    parts = input_string.split(string_tables.EVOSUITE_SIGNATURE)
+    if len(parts) > 0:
+        return parts[0]
+    else:
+        return input_string  # Return the original string if "_ESTest" is not found
+
+def get_MUT_from_string(input_string):
+    parts = input_string.split(".")
+    if len(parts) >= 2:
+        return parts[1]
+    else:
+        return input_string  # Return the original string if there's no second part or it can't be split
+
+def remove_key_value_pair_from_json(data, key):
+    # Iterate through the list of dictionaries and remove key-value pairs
+    for item in data:
+        # Remove the 'dependencies' key if it exists in the current dictionary
+        if key in item:
+            del item[key]
+
+    # Convert the modified data back to JSON (if needed)
+    json_data = json.dumps(data)
+    return json_data
+    
 def remove_empty_lines(input_text):
     lines = input_text.split('\n')
     non_empty_lines = [line for line in lines if line.strip()]
@@ -368,3 +393,29 @@ def extract_assertions_from_string(input_string):
 
     extracted_assertions = '\n'.join(extracted_assertions)
     return extracted_assertions
+
+def extract_first_assertion_from_string(input_string):
+    # Regular expression pattern to match assertions
+    assertion_patterns = [
+        r'(\w+\.)?assert\s*\(.+?\);',           # Matches ClassName.assert(...)
+        r'(\w+\.)?assertTrue\s*\(.+?\);',       # Matches ClassName.assertTrue(...)
+        r'(\w+\.)?assertNull\s*\(.+?\);',       # Matches ClassName.assertNull(...)
+        r'(\w+\.)?fail\s*\(.+?\);',             # Matches ClassName.fail(...)
+        r'(\w+\.)?assertFalse\s*\(.+?\);',      # Matches ClassName.assertFalse(...)
+        r'(\w+\.)?assertNotEquals\s*\(.+?\);',  # Matches ClassName.assertNotEquals(...)
+        r'(\w+\.)?assertEquals\s*\(.+?\);',     # Matches ClassName.assertEquals(...)
+        r'(\w+\.)?assertArrayEquals\s*\(.+?\);',# Matches ClassName.assertArrayEquals(...)
+        r'(\w+\.)?assertNotNull\s*\(.+?\);',    # Matches ClassName.assertNotNull(...)
+        r'(\w+\.)?assertNotSame\s*\(.+?\);',    # Matches ClassName.assertNotSame(...)
+        r'(\w+\.)?assertSame\s*\(.+?\);',       # Matches ClassName.assertSame(...)
+        r'(\w+\.)?assertThat\s*\(.+?\);',       # Matches ClassName.assertThat(...)
+    ]
+
+    # Iterate through each pattern and find matches in the input string
+    for pattern in assertion_patterns:
+        match = re.search(pattern, input_string)
+        if match:
+            return match.group(0)
+
+    
+    return ""

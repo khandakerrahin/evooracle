@@ -42,6 +42,8 @@ template = PromptTemplate(input_variables=['action'], template="""{action}""")
 chain = LLMChain(llm=llm, prompt=template, verbose=True) 
 
 def ask_openLLM(messages):
+    # return "failed"
+    # return 'assertTrue(nodeInstaller4.getNodeVersion().equals("/node"));\n  assertFalse(nodeInstaller4.getNodeVersion().equals("/node"));\n  assertSame(nodeInstaller4.getNodeVersion().equals("/node"));'
     # Retry 5 times when error occurs
     max_try = 5
     while max_try:
@@ -322,14 +324,16 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
     """
     result = {}
     evo_result = {
-        "is_compiled": False,
-        "is_run": False,
-        "es_mutation_score": 0,
+        "eo_is_compiled": False,
+        "eo_is_run": False,
         "eo_mutation_score": 0,
+        "eo_test_path": None,
+        "es_is_compiled": False,
+        "es_is_run": False,
+        "es_mutation_score": 0,
+        "es_test_path": None,
         "prompts_and_responses": None,
     }
-
-    prompts_and_responses = []
 
     # 1. Extract the code
     has_code, extracted_code, has_syntactic_error = extract_code(evooracle_source_code)
@@ -351,32 +355,37 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
 
     out_dir = os.path.dirname(os.path.dirname(output_path))
 
-    renamed_class_evooracle = class_name + '_' + method_name + '_' + str(test_num) + string_tables.EVOORACLE_SIGNATURE
+    renamed_class_evooracle = class_name + '_' + str(test_num) + string_tables.EVOORACLE_SIGNATURE
     renamed_class_source_code_evooracle = change_class_name(extracted_code, class_name, renamed_class_evooracle)
 
     evooracle_test_file_name = export_method_test_case(out_dir, renamed_class_evooracle, renamed_class_source_code_evooracle)
     
-    renamed_class_evosuite = class_name + '_' + method_name + '_' + str(test_num) + string_tables.EVOSUITE_SIGNATURE
+    renamed_class_evosuite = class_name + '_' + str(test_num) + string_tables.EVOSUITE_UNIT_SIGNATURE
     renamed_class_source_code_evosuite = change_class_name(evosuite_source_code, class_name, renamed_class_evosuite)
-
+    
     evosuite_test_file_name = export_method_test_case(out_dir, renamed_class_evosuite, renamed_class_source_code_evosuite)
-
+    
     # run test
     response_dir = os.path.abspath(out_dir)
     target_dir = os.path.abspath(project_dir)
 
     # print("response_dir: " + response_dir)
     # print("target_dir: " + target_dir)
-    # print("test_file_name: " + test_file_name)
+    # print("test_file_name: " + evosuite_test_file_name)
 
     test_result_eo_c, test_result_eo_r, test_result_eo_ms = Task.test(response_dir, target_dir, evooracle_test_file_name, package, renamed_class_evooracle)
     test_result_es_c, test_result_es_r, test_result_es_ms = Task.test(response_dir, target_dir, evosuite_test_file_name, package, renamed_class_evosuite)
 
     # 3. Read the result
-    evo_result["is_compiled"] = test_result_eo_c
-    evo_result["is_run"] = test_result_eo_r
+    evo_result["eo_is_compiled"] = test_result_eo_c
+    evo_result["eo_is_run"] = test_result_eo_r
     evo_result["eo_mutation_score"] = test_result_eo_ms
+    evo_result["eo_test_path"] = evooracle_test_file_name
+
+    evo_result["es_is_compiled"] = test_result_es_c
+    evo_result["es_is_run"] = test_result_es_r
     evo_result["es_mutation_score"] = test_result_es_ms
+    evo_result["es_test_path"] = evosuite_test_file_name
     
     return evo_result
 
@@ -397,7 +406,6 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
     project_name = context.get("project_name")
     test_class_name = context.get("test_class_name")
     test_class_path = context.get("test_class_path")
-    method_name = context.get("method_name")
     
     # context = {"project_name", "class_name", "test_class_path", "test_class_name", "test_method_name", "method_name", 
     #               "method_details", "test_method_code", "assertion_placeholder", "test_case_with_placeholder", "package", "evosuite_test_case", "developer_comments"}
@@ -416,73 +424,118 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
                 "attempts": 0, 
                 "assertion_generated": False,
                 "assertion_generation_time": 0,
-                "is_compiled": False,
-                "is_run": False,
-                "es_mutation_score": 0,
+                "eo_is_compiled": False,
+                "eo_is_run": False,
                 "eo_mutation_score": 0,
+                "eo_test_path":None,
                 "eo_assertions": None,
+                "es_is_compiled": False,
+                "es_is_run": False,
+                "es_mutation_score": 0,
+                "es_test_path":None,
                 "prompts_and_responses": None,
             }
     
     prompts_and_responses = []
 
-    if consider_dev_comments:
-        prompt_template = TEMPLATE_WITH_DEV_COMMENTS
-    else:
-        prompt_template = TEMPLATE_BASIC
+    # if consider_dev_comments:
+    #     prompt_template = TEMPLATE_WITH_DEV_COMMENTS
+    # else:
+    #     prompt_template = TEMPLATE_BASIC
 
+    prompt_template = TEMPLATE_BASIC
+
+    if not consider_dev_comments:
+        context["method_details"] = remove_key_value_pair_from_json(context.get("method_details"), "dev_comments")
+
+        # print("AFTER REMOVING DEV COMMENTS:")
+        # print(context["method_details"])
+    
     try:
         while rounds < max_attempts:
             # 1. Ask LLM
             steps += 1
             rounds += 1
-            print(method_name, "test_" + str(test_id), "Asking " + llm_name + "...", "rounds", rounds)
-            
+            # print(method_name, "test_" + str(test_id), "Asking " + llm_name + "...", "rounds", rounds)
+            print("test_" + str(test_id), "Asking " + llm_name + "...", "rounds", rounds)
+
             # context = {"project_name", "class_name", "test_class_path", "test_class_name", "test_method_name", "method_name", 
             #           "method_details", "test_method_code", "assertion_placeholder", "test_case_with_placeholder", "package", "evosuite_test_case", "developer_comments"
+            
+            
+            # if rounds > 2:
+            #     # Third round : super trimmed prompt
+            #     trimmed_context = context
+
+            #     if len(context.get("developer_comments")) > 500:
+            #         trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 500)
+            #     elif len(context.get("developer_comments")) > 300:
+            #         trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 300)
+
+            #     trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
+            #     messages = generate_messages(prompt_template, trimmed_context)
+            # if rounds > 1:
+            #     # Second round : trimmed prompt
+            #     trimmed_context = context
+            #     if len(context.get("developer_comments")) > 500:
+            #         trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 500)
+            #     elif len(context.get("developer_comments")) > 300:
+            #         trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 300)
+
+            #     trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
+            #     messages = generate_messages(prompt_template, trimmed_context)
+            # else:
+            #     # first round : normal prompt
+            #     messages = generate_messages(prompt_template, context)
+
+            # print(Fore.BLUE, messages, Style.RESET_ALL)
+
             if rounds > 2:
                 # Third round : super trimmed prompt
                 trimmed_context = context
 
-                if len(context.get("developer_comments")) > 500:
-                    trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 500)
-                elif len(context.get("developer_comments")) > 300:
-                    trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 300)
+                if len(context.get("method_details")) > 3:
+                    trimmed_context["method_details"] = trim_list_to_desired_size(context.get("method_details"), 3)
+                elif len(context.get("method_details")) > 2:
+                    trimmed_context["method_details"] = trim_list_to_desired_size(context.get("method_details"), 2)
 
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
                 messages = generate_messages(prompt_template, trimmed_context)
             if rounds > 1:
                 # Second round : trimmed prompt
                 trimmed_context = context
-                if len(context.get("developer_comments")) > 500:
-                    trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 500)
-                elif len(context.get("developer_comments")) > 300:
-                    trimmed_context["developer_comments"] = trim_string_to_desired_length(context.get("developer_comments"), 300)
+                if len(context.get("method_details")) > 5:
+                    trimmed_context["method_details"] = trim_list_to_desired_size(context.get("method_details"), 5)
+                elif len(context.get("method_details")) > 3:
+                    trimmed_context["method_details"] = trim_list_to_desired_size(context.get("method_details"), 3)
 
                 trimmed_context["test_method_code"] = trim_string_to_substring(context.get("test_method_code"), string_tables.ASSERTION_PLACEHOLDER)
                 messages = generate_messages(prompt_template, trimmed_context)
+                
             else:
                 # first round : normal prompt
                 messages = generate_messages(prompt_template, context)
+                
+            # print("Prompt: " + Fore.YELLOW + messages, Style.RESET_ALL)  
 
-            # print(Fore.BLUE, messages, Style.RESET_ALL)
-            
             print("Attempt: " + Fore.YELLOW + str(rounds), Style.RESET_ALL)  
             llm_result = ask_openLLM(messages)
 
             prompts_and_responses.append({"prompt":messages,"response":llm_result})
-            # 2. Extract information from LLM, and RUN save the result
+            
             steps += 1
 
             raw_file_name = os.path.join(save_dir, str(steps) + "_raw_" + str(rounds) + ".json")
 
-            assertions = extract_assertions_from_string(llm_result)
+            assertions = extract_first_assertion_from_string(llm_result)
             
             if assertions:
                 print("Assertion generate: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
                 # print("LLM Response Assertion: " + Fore.GREEN + assertions, Style.RESET_ALL)
                 # print()
                 
+                end_time = time.perf_counter()
+
                 if not assertions.endswith(";"):
                     assertions += ";"
 
@@ -493,23 +546,31 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
                 
                 evo_result = extract_and_run(evooracle_source_code, evosuite_source_code, raw_file_name, test_class_name, test_id, context.get("method_name"),
                                                         project_name, context.get("package"), project_dir)
+                
                 result["assertion_generated"] = True
-                result["is_compiled"] = evo_result["is_compiled"]
-                result["is_run"] = evo_result["is_run"]
-                result["es_mutation_score"] = evo_result["es_mutation_score"]
+                result["eo_is_compiled"] = evo_result["eo_is_compiled"]
+                result["eo_is_run"] = evo_result["eo_is_run"]
                 result["eo_mutation_score"] = evo_result["eo_mutation_score"]
+                result["eo_test_path"] = evo_result["eo_test_path"]
                 result["eo_assertions"] = assertions
+                
+                result["es_is_compiled"] = evo_result["es_is_compiled"]
+                result["es_is_run"] = evo_result["es_is_run"]
+                result["es_mutation_score"] = evo_result["es_mutation_score"]
+                result["es_test_path"] = evo_result["es_test_path"]
                 
                 break
             else:
-                print("Assertion generate: " + Fore.RED + "FAILED", Style.RESET_ALL)  
+                print("Assertion generate: " + Fore.RED + "FAILED", Style.RESET_ALL)
+                end_time = time.perf_counter()
         
         result["attempts"] = rounds
 
     except Exception as e:
         print(Fore.RED + str(e), Style.RESET_ALL)
+        end_time = time.perf_counter()
     
-    end_time = time.perf_counter()
+    # end_time = time.perf_counter()
 
     assertion_generation_time = (end_time - start_time) * 1000
 
@@ -539,6 +600,17 @@ def trim_string_to_desired_length(original_string, cutoff_length):
     print(trimmed_string)
 
     return trimmed_string
+
+def trim_list_to_desired_size(original_list, cutoff_length):
+    try:
+        if not isinstance(original_list, list):
+            original_list = json.loads(original_list)
+        
+        while len(original_list) > cutoff_length:
+            original_list.pop()  
+        return original_list
+    except json.JSONDecodeError:
+        return original_list
 
 def whole_process(test_num, base_name, base_dir, repair, submits, total):
     """
