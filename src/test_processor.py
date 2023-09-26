@@ -297,9 +297,9 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
         with open(final_result_file, mode='w', newline='') as csv_file:
             # test_id, time, attempts, assertion_generated, is_compiled, is_run, mutation_score, CUT, MUT, project_dir, eo_assertions, 
             fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "eo_is_compiled", "eo_is_run", 
-                          "eo_mutation_score", "eo_test_path", "es_is_compiled", "es_is_run", "es_mutation_score", "es_test_path", "CUT", "MUT", "project_dir", "eo_assertions", 
-                          "used_developer_comments", "model", "temperature", "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", 
-                          "repeat_last_n", "timestamp", "prompts_and_responses"]
+                          "eo_mutation_score", "eo_test_path", "es_is_compiled", "es_is_run", "es_mutation_score", "es_test_path", "CUT", "MUT", "project_dir", 
+                          "eo_assertion", "es_assertion", "used_developer_comments", "model", "temperature", "n_predict", "top_p", "top_k", "n_batch", 
+                          "repeat_penalty", "repeat_last_n", "timestamp", "prompts_and_responses"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -329,9 +329,9 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
 
     with open(final_result_file, mode='a', newline='') as csv_file:
         fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "eo_is_compiled", "eo_is_run", 
-                          "eo_mutation_score", "eo_test_path", "es_is_compiled", "es_is_run", "es_mutation_score", "es_test_path", "CUT", "MUT", "project_dir", "eo_assertions", 
-                          "used_developer_comments", "model", "temperature", "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", 
-                          "repeat_last_n", "timestamp", "prompts_and_responses"]
+                          "eo_mutation_score", "eo_test_path", "es_is_compiled", "es_is_run", "es_mutation_score", "es_test_path", "CUT", "MUT", "project_dir", 
+                          "eo_assertion", "es_assertion", "used_developer_comments", "model", "temperature", "n_predict", "top_p", "top_k", "n_batch", 
+                          "repeat_penalty", "repeat_last_n", "timestamp", "prompts_and_responses"]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         
         writer.writerow({
@@ -351,7 +351,8 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
             "CUT": class_under_test,
             "MUT": method_details_list,
             "project_dir": project_dir,
-            "eo_assertions": result["eo_assertions"],
+            "eo_assertion": result["eo_assertions"],
+            "es_assertion": replaced_assertions,
             "model": llm_name,
             "temperature": temperature, 
             "n_predict": n_predict, 
