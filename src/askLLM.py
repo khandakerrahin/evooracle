@@ -327,9 +327,11 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
         "eo_is_compiled": False,
         "eo_is_run": False,
         "eo_mutation_score": 0,
+        "eo_test_path": None,
         "es_is_compiled": False,
         "es_is_run": False,
         "es_mutation_score": 0,
+        "es_test_path": None,
         "prompts_and_responses": None,
     }
 
@@ -369,7 +371,7 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
 
     # print("response_dir: " + response_dir)
     # print("target_dir: " + target_dir)
-    # print("test_file_name: " + test_file_name)
+    # print("test_file_name: " + evosuite_test_file_name)
 
     test_result_eo_c, test_result_eo_r, test_result_eo_ms = Task.test(response_dir, target_dir, evooracle_test_file_name, package, renamed_class_evooracle)
     test_result_es_c, test_result_es_r, test_result_es_ms = Task.test(response_dir, target_dir, evosuite_test_file_name, package, renamed_class_evosuite)
@@ -378,10 +380,12 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
     evo_result["eo_is_compiled"] = test_result_eo_c
     evo_result["eo_is_run"] = test_result_eo_r
     evo_result["eo_mutation_score"] = test_result_eo_ms
+    evo_result["eo_test_path"] = evooracle_test_file_name
 
     evo_result["es_is_compiled"] = test_result_es_c
     evo_result["es_is_run"] = test_result_es_r
     evo_result["es_mutation_score"] = test_result_es_ms
+    evo_result["es_test_path"] = evosuite_test_file_name
     
     return evo_result
 
@@ -402,7 +406,6 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
     project_name = context.get("project_name")
     test_class_name = context.get("test_class_name")
     test_class_path = context.get("test_class_path")
-    method_name = context.get("method_name")
     
     # context = {"project_name", "class_name", "test_class_path", "test_class_name", "test_method_name", "method_name", 
     #               "method_details", "test_method_code", "assertion_placeholder", "test_case_with_placeholder", "package", "evosuite_test_case", "developer_comments"}
@@ -424,10 +427,12 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
                 "eo_is_compiled": False,
                 "eo_is_run": False,
                 "eo_mutation_score": 0,
+                "eo_test_path":None,
                 "eo_assertions": None,
                 "es_is_compiled": False,
                 "es_is_run": False,
                 "es_mutation_score": 0,
+                "es_test_path":None,
                 "prompts_and_responses": None,
             }
     
@@ -546,11 +551,13 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
                 result["eo_is_compiled"] = evo_result["eo_is_compiled"]
                 result["eo_is_run"] = evo_result["eo_is_run"]
                 result["eo_mutation_score"] = evo_result["eo_mutation_score"]
+                result["eo_test_path"] = evo_result["eo_test_path"]
                 result["eo_assertions"] = assertions
                 
                 result["es_is_compiled"] = evo_result["es_is_compiled"]
                 result["es_is_run"] = evo_result["es_is_run"]
                 result["es_mutation_score"] = evo_result["es_mutation_score"]
+                result["es_test_path"] = evo_result["es_test_path"]
                 
                 break
             else:

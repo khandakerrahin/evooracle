@@ -297,7 +297,7 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
         with open(final_result_file, mode='w', newline='') as csv_file:
             # test_id, time, attempts, assertion_generated, is_compiled, is_run, mutation_score, CUT, MUT, project_dir, eo_assertions, 
             fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "eo_is_compiled", "eo_is_run", 
-                          "eo_mutation_score", "es_is_compiled", "es_is_run", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", 
+                          "eo_mutation_score", "eo_test_path", "es_is_compiled", "es_is_run", "es_mutation_score", "es_test_path", "CUT", "MUT", "project_dir", "eo_assertions", 
                           "used_developer_comments", "model", "temperature", "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", 
                           "repeat_last_n", "timestamp", "prompts_and_responses"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
@@ -329,7 +329,7 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
 
     with open(final_result_file, mode='a', newline='') as csv_file:
         fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "eo_is_compiled", "eo_is_run", 
-                          "eo_mutation_score", "es_is_compiled", "es_is_run", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", 
+                          "eo_mutation_score", "eo_test_path", "es_is_compiled", "es_is_run", "es_mutation_score", "es_test_path", "CUT", "MUT", "project_dir", "eo_assertions", 
                           "used_developer_comments", "model", "temperature", "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", 
                           "repeat_last_n", "timestamp", "prompts_and_responses"]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
@@ -343,9 +343,11 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
             "eo_is_compiled": result["eo_is_compiled"],
             "eo_is_run": result["eo_is_run"],
             "eo_mutation_score": result["eo_mutation_score"],
+            "eo_test_path": result["eo_test_path"],
             "es_is_compiled": result["es_is_compiled"],
             "es_is_run": result["es_is_run"],
             "es_mutation_score": result["es_mutation_score"],
+            "es_test_path": result["es_test_path"],
             "CUT": class_under_test,
             "MUT": method_details_list,
             "project_dir": project_dir,
