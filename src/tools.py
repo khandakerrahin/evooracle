@@ -299,6 +299,20 @@ def remove_all_assertions_but_last(source_code):
 
     return source_code
 
+def get_CUT_from_test_class_name(input_string):
+    parts = input_string.split(string_tables.EVOSUITE_SIGNATURE)
+    if len(parts) > 0:
+        return parts[0]
+    else:
+        return input_string  # Return the original string if "_ESTest" is not found
+
+def get_MUT_from_string(input_string):
+    parts = input_string.split(".")
+    if len(parts) >= 2:
+        return parts[1]
+    else:
+        return input_string  # Return the original string if there's no second part or it can't be split
+
 def remove_empty_lines(input_text):
     lines = input_text.split('\n')
     non_empty_lines = [line for line in lines if line.strip()]

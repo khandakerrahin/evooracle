@@ -42,7 +42,7 @@ template = PromptTemplate(input_variables=['action'], template="""{action}""")
 chain = LLMChain(llm=llm, prompt=template, verbose=True) 
 
 def ask_openLLM(messages):
-    # return 'assertTrue(nodeInstaller4.getNodeVersion().equals("/node"));\n  assertFalse(nodeInstaller4.getNodeVersion().equals("/node"));\n  assertSame(nodeInstaller4.getNodeVersion().equals("/node"));'
+    return 'assertTrue(nodeInstaller4.getNodeVersion().equals("/node"));\n  assertFalse(nodeInstaller4.getNodeVersion().equals("/node"));\n  assertSame(nodeInstaller4.getNodeVersion().equals("/node"));'
     # Retry 5 times when error occurs
     max_try = 5
     while max_try:
@@ -323,10 +323,12 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
     """
     result = {}
     evo_result = {
-        "is_compiled": False,
-        "is_run": False,
-        "es_mutation_score": 0,
+        "eo_is_compiled": False,
+        "eo_is_run": False,
         "eo_mutation_score": 0,
+        "es_is_compiled": False,
+        "es_is_run": False,
+        "es_mutation_score": 0,
         "prompts_and_responses": None,
     }
 
@@ -357,7 +359,7 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
 
     evooracle_test_file_name = export_method_test_case(out_dir, renamed_class_evooracle, renamed_class_source_code_evooracle)
     
-    renamed_class_evosuite = class_name + '_' + method_name + '_' + str(test_num) + string_tables.EVOSUITE_SIGNATURE
+    renamed_class_evosuite = class_name + '_' + method_name + '_' + str(test_num) + string_tables.EVOSUITE_UNIT_SIGNATURE
     renamed_class_source_code_evosuite = change_class_name(evosuite_source_code, class_name, renamed_class_evosuite)
 
     evosuite_test_file_name = export_method_test_case(out_dir, renamed_class_evosuite, renamed_class_source_code_evosuite)
@@ -374,9 +376,12 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
     test_result_es_c, test_result_es_r, test_result_es_ms = Task.test(response_dir, target_dir, evosuite_test_file_name, package, renamed_class_evosuite)
 
     # 3. Read the result
-    evo_result["is_compiled"] = test_result_eo_c
-    evo_result["is_run"] = test_result_eo_r
+    evo_result["eo_is_compiled"] = test_result_eo_c
+    evo_result["eo_is_run"] = test_result_eo_r
     evo_result["eo_mutation_score"] = test_result_eo_ms
+
+    evo_result["es_is_compiled"] = test_result_es_c
+    evo_result["es_is_run"] = test_result_es_r
     evo_result["es_mutation_score"] = test_result_es_ms
     
     return evo_result
@@ -417,11 +422,13 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
                 "attempts": 0, 
                 "assertion_generated": False,
                 "assertion_generation_time": 0,
-                "is_compiled": False,
-                "is_run": False,
-                "es_mutation_score": 0,
+                "eo_is_compiled": False,
+                "eo_is_run": False,
                 "eo_mutation_score": 0,
                 "eo_assertions": None,
+                "es_is_compiled": False,
+                "es_is_run": False,
+                "es_mutation_score": 0,
                 "prompts_and_responses": None,
             }
     
@@ -497,11 +504,14 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
                 evo_result = extract_and_run(evooracle_source_code, evosuite_source_code, raw_file_name, test_class_name, test_id, context.get("method_name"),
                                                         project_name, context.get("package"), project_dir)
                 result["assertion_generated"] = True
-                result["is_compiled"] = evo_result["is_compiled"]
-                result["is_run"] = evo_result["is_run"]
-                result["es_mutation_score"] = evo_result["es_mutation_score"]
+                result["eo_is_compiled"] = evo_result["eo_is_compiled"]
+                result["eo_is_run"] = evo_result["eo_is_run"]
                 result["eo_mutation_score"] = evo_result["eo_mutation_score"]
                 result["eo_assertions"] = assertions
+                
+                result["es_is_compiled"] = evo_result["es_is_compiled"]
+                result["es_is_run"] = evo_result["es_is_run"]
+                result["es_mutation_score"] = evo_result["es_mutation_score"]
                 
                 break
             else:

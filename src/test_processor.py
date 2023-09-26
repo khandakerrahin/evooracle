@@ -255,18 +255,32 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
 
     # focal_methods = json.loads(focal_method_name)
     
+    # overriding the CUT from DB Json to Test Filename
+    class_under_test = get_CUT_from_test_class_name(test_class_name)
+
+    method_under_test = ""
+
     # prepare the context
-    class_under_test, method_under_test = (focal_methods[0]).split(".")
+    MUT_list = set()  # Create an empty set to store unique MUT
     
-    print("CUT: ", Fore.GREEN + class_under_test, Style.RESET_ALL)
-    print("MUT: ", Fore.GREEN + method_under_test, Style.RESET_ALL)
-    print()
+    for focal_method in focal_methods:
+        mut = get_MUT_from_string(focal_method)
+        MUT_list.add(mut)
+
+    MUT_list = list(MUT_list)
+
+    
+    # print("CUT: ", Fore.GREEN + class_under_test, Style.RESET_ALL)
+    print("MUT: ", Fore.YELLOW + "\n".join(MUT_list), Style.RESET_ALL)
+    # print()
     
     method_under_test_details = manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, False)
 
     # print(method_under_test_details)
-
-    dev_comments = method_under_test_details.get("dev_comments")
+    if method_under_test_details:
+        dev_comments = method_under_test_details.get("dev_comments")
+    else:
+        dev_comments = None
 
     context = {"project_name": project_name, "class_name": class_under_test, "test_class_path":test_class_path, "test_class_name": test_class_name, "test_method_name":method_name, "method_name": method_under_test, 
             "method_details": manager.get_details_by_project_class_and_method(project_name, class_under_test, method_under_test, True), 
@@ -281,16 +295,30 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
         # If it doesn't exist, create the file with a header row
         with open(final_result_file, mode='w', newline='') as csv_file:
             # test_id, time, attempts, assertion_generated, is_compiled, is_run, mutation_score, CUT, MUT, project_dir, eo_assertions, 
-            fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "is_compiled", "is_run", 
-                          "eo_mutation_score", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", "used_developer_comments", "model", "temperature", 
-                          "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", "repeat_last_n", "timestamp", "prompts_and_responses"]
+            fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "eo_is_compiled", "eo_is_run", 
+                          "eo_mutation_score", "es_is_compiled", "es_is_run", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", 
+                          "used_developer_comments", "model", "temperature", "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", 
+                          "repeat_last_n", "timestamp", "prompts_and_responses"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
 
     # Get the current time in milliseconds
     start_time = time.perf_counter()
     
-    result = whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev_comments)
+    result = {
+        "assertion_generation_time": None,
+        "attempts": None, 
+        "assertion_generated": None,
+        "eo_is_compiled": None,
+        "eo_is_run": None,
+        "eo_mutation_score": None,
+        "es_is_compiled": None,
+        "es_is_run": None,
+        "es_mutation_score": None,
+        "eo_assertions": None,
+        "prompts_and_responses": None,
+    }
+    # result = whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev_comments)
     
     end_time = time.perf_counter()
 
@@ -299,9 +327,10 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     with open(final_result_file, mode='a', newline='') as csv_file:
-        fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "is_compiled", "is_run", 
-                          "eo_mutation_score", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", "used_developer_comments", "model", "temperature", 
-                          "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", "repeat_last_n", "timestamp", "prompts_and_responses"]
+        fieldnames = ["test_id", "total_time", "assertion_generation_time", "attempts", "assertion_generated", "eo_is_compiled", "eo_is_run", 
+                          "eo_mutation_score", "es_is_compiled", "es_is_run", "es_mutation_score", "CUT", "MUT", "project_dir", "eo_assertions", 
+                          "used_developer_comments", "model", "temperature", "n_predict", "top_p", "top_k", "n_batch", "repeat_penalty", 
+                          "repeat_last_n", "timestamp", "prompts_and_responses"]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         
         writer.writerow({
@@ -310,10 +339,12 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
             "assertion_generation_time": result["assertion_generation_time"],
             "attempts": result["attempts"], 
             "assertion_generated": result["assertion_generated"],
-            "is_compiled": result["is_compiled"],
-            "is_run": result["is_run"],
-            "es_mutation_score": result["es_mutation_score"],
+            "eo_is_compiled": result["eo_is_compiled"],
+            "eo_is_run": result["eo_is_run"],
             "eo_mutation_score": result["eo_mutation_score"],
+            "es_is_compiled": result["es_is_compiled"],
+            "es_is_run": result["es_is_run"],
+            "es_mutation_score": result["es_mutation_score"],
             "CUT": class_under_test,
             "MUT": method_under_test,
             "project_dir": project_dir,
@@ -330,9 +361,6 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
             "prompts_and_responses": result["prompts_and_responses"],
             "timestamp": current_time,
         })
-    
-
-
  
         print("Result generation: ", Fore.GREEN + "SUCCESS", Style.RESET_ALL)
 
