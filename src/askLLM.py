@@ -333,8 +333,6 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
         "prompts_and_responses": None,
     }
 
-    prompts_and_responses = []
-
     # 1. Extract the code
     has_code, extracted_code, has_syntactic_error = extract_code(evooracle_source_code)
     if not has_code:
@@ -355,16 +353,16 @@ def extract_and_run(evooracle_source_code, evosuite_source_code, output_path, cl
 
     out_dir = os.path.dirname(os.path.dirname(output_path))
 
-    renamed_class_evooracle = class_name + '_' + method_name + '_' + str(test_num) + string_tables.EVOORACLE_SIGNATURE
+    renamed_class_evooracle = class_name + '_' + str(test_num) + string_tables.EVOORACLE_SIGNATURE
     renamed_class_source_code_evooracle = change_class_name(extracted_code, class_name, renamed_class_evooracle)
 
     evooracle_test_file_name = export_method_test_case(out_dir, renamed_class_evooracle, renamed_class_source_code_evooracle)
     
-    renamed_class_evosuite = class_name + '_' + method_name + '_' + str(test_num) + string_tables.EVOSUITE_UNIT_SIGNATURE
+    renamed_class_evosuite = class_name + '_' + str(test_num) + string_tables.EVOSUITE_UNIT_SIGNATURE
     renamed_class_source_code_evosuite = change_class_name(evosuite_source_code, class_name, renamed_class_evosuite)
-
+    
     evosuite_test_file_name = export_method_test_case(out_dir, renamed_class_evosuite, renamed_class_source_code_evosuite)
-
+    
     # run test
     response_dir = os.path.abspath(out_dir)
     target_dir = os.path.abspath(project_dir)
@@ -513,13 +511,13 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
                 # first round : normal prompt
                 messages = generate_messages(prompt_template, context)
                 
-            print("Prompt: " + Fore.YELLOW + messages, Style.RESET_ALL)  
+            # print("Prompt: " + Fore.YELLOW + messages, Style.RESET_ALL)  
 
             print("Attempt: " + Fore.YELLOW + str(rounds), Style.RESET_ALL)  
             llm_result = ask_openLLM(messages)
 
             prompts_and_responses.append({"prompt":messages,"response":llm_result})
-            # 2. Extract information from LLM, and RUN save the result
+            
             steps += 1
 
             raw_file_name = os.path.join(save_dir, str(steps) + "_raw_" + str(rounds) + ".json")
@@ -543,6 +541,7 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
                 
                 evo_result = extract_and_run(evooracle_source_code, evosuite_source_code, raw_file_name, test_class_name, test_id, context.get("method_name"),
                                                         project_name, context.get("package"), project_dir)
+                
                 result["assertion_generated"] = True
                 result["eo_is_compiled"] = evo_result["eo_is_compiled"]
                 result["eo_is_run"] = evo_result["eo_is_run"]
