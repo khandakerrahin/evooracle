@@ -42,5 +42,5 @@ if __name__ == '__main__':
         
         run(test_id, project_dir, class_name, method_name, llm_name, consider_dev_comments)
     else:
-        print(Fore.RED + "Run failed, missing arguments.", Style.RESET_ALL)        
+        print(Fore.RED + "Run failed, missing arguments: test_id    project_dir class_name  method_name llm_name    consider_dev_comments", Style.RESET_ALL)        
     

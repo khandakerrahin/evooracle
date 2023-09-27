@@ -287,7 +287,7 @@ def remove_all_assertions_but_last(source_code):
 
     # If there are no assertions, return the source_code as is
     if not assertions:
-        return source_code, []
+        return source_code
 
     # Initialize the replaced_assertions list
     replaced_assertions = []

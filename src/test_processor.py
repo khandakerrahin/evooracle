@@ -232,6 +232,8 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
 
     source_code = remove_all_assertions_but_last(source_code)
 
+    # print("SIMPLIFIED SOURCE CODE: " + str(source_code))
+
     source_code = remove_empty_lines(source_code)
 
     # print("SIMPLIFIED SOURCE CODE: " + source_code)
