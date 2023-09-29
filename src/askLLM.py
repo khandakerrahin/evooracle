@@ -449,6 +449,11 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
 
     prompt_template = TEMPLATE_BASIC
 
+    # write in file if comments exist
+    # write_entries_with_comments(context)
+    
+    # sys.exit()
+
     if not consider_dev_comments:
         context["method_details"] = remove_key_value_pair_from_json(context.get("method_details"), "dev_comments")
 

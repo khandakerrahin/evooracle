@@ -1,0 +1,6 @@
+id,model
+1,ggml-stable-vicuna-13B.q4_2.bin
+2,wizardlm-13b-v1.1-superhot-8k.ggmlv3.q4_0.bin
+3,ggml-mpt-7b-chat.bin
+4,orca-mini-13b.ggmlv3.q4_0.bin
+5,nous-hermes-13b.ggmlv3.q4_0.bin
