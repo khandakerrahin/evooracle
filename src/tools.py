@@ -1,5 +1,7 @@
+import csv
 import math
 import shutil
+import sys
 from config import *
 import os
 import json
@@ -287,7 +289,7 @@ def remove_all_assertions_but_last(source_code):
 
     # If there are no assertions, return the source_code as is
     if not assertions:
-        return source_code, []
+        return source_code
 
     # Initialize the replaced_assertions list
     replaced_assertions = []
@@ -323,7 +325,42 @@ def remove_key_value_pair_from_json(data, key):
     # Convert the modified data back to JSON (if needed)
     json_data = json.dumps(data)
     return json_data
+
+def write_entries_with_comments(context):
+    # context = {"project_name", "class_name", "test_class_path", "test_class_name", 
+    #        "test_method_name", "method_details", "test_method_code", "assertion_placeholder", "test_case_with_placeholder", "package", "evosuite_test_case"}
     
+    data = context.get("method_details")
+        
+    comment_entries_file = "/home/shaker/Documents/evooracle_comments_entries.csv"
+    # open file to write results
+    if not os.path.exists(comment_entries_file):
+        # If it doesn't exist, create the file with a header row
+        with open(comment_entries_file, mode='w', newline='') as csv_file:
+            
+            fieldnames = ["project_name", "test_class_name", "test_method_name", "test_class_path", "dev_comments"]
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writeheader()
+            
+    # Iterate through the list of dictionaries and remove key-value pairs
+    for item in data:
+        # Remove the 'dependencies' key if it exists in the current dictionary
+        if "dev_comments" in item:
+            if item["dev_comments"]:
+                with open(comment_entries_file, mode='a', newline='') as csv_file:
+                    fieldnames = ["project_name", "test_class_name", "test_method_name", "test_class_path", "dev_comments"]
+                    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+                    
+                    writer.writerow({
+                        "project_name": context.get("project_name"), 
+                        "test_class_name": context.get("test_class_name"),  
+                        "test_method_name": context.get("test_method_name"), 
+                        "test_class_path": context.get("test_class_path"),  
+                        "dev_comments": item["dev_comments"],
+                    })
+                break
+    
+
 def remove_empty_lines(input_text):
     lines = input_text.split('\n')
     non_empty_lines = [line for line in lines if line.strip()]

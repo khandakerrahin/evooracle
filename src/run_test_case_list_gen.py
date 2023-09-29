@@ -53,5 +53,5 @@ if __name__ == '__main__':
         
         run(project_dir)
     else:
-        print(Fore.RED + "Run failed, missing arguments.", Style.RESET_ALL)        
+        print(Fore.RED + "Run failed, missing arguments: project_dir", Style.RESET_ALL)        
     

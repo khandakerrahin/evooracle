@@ -31,15 +31,19 @@ env = jinja2.Environment(loader=jinja2.FileSystemLoader('../prompt'))
 # BASE_PATH = '/home/shaker/models/GPT4All/'
 BASE_PATH = LLM_BASE_PATH
 # PATH = f'{BASE_PATH}{"ggml-gpt4all-l13b-snoozy.bin"}'
-PATH = f'{BASE_PATH}{sys.argv[5]}'
+try:
+    PATH = f'{BASE_PATH}{sys.argv[5]}'
+    # Callbacks support token-wise streaming
+    callbacks = [StreamingStdOutCallbackHandler()]
 
-# Callbacks support token-wise streaming
-callbacks = [StreamingStdOutCallbackHandler()]
+    llm = GPT4All(model=PATH, backend="gptj", callbacks=callbacks, verbose=True, temp=temperature, n_predict=n_predict, top_p=top_p, top_k=top_k, n_batch=n_batch, repeat_penalty=repeat_penalty, repeat_last_n=repeat_last_n)
 
-llm = GPT4All(model=PATH, backend="gptj", callbacks=callbacks, verbose=True, temp=temperature, n_predict=n_predict, top_p=top_p, top_k=top_k, n_batch=n_batch, repeat_penalty=repeat_penalty, repeat_last_n=repeat_last_n)
+    template = PromptTemplate(input_variables=['action'], template="""{action}""")
+    chain = LLMChain(llm=llm, prompt=template, verbose=True) 
+except:
+    print("LLM path missing, ignoring.")
 
-template = PromptTemplate(input_variables=['action'], template="""{action}""")
-chain = LLMChain(llm=llm, prompt=template, verbose=True) 
+
 
 def ask_openLLM(messages):
     # return "failed"
@@ -444,6 +448,11 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
     #     prompt_template = TEMPLATE_BASIC
 
     prompt_template = TEMPLATE_BASIC
+
+    # write in file if comments exist
+    # write_entries_with_comments(context)
+    
+    # sys.exit()
 
     if not consider_dev_comments:
         context["method_details"] = remove_key_value_pair_from_json(context.get("method_details"), "dev_comments")

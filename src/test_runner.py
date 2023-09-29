@@ -116,8 +116,8 @@ class TestRunner:
             # "java -version",
             # "export CLASSPATH=target/classes:evosuite-standalone-runtime-1.0.6.jar:evosuite-tests:target/dependency/junit-4.12.j/ar:target/dependency/hamcrest-core-1.3.jar",
             # "javac {}".format(test_path + "/*.java"),
-            "javac -cp target/classes:evosuite-standalone-runtime-1.0.6.jar:evosuite-tests:target/dependency/junit-4.12.jar:target/dependency/hamcrest-core-1.3.jar {}".format(test_file),
-            "java -cp target/classes:evosuite-standalone-runtime-1.0.6.jar:evosuite-tests:target/dependency/junit-4.12.jar:target/dependency/hamcrest-core-1.3.jar org.junit.runner.JUnitCore {}.{}".format(package, class_name)
+            "javac -verbose -cp target/classes:evosuite-standalone-runtime-1.0.6.jar:evosuite-tests:target/dependency/junit-4.12.jar:target/dependency/hamcrest-core-1.3.jar {}".format(test_file),
+            "java -verbose -cp target/classes:evosuite-standalone-runtime-1.0.6.jar:evosuite-tests:target/dependency/junit-4.12.jar:target/dependency/hamcrest-core-1.3.jar org.junit.runner.JUnitCore {}.{}".format(package, class_name)
             # "$EVOSUITE",
             # "$EVOSUITE -class tutorial.Stack -projectCP target/classes",
             # "javac evosuite-tests/tutorial/*.java",
