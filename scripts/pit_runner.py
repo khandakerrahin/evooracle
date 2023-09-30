@@ -21,8 +21,8 @@ classes = {
 models = ["ocra", "mpt", "nous", "vicuna", "wizlm"]
 runs = ["run_01", "run_02", "run_03"]
 
-models = ["ocra"]
-runs = ["run_03"]
+# models = ["ocra"]
+# runs = ["run_03"]
 
 filenames = []
 
@@ -36,7 +36,7 @@ for class_name, class_data in classes.items():
         for run in runs:
             # Construct the file name pattern
             file_pattern = f"{class_name}_ESTest_{run}_identical_5_{model}"
-
+            file_pattern = f"{class_name}_ESTest_{run}_identical_5"
             test_path = class_path + "/src/test/java"
             # Construct the full path
             full_path = os.path.join(test_path, package.replace(".", os.path.sep))
@@ -57,14 +57,17 @@ for class_name, class_data in classes.items():
                             os.rename(os.path.join(root, file), failed_file_path)
                             # print(f"{file} renamed to {file}.failed.")
                         else:
-                            print(f"The compiled file at {compiled_file} exists.")
+                            # print(f"The compiled file at {compiled_file} exists.")
                             
                             # TODO run mvn and check if successful
-                            # Define your commands
-                            commands = [
-                                
-                            ]
                             
+                            # PIT Test command
+                            # filename = "{class}_ESTest_{run}_identical_5_{model}_{any_random_id}_EOTest"
+                            test_class_name = file.replace(".java", "")
+                            individual_mvn_pit_command = f"mvn test-compile org.pitest:pitest-maven:mutationCoverage -DtargetClasses={package}.{class_name} -DtargetTests={package}.{test_class_name}"
+                            
+                            print("PIT Command: " + individual_mvn_pit_command)
+
                             def run_command(command, working_directory=None):
                                 try:
                                     subprocess.run(command, shell=True, check=True, cwd=working_directory)
@@ -75,16 +78,9 @@ for class_name, class_data in classes.items():
                                     return False
                             
                             # Running mvn PIT test for class
-                            if run_command(commands[0], working_directory=target_path):
-                                print("Compile: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
-                                is_compiled = True
+                            # if run_command(individual_mvn_pit_command, working_directory=class_path):
+                            #     print("PIT Test: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
                                 
-                                # RUNNING
-                                if run_command(commands[1], working_directory=target_path):
-                                    print("RUN: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
-                                    is_run = True
-                                else:
-                                    print("RUN: " + Fore.RED + "FAIL", Style.RESET_ALL)
-                            else:
-                                print("Compile: " + Fore.RED + "FAIL", Style.RESET_ALL)
+                            # else:
+                            #     print("PIT Test: " + Fore.RED + "FAIL", Style.RESET_ALL)
 
