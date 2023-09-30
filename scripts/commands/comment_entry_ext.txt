@@ -1,5 +1,3 @@
-python run_evoOracle.py run_001_vicuna /home/shaker/git/evooracle_db/zerocode/core/ PropertiesProviderUtils_ESTest test08 ggml-stable-vicuna-13B.q4_2.bin false
-
 python run_evoOracle.py  run_01_identical_5_mpt_1 /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/projects_db/zerocode/core/ ZeroCodeAssertionsProcessor_ESTest test0 ggml-mpt-7b-chat.bin false
 python run_evoOracle.py  run_01_identical_5_mpt_2 /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/projects_db/zerocode/core/ PropertiesProviderUtils_ESTest test00 ggml-mpt-7b-chat.bin false
 python run_evoOracle.py  run_01_identical_5_mpt_3 /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/projects_db/zerocode/core/ PropertiesProviderUtils_ESTest test01 ggml-mpt-7b-chat.bin false
@@ -48,10 +46,9 @@ python run_evoOracle.py  run_01_identical_5_mpt_45 /home/shaker/Programs/evoorac
 python run_evoOracle.py  run_01_identical_5_mpt_46 /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/projects_db/javacv BaseSettings_ESTest test09 ggml-mpt-7b-chat.bin false
 python run_evoOracle.py  run_01_identical_5_mpt_47 /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/projects_db/javacv BaseSettings_ESTest test10 ggml-mpt-7b-chat.bin false
 python run_evoOracle.py  run_01_identical_5_mpt_48 /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/projects_db/javacv BaseSettings_ESTest test11 ggml-mpt-7b-chat.bin false
+python run_evoOracle.py  run_01_identical_5_mpt_49 /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/projects_db/javacv BaseSettings_ESTest test12 ggml-mpt-7b-chat.bin false
+python run_evoOracle.py  run_01_identical_5_mpt_50 /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/projects_db/javacv BaseSettings_ESTest test13 ggml-mpt-7b-chat.bin false
 
-
-false49_eo_out.txt --error outputs/out_err/run_01_identical_5_mpt_49_eo_err.txt -p identical-5 _______________________________ run_01_identical_5_mpt_49 /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/projects_db/javacv BaseSettings_ESTest test12 ggml-mpt-7b-chat.bin false
-false50_eo_out.txt --error outputs/out_err/run_01_identical_5_mpt_50_eo_err.txt -p identical-5 _______________________________ run_01_identical_5_mpt_50 /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/projects_db/javacv BaseSettings_ESTest test13 ggml-mpt-7b-chat.bin false
 false51_eo_out.txt --error outputs/out_err/run_01_identical_5_mpt_51_eo_err.txt -p identical-5 _______________________________ run_01_identical_5_mpt_51 /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/projects_db/javacv SeekableByteArrayOutputStream_ESTest test00 ggml-mpt-7b-chat.bin false
 false52_eo_out.txt --error outputs/out_err/run_01_identical_5_mpt_52_eo_err.txt -p identical-5 _______________________________ run_01_identical_5_mpt_52 /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/projects_db/javacv SeekableByteArrayOutputStream_ESTest test01 ggml-mpt-7b-chat.bin false
 false53_eo_out.txt --error outputs/out_err/run_01_identical_5_mpt_53_eo_err.txt -p identical-5 _______________________________ run_01_identical_5_mpt_53 /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/projects_db/javacv SeekableByteArrayOutputStream_ESTest test02 ggml-mpt-7b-chat.bin false
