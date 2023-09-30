@@ -1,0 +1,13 @@
+class,EvoSuite,mpt,nous,ocra,vicuna,wizlm
+BaseSettings,53.33,13.33,37.78,20.0,0.0,2.22
+CacheHandler,27.78,0.0,0.0,0.0,0.0,0.0
+NPMInstaller,34.09,0.0,12.12,0.0,0.0,0.0
+NodeInstaller,56.9,27.59,45.98,12.07,0.0,12.07
+Parallel,100.0,7.69,60.26,0.0,33.33,51.28
+PnpmInstaller,29.27,8.94,14.63,0.0,1.63,4.07
+PropertiesProviderUtils,26.67,15.55,11.11,6.67,0.0,8.89
+ResolutionCache,0.0,0.0,0.0,0.0,0.0,0.0
+Seekable,0.0,0.0,0.0,0.0,0.0,0.0
+SeekableByteArrayOutputStream,93.75,0.0,60.42,14.58,31.25,25.0
+ZeroCodeAssertionsProcessor,0.0,0.0,0.0,0.0,0.0,0.0
+ZerocodeCorrelationshipLogger,52.38,6.35,25.4,1.59,0.0,28.57
