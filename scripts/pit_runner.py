@@ -1,7 +1,9 @@
+import csv
 import os
 from colorama import Fore, Style, init
 import subprocess
-
+from pit_report_parser import get_linecov_mutcov_teststrength
+import sys
 # classes format = class:[package, path]
 classes = {
     "BaseSettings":["org.bytedeco.javacv", "/home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/javacv"],
@@ -24,7 +26,15 @@ runs = ["run_01", "run_02", "run_03"]
 # models = ["ocra"]
 # runs = ["run_03"]
 
-filenames = []
+final_result_file = "/home/shaker/Programs/evooracle_singularity/eo_mutation_scores.csv"
+# open file to write results
+if not os.path.exists(final_result_file):
+    # If it doesn't exist, create the file with a header row
+    with open(final_result_file, mode='w', newline='') as csv_file:
+        fieldnames = ["class", "test_class", "model", "run", "eo_test_count", "package", "eo_line_coverage_score", "eo_mutation_coverage_score", "eo_test_strength_score", 
+                    "eo_line_coverage", "eo_mutation_coverage", "eo_test_strength", "mvn_pit_command", "mvn_pit_status"]
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer.writeheader()
 
 # Iterate through each class
 for class_name, class_data in classes.items():
@@ -34,9 +44,11 @@ for class_name, class_data in classes.items():
     for model in models:
         # Iterate through each run
         for run in runs:
+            target_tests = []
+
             # Construct the file name pattern
             file_pattern = f"{class_name}_ESTest_{run}_identical_5_{model}"
-            file_pattern = f"{class_name}_ESTest_{run}_identical_5"
+            # file_pattern = f"{class_name}_ESTest_{run}_identical_5"
             test_path = class_path + "/src/test/java"
             # Construct the full path
             full_path = os.path.join(test_path, package.replace(".", os.path.sep))
@@ -64,9 +76,11 @@ for class_name, class_data in classes.items():
                             # PIT Test command
                             # filename = "{class}_ESTest_{run}_identical_5_{model}_{any_random_id}_EOTest"
                             test_class_name = file.replace(".java", "")
-                            individual_mvn_pit_command = f"mvn test-compile org.pitest:pitest-maven:mutationCoverage -DtargetClasses={package}.{class_name} -DtargetTests={package}.{test_class_name}"
                             
-                            print("PIT Command: " + individual_mvn_pit_command)
+                            target_test = f"{package}.{test_class_name}"
+                            target_tests.append(target_test)
+
+                            # print("PIT Command: " + individual_mvn_pit_command)
 
                             def run_command(command, working_directory=None):
                                 try:
@@ -83,4 +97,54 @@ for class_name, class_data in classes.items():
                                 
                             # else:
                             #     print("PIT Test: " + Fore.RED + "FAIL", Style.RESET_ALL)
+            
+            eo_test_count = len(target_tests)
+            eo_line_coverage_score = 0
+            eo_mutation_coverage_score = 0
+            eo_test_strength_score = 0
+            eo_line_coverage = 0
+            eo_mutation_coverage = 0
+            eo_test_strength = 0
+            mvn_pit_status = False
 
+            if target_tests:
+
+                # print("\ntarget_tests:\n" + "\n".join(target_tests))
+                comma_separated_target_tests = ",".join(target_tests)
+                mvn_pit_command = f"mvn test-compile org.pitest:pitest-maven:mutationCoverage -DtargetClasses={package}.{class_name} -DtargetTests={comma_separated_target_tests}"
+                            
+                # Running mvn PIT test for class
+                if run_command(mvn_pit_command, working_directory=class_path):
+                    print("PIT Test: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
+                    mvn_pit_status = True
+                    
+                    # TODO parse pit report
+                    report_path = os.path.join(class_path, "target/pit-reports/index.html") 
+                    eo_line_coverage_score, eo_mutation_coverage_score, eo_test_strength_score, eo_line_coverage, eo_mutation_coverage, eo_test_strength  = get_linecov_mutcov_teststrength(report_path)
+
+                else:
+                    print("PIT Test: " + Fore.RED + "FAIL", Style.RESET_ALL)
+                
+            with open(final_result_file, mode='a', newline='') as csv_file:
+                fieldnames = ["class", "test_class", "model", "run", "eo_test_count", "package", "eo_line_coverage_score", "eo_mutation_coverage_score", "eo_test_strength_score", 
+                    "eo_line_coverage", "eo_mutation_coverage", "eo_test_strength", "mvn_pit_command", "mvn_pit_status"]
+
+                writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+                
+                writer.writerow({
+                    "class": class_name,
+                    "test_class": test_class_name,
+                    "model": model,
+                    "run": run,
+                    "eo_test_count": eo_test_count,
+                    "package": package, 
+                    "eo_line_coverage_score": eo_line_coverage_score,
+                    "eo_mutation_coverage_score": eo_mutation_coverage_score, 
+                    "eo_test_strength_score": eo_test_strength_score,
+                    "eo_line_coverage": eo_line_coverage,
+                    "eo_mutation_coverage": eo_mutation_coverage, 
+                    "eo_test_strength": eo_test_strength,
+                    "mvn_pit_command": mvn_pit_command,
+                    "mvn_pit_status": mvn_pit_status
+                })
+                # sys.exit()
