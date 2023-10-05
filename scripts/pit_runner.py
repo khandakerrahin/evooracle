@@ -1,5 +1,6 @@
 import csv
 import os
+import re
 from colorama import Fore, Style, init
 import subprocess
 from pit_report_parser import get_linecov_mutcov_teststrength
@@ -21,12 +22,12 @@ classes = {
 }
 
 models = ["ocra", "mpt", "nous", "vicuna", "wizlm"]
-runs = ["run_01", "run_02", "run_03"]
+runs = ["run_01", "run_02", "run_03", "run_04", "run_05", "run_06", "run_07"]
 
 # models = ["ocra"]
 # runs = ["run_03"]
 
-final_result_file = "/home/shaker/Programs/evooracle_singularity/eo_mutation_scores.csv"
+final_result_file = "/home/shaker/Programs/evooracle_singularity/eo_mutation_scores_second_run.csv"
 # open file to write results
 if not os.path.exists(final_result_file):
     # If it doesn't exist, create the file with a header row
@@ -48,7 +49,9 @@ for class_name, class_data in classes.items():
 
             # Construct the file name pattern
             file_pattern = f"{class_name}_ESTest_{run}_identical_5_{model}"
-            # file_pattern = f"{class_name}_ESTest_{run}_identical_5"
+            # file_pattern_2 = f"{class_name}_ESTest_{run}_identical_5"
+            file_pattern_3 = f"{class_name}_ESTest_{run}_identical_5_(\d+)_EOTest"
+
             test_path = class_path + "/src/test/java"
             # Construct the full path
             full_path = os.path.join(test_path, package.replace(".", os.path.sep))
@@ -58,10 +61,13 @@ for class_name, class_data in classes.items():
             # Iterate through the directory and its subdirectories
             for root, dirs, files in os.walk(full_path):
                 # List all ".java" files matching the pattern
-                matching_files = [file for file in files if file.endswith("_EOTest.java") and file.startswith(file_pattern)]
+                # matching_files = [file for file in files if file.endswith("_EOTest.java") and file.startswith(file_pattern)]
+                matching_files = [file for file in files if file.endswith("_EOTest.java") and (file.startswith(file_pattern) or re.match(file_pattern_3, file))]
+                
                 if matching_files:
                     for file in matching_files:
-                        # print("FileName: " + os.path.join(root, file))
+                        # if(model=='vicuna'):
+                        #     print("FileName: " + os.path.join(root, file))
                         compiled_file = os.path.join(root, file.replace(".java", ".class"))
                         if not os.path.exists(compiled_file):
                             # print(f"The compiled file at {compiled_file} does not exist. Renaming {file} to {file}.failed.")
@@ -112,7 +118,8 @@ for class_name, class_data in classes.items():
                 # print("\ntarget_tests:\n" + "\n".join(target_tests))
                 comma_separated_target_tests = ",".join(target_tests)
                 mvn_pit_command = f"mvn test-compile org.pitest:pitest-maven:mutationCoverage -DtargetClasses={package}.{class_name} -DtargetTests={comma_separated_target_tests}"
-                            
+
+                  
                 # Running mvn PIT test for class
                 if run_command(mvn_pit_command, working_directory=class_path):
                     print("PIT Test: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
@@ -148,3 +155,4 @@ for class_name, class_data in classes.items():
                     "mvn_pit_status": mvn_pit_status
                 })
                 # sys.exit()
+    
