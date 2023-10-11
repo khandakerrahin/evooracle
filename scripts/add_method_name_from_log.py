@@ -1,9 +1,9 @@
 import csv
 import re
 
-old_csv_file = "/home/shaker/Programs/evooracle_singularity/logs.csv"
-new_csv_file = "/home/shaker/Programs/evooracle_singularity/custom_evoracle_final_results.csv"
-output_csv_file = "/home/shaker/Programs/evooracle_singularity/merged_evoracle_final_results.csv"
+old_csv_file = "/home/shaker/Programs/evooracle_singularity/second_run/logs.csv"
+new_csv_file = "/home/shaker/Programs/evooracle_singularity/second_run/second_evoracle_final_results.csv"
+output_csv_file = "/home/shaker/Programs/evooracle_singularity/second_run/merged_evoracle_final_results.csv"
 
 # Read the OLD_CSV and store method_name values in a dictionary
 method_name_dict = {}

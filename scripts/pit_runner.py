@@ -27,7 +27,7 @@ runs = ["run_01", "run_02", "run_03", "run_04", "run_05", "run_06", "run_07"]
 # models = ["ocra"]
 # runs = ["run_03"]
 
-final_result_file = "/home/shaker/Programs/evooracle_singularity/eo_mutation_scores_second_run.csv"
+final_result_file = "/home/shaker/Programs/evooracle_singularity/eo_mutation_scores_second_run_enhanced.csv"
 # open file to write results
 if not os.path.exists(final_result_file):
     # If it doesn't exist, create the file with a header row
@@ -50,7 +50,7 @@ for class_name, class_data in classes.items():
             # Construct the file name pattern
             file_pattern = f"{class_name}_ESTest_{run}_identical_5_{model}"
             # file_pattern_2 = f"{class_name}_ESTest_{run}_identical_5"
-            file_pattern_3 = f"{class_name}_ESTest_{run}_identical_5_(\d+)_EOTest"
+            file_pattern_3 = f"{class_name}_ESTest_{run}_identical_5_(\d+)_ESUTest"
 
             test_path = class_path + "/src/test/java"
             # Construct the full path
@@ -62,13 +62,13 @@ for class_name, class_data in classes.items():
             for root, dirs, files in os.walk(full_path):
                 # List all ".java" files matching the pattern
                 # matching_files = [file for file in files if file.endswith("_EOTest.java") and file.startswith(file_pattern)]
-                matching_files = [file for file in files if file.endswith("_EOTest.java") and (file.startswith(file_pattern) or re.match(file_pattern_3, file))]
+                matching_files = [file for file in files if file.endswith("_ESUTest.java") and (file.startswith(file_pattern) or re.match(file_pattern_3, file))]
                 
                 if matching_files:
                     for file in matching_files:
                         # if(model=='vicuna'):
                         #     print("FileName: " + os.path.join(root, file))
-                        compiled_file = os.path.join(root, file.replace(".java", ".class"))
+                        compiled_file = os.path.join(root, file.replace(".java", ".java"))
                         if not os.path.exists(compiled_file):
                             # print(f"The compiled file at {compiled_file} does not exist. Renaming {file} to {file}.failed.")
                             failed_file_path = os.path.join(root, file.replace(".java", ".java.failed"))

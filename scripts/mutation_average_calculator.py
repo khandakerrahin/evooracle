@@ -4,18 +4,26 @@ import seaborn as sns
 
 
 # Read the CSV
-df = pd.read_csv('/home/shaker/Documents/Thesis/Writing/data/EO_Mutation_Score_second_run.csv')
+# df = pd.read_csv('/home/shaker/Documents/Thesis/Writing/data/EO_Mutation_Score_second_run.csv')
+df = pd.read_csv('/home/shaker/Documents/Thesis/Writing/data/EO_Enhanced_filtered_ES.csv')
 
 # Group by 'class' and 'model', and calculate the average
 grouped_df = df.groupby(['class', 'model']).agg({
     'eo_test_count': 'mean',
     'eo_line_coverage_score': 'mean',
     'eo_mutation_coverage_score': 'mean',
-    'eo_test_strength_score': 'mean'
+    'eo_test_strength_score': 'mean',
+    'kills_mutants_covered': 'mean',
+    'mutants_covered': 'mean',
+    'mutants_killed': 'mean',
+    'mutant_total': 'mean',
+    'line_covered': 'mean',
+    'line_total': 'mean'
 }).reset_index()
 
 # Write the results to another CSV
-grouped_df.to_csv('/home/shaker/Documents/Thesis/Writing/data/EO_mutation_score_second_run_mean.csv', index=False)
+# grouped_df.to_csv('/home/shaker/Documents/Thesis/Writing/data/EO_mutation_score_second_run_mean.csv', index=False)
+grouped_df.to_csv('/home/shaker/Documents/Thesis/Writing/data/EO_mutation_score_second_run_enhanced_ES_mean.csv', index=False)
 
 
 # # Group by 'class' and 'model', and calculate the average, median, maximum, and minimum
