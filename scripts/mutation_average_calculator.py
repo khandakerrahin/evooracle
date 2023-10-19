@@ -8,7 +8,7 @@ import seaborn as sns
 df = pd.read_csv('/home/shaker/Documents/Thesis/Writing/data/EO_Enhanced_filtered_ES.csv')
 
 # Group by 'class' and 'model', and calculate the average
-grouped_df = df.groupby(['class', 'model']).agg({
+grouped_df = df.groupby(['model']).agg({
     'eo_test_count': 'mean',
     'eo_line_coverage_score': 'mean',
     'eo_mutation_coverage_score': 'mean',
@@ -23,7 +23,7 @@ grouped_df = df.groupby(['class', 'model']).agg({
 
 # Write the results to another CSV
 # grouped_df.to_csv('/home/shaker/Documents/Thesis/Writing/data/EO_mutation_score_second_run_mean.csv', index=False)
-grouped_df.to_csv('/home/shaker/Documents/Thesis/Writing/data/EO_mutation_score_second_run_enhanced_ES_mean.csv', index=False)
+grouped_df.to_csv('/home/shaker/Documents/Thesis/Writing/data/EO_mutation_score_second_run_enhanced_ES_ALL_mean.csv', index=False)
 
 
 # # Group by 'class' and 'model', and calculate the average, median, maximum, and minimum

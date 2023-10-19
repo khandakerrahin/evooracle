@@ -2,7 +2,7 @@ import os
 import csv
 
 log_directory = "/home/shaker/Programs/evooracle_singularity/second_run/outputs"
-target_file = "/home/shaker/Programs/evooracle_singularity/second_run/logs.csv"
+target_file = "/home/shaker/Documents/Thesis/Writing/data/logs.csv"
 
 # Check if the target file exists
 if not os.path.exists(target_file):
