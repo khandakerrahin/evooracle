@@ -9,7 +9,4 @@ class string_tables:
     EVOORACLE_SIGNATURE = "_EOTest"
     EVOSUITE_UNIT_SIGNATURE = "_ESUTest"
     EVOSUITE_SIGNATURE = "_ESTest" 
-    
-    # You can add more constants as needed
-    # For example:
-    # FILE_PATH = "/path/to/your/file.txt"
+
