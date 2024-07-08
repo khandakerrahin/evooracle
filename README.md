@@ -24,7 +24,9 @@ The tool follows the following workflow:
 6. Go into the directory `cd evooracle`
 7. Install the required dependencies `pip install -r requirements.txt`
 8. Update the base ggml download path of the models in line 17 of `app.py`, e.g. `BASE_PATH = 'C:/Users/User/AppData/Local/nomic.ai/GPT4All/'` and openAI api key on line 19
-9. Start the python app by running `python run_test_case_list_gen.py` and `python run_evoOracle.py`
+9. Run the tool:
+	- To preprocess the test cases: `python run_test_case_list_gen.py`
+	- To generate Oracles: `python run_evoOracle.py`
 
 # Who, When, Why?
 👨🏾‍💻 Author: Shaker Mahmud Khandaker <br />
