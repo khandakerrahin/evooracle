@@ -1,0 +1,7 @@
+cd git/
+git clone git@gitlab.fbk.eu:skhandaker/evooracle.git
+cd evooracle/
+python -m venv evooracle_venv
+source evooracle_venv/bin/activate
+pip install -r requirements.txt
+cd src

@@ -1,10 +1,10 @@
 import os.path
 import time
 import sys  # Import the sys module to access command-line arguments
-from db_operations import *
+# from db_operations import *
 from tools import *
 from parse_data import parse_data
-from export_data import export_data
+# from export_data import export_data
 from test_processor import prepare_test_cases_entries, start_generation, prepare_test_cases
 from parse_xml import result_analysis
 from task import Task

@@ -2,8 +2,8 @@
 This repository contains an automated Oracle generation tool that leverages the power of Large Language Models (LLMs) to enhance software testing efficiency. The tool is designed to generate JUnit tests and test case assertions, acting as an Oracle for the system under test.
 
 ## Tool Architecture
-![alt text](resources/UML_Component_Diagram_EvoOracle_v2.png)
-*Figure 01: Tool Architecture*
+![alt text](resources/evoOracle_overview.png)
+*Figure 01: Tool Overview*
 
 ## Workflow
 The tool follows the following workflow:
@@ -20,15 +20,11 @@ The tool follows the following workflow:
    - Windows:`.\evooracle_venv\Scripts\activate`
    - Mac: `source evooracle_venv/bin/activate`
 3. Download the required LLM models and take note of the PATH they're installed to
-5. Clone this repo `git@gitlab.fbk.eu:skhandaker/evooracle.git`
+5. Clone this repo `git@github.com:khandakerrahin/evooracle.git`
 6. Go into the directory `cd evooracle`
 7. Install the required dependencies `pip install -r requirements.txt`
 8. Update the base ggml download path of the models in line 17 of `app.py`, e.g. `BASE_PATH = 'C:/Users/User/AppData/Local/nomic.ai/GPT4All/'` and openAI api key on line 19
-9. Start the python app by running `streamlit run app.py`
-
-# Other References 🔗
-<p>-<a href="https://github.com/nomic-ai/gpt4all/tree/main">GPT4AllReference
-</a>: mainly used to determine how to install the GPT4All library and references. Doco was changing frequently, at the time of coding this was the most up to date example of getting it running.</p>
+9. Start the python app by running `python run_test_case_list_gen.py` and `python run_evoOracle.py`
 
 # Who, When, Why?
 👨🏾‍💻 Author: Shaker Mahmud Khandaker <br />

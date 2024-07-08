@@ -1,0 +1,1000 @@
+ 1001  git status
+ 1002  git push
+ 1003  exit
+ 1004  cd git/MasterThesis/
+ 1005  git status
+ 1006  git add .
+ 1007  git commit
+ 1008  git push
+ 1009  exit
+ 1010  git status
+ 1011  git add .
+ 1012  git status
+ 1013  git commit
+ 1014  git push
+ 1015  exit
+ 1016  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_01_identical_5_15695615_ESUTest.java
+ 1017  /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_01_identical_5_108134887_ESUTest.java
+ 1018  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_01_identical_5_108134887_ESUTest.java
+ 1019  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_02_identical_5_103756612_ESUTest.java
+ 1020  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_02_identical_5_115327101_ESUTest.java
+ 1021  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_01_identical_5_wizlm_14096456_ESUTest.java
+ 1022  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_03_identical_5_113600806_ESUTest.java
+ 1023  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_01_identical_5_wizlm_1011856789_ESUTest.java
+ 1024  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_03_identical_5_1012276390_ESUTest.java
+ 1025  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_02_identical_5_wizlm_14221379_ESUTest.java
+ 1026  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_02_identical_5_wizlm_1012652708_ESUTest.java
+ 1027  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_07_identical_5_wizlm_10213091994_ESUTest.java
+ 1028  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_07_identical_5_vicuna_1021890942_ESUTest.java
+ 1029  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_07_identical_5_wizlm_109758790_ESUTest.java
+ 1030  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_07_identical_5_vicuna_1463727275_ESUTest.java
+ 1031  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_07_identical_5_wizlm_11672360_ESUTest.java
+ 1032  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_07_identical_5_vicuna_1011756435_ESUTest.java
+ 1033  vim assertTrue(properties0.containsKey("key"));
+ 1034  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_07_identical_5_vicuna_112175194_ESUTest.java
+ 1035  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_07_identical_5_ocra_146923109_ESUTest.java
+ 1036  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_07_identical_5_ocra_1011914871_ESUTest.java
+ 1037  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_07_identical_5_ocra_114867137_ESUTest.java
+ 1038  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_07_identical_5_mpt_1469154679_ESUTest.java
+ 1039  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_07_identical_5_mpt_1027874111_ESUTest.java
+ 1040  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_07_identical_5_mpt_105410596_ESUTest.java
+ 1041  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_07_identical_5_mpt_16106773_ESUTest.java
+ 1042  clear
+ 1043  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_06_identical_5_wizlm_1022257410_ESUTest.java
+ 1044  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_06_identical_5_vicuna_102588744_ESUTest.java
+ 1045  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_06_identical_5_wizlm_109040816_ESUTest.java
+ 1046  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_06_identical_5_vicuna_1461336925_ESUTest.java
+ 1047  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_06_identical_5_wizlm_111230368_ESUTest.java
+ 1048  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_06_identical_5_vicuna_1014378658_ESUTest.java
+ 1049  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_06_identical_5_vicuna_11138678_ESUTest.java
+ 1050  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_06_identical_5_ocra_1466538814_ESUTest.java
+ 1051  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_06_identical_5_ocra_1029758843_ESUTest.java
+ 1052  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_06_identical_5_ocra_1015660040_ESUTest.java
+ 1053  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_06_identical_5_ocra_112861301_ESUTest.java
+ 1054  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_06_identical_5_nous_111537251_ESUTest.java
+ 1055  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_06_identical_5_mpt_14614789089_ESUTest.java
+ 1056  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_06_identical_5_mpt_10215124531_ESUTest.java
+ 1057  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_06_identical_5_mpt_103843329_ESUTest.java
+ 1058  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_06_identical_5_mpt_110620635_ESUTest.java
+ 1059  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_05_identical_5_wizlm_1025444228_ESUTest.java
+ 1060  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_05_identical_5_vicuna_10212564125_ESUTest.java
+ 1061  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_05_identical_5_wizlm_1010369182_ESUTest.java
+ 1062  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_05_identical_5_wizlm_111622511_ESUTest.java
+ 1063  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_05_identical_5_vicuna_14613095308_ESUTest.java
+ 1064  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_05_identical_5_vicuna_1013974920_ESUTest.java
+ 1065  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_05_identical_5_vicuna_14619293_ESUTest.java
+ 1066  clear
+ 1067  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_05_identical_5_ocra_1464592006_ESUTest.java
+ 1068  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_05_identical_5_ocra_1016147350_ESUTest.java
+ 1069  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_05_identical_5_ocra_1635020_ESUTest.java
+ 1070  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_05_identical_5_nous_17184_ESUTest.java
+ 1071  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_05_identical_5_mpt_1465105575_ESUTest.java
+ 1072  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_05_identical_5_mpt_10211889346_ESUTest.java
+ 1073  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_05_identical_5_mpt_109782338_ESUTest.java
+ 1074  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_05_identical_5_mpt_114922591_ESUTest.java
+ 1075  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_04_identical_5_wizlm_10215442060_ESUTest.java
+ 1076  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_04_identical_5_vicuna_1021558831_ESUTest.java
+ 1077  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_04_identical_5_wizlm_107778480_ESUTest.java
+ 1078  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_04_identical_5_vicuna_1466191538_ESUTest.java
+ 1079  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_04_identical_5_wizlm_116171330_ESUTest.java
+ 1080  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_04_identical_5_vicuna_108803843_ESUTest.java
+ 1081  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_04_identical_5_vicuna_11321016_ESUTest.java
+ 1082  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_04_identical_5_ocra_1462181899_ESUTest.java
+ 1083  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_04_identical_5_ocra_1023062036_ESUTest.java
+ 1084  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_04_identical_5_ocra_102811707_ESUTest.java
+ 1085  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_04_identical_5_ocra_12764888_ESUTest.java
+ 1086  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_04_identical_5_mpt_1461715244_ESUTest.java
+ 1087  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_04_identical_5_nous_11237618_ESUTest.java
+ 1088  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_04_identical_5_mpt_1022463849_ESUTest.java
+ 1089  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_04_identical_5_mpt_1014864571_ESUTest.java
+ 1090  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_04_identical_5_mpt_12846196_ESUTest.java
+ 1091  clear
+ 1092  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_03_identical_5_vicuna_10212753664_ESUTest.java
+ 1093  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_03_identical_5_vicuna_14614013813_ESUTest.java
+ 1094  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_03_identical_5_wizlm_1023140102_ESUTest.java
+ 1095  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_03_identical_5_ocra_1463536490_ESUTest.java
+ 1096  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_03_identical_5_mpt_14616286289_ESUTest.java
+ 1097  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_03_identical_5_mpt_10213918873_ESUTest.java
+ 1098  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_02_identical_5_wizlm_10212089949_ESUTest.java
+ 1099  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_02_identical_5_vicuna_1464453154_ESUTest.java
+ 1100  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_02_identical_5_vicuna_10211143098_ESUTest.java
+ 1101  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_02_identical_5_ocra_1462171469_ESUTest.java
+ 1102  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_02_identical_5_mpt_1464506108_ESUTest.java
+ 1103  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_02_identical_5_mpt_10213140466_ESUTest.java
+ 1104  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_01_identical_5_vicuna_1026873077_ESUTest.java
+ 1105  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_01_identical_5_wizlm_1021153731_ESUTest.java
+ 1106  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_01_identical_5_vicuna_146835799_ESUTest.java
+ 1107  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_01_identical_5_ocra_14612198458_ESUTest.java
+ 1108  /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_01_identical_5_ocra_1026840330_ESUTest.java
+ 1109  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_01_identical_5_ocra_1026840330_ESUTest.java
+ 1110  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_01_identical_5_mpt_1462603323_ESUTest.java
+ 1111  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_01_identical_5_mpt_1022178023_ESUTest.java
+ 1112  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_03_identical_5_nous_18447725_ESUTest.java
+ 1113  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_02_identical_5_nous_115148239_ESUTest.java
+ 1114  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_03_identical_5_ocra_10227193_ESUTest.java
+ 1115  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_03_identical_5_ocra_110418435_ESUTest.java
+ 1116  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_02_identical_5_ocra_101216294_ESUTest.java
+ 1117  clear
+ 1118  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_01_identical_5_ocra_16499382_ESUTest.java
+ 1119  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_01_identical_5_ocra_102403888_ESUTest.java
+ 1120  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_03_identical_5_mpt_15207068_ESUTest.java
+ 1121  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_02_identical_5_mpt_1295261_ESUTest.java
+ 1122  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_02_identical_5_mpt_109703032_ESUTest.java
+ 1123  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_03_identical_5_wizlm_12658693_ESUTest.java
+ 1124  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_01_identical_5_mpt_101703900_ESUTest.java
+ 1125  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/engine/preprocessor/ZeroCodeAssertionsProcessor_ESTest_run_01_identical_5_mpt_12413367_ESUTest.java
+ 1126  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/zerocode/core/src/test/java/org/jsmart/zerocode/core/utils/PropertiesProviderUtils_ESTest_run_03_identical_5_wizlm_1012819901_ESUTest.java
+ 1127  exit
+ 1128  cd /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/javacv/
+ 1129  ll
+ 1130  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.bytedeco.javacv.Parallel -DtargetTests=org.bytedeco.javacv.Parallel_ESTest
+ 1131  clear
+ 1132  mvn test-compile org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.bytedeco.javacv.Parallel -DtargetTests=org.bytedeco.javacv.Parallel_ESTest
+ 1133  cd ..
+ 1134  ll
+ 1135  cd frontend-maven-plugin/frontend-plugin-core/
+ 1136  ll
+ 1137  mvn test-compile org.pitest:pitest-maven:mutationCoverage -DtargetClasses=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller -DtargetTests=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller_ESTest
+ 1138  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller -DtargetTests=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller_ESTest
+ 1139  cd ..
+ 1140  ll
+ 1141  cd webdrivermanager/
+ 1142  ll
+ 1143  mvn test-compile org.pitest:pitest-maven:mutationCoverage -DtargetClasses=io.github.bonigarcia.wdm.cache.CacheHandler -DtargetTests=io.github.bonigarcia.wdm.cache.CacheHandler_ESTest
+ 1144  cd ..
+ 1145  ll
+ 1146  cd zerocode/
+ 1147  ll
+ 1148  cd core/
+ 1149  ll
+ 1150  clear
+ 1151  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=io.github.bonigarcia.wdm.cache.CacheHandler -DtargetTests=io.github.bonigarcia.wdm.cache.CacheHandler_ESTest
+ 1152  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger -DtargetTests=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger_ESTest
+ 1153  cd ..
+ 1154  ll
+ 1155  cd ..
+ 1156  cd webdrivermanager/
+ 1157  ll
+ 1158  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=io.github.bonigarcia.wdm.cache.CacheHandler -DtargetTests=io.github.bonigarcia.wdm.cache.CacheHandler_ESTest
+ 1159  cd ..
+ 1160  ll
+ 1161  cd javacv/
+ 1162  ll
+ 1163  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.bytedeco.javacv.Parallel -DtargetTests=org.bytedeco.javacv.Parallel_ESTest
+ 1164  cd ..
+ 1165  ll
+ 1166  cd frontend-maven-plugin/frontend-plugin-core/
+ 1167  ll
+ 1168  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller -DtargetTests=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller_ESTest
+ 1169  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/PnpmInstaller_ESTest_run_06_identical_5_ocra_1466538814_ESUTest.java:
+ 1170  clear
+ 1171  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller -DtargetTests=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller_ESTest
+ 1172  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_02_identical_5_mpt_10213140466_ESUTest.java:
+ 1173  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller -DtargetTests=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller_ESTest
+ 1174  clear
+ 1175  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller -DtargetTests=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller_ESTest
+ 1176  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_07_identical_5_wizlm_10213091994_ESUTest.java
+ 1177  clear
+ 1178  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller -DtargetTests=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller_ESTest
+ 1179  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_07_identical_5_wizlm_10213091994_ESUTest.java
+ 1180  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_02_identical_5_mpt_10213140466_ESUTest.java
+ 1181  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller -DtargetTests=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller_ESTest
+ 1182  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_02_identical_5_wizlm_10212089949_ESUTest.java
+ 1183  vim /home/shaker/Programs/evooracle_singularity/evo_cluster/projects_db/frontend-maven-plugin/frontend-plugin-core/src/test/java/com/github/eirslett/maven/plugins/frontend/lib/NPMInstaller_ESTest_run_06_identical_5_vicuna_102588744_ESUTest.java
+ 1184  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller -DtargetTests=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller_ESTest
+ 1185  clear
+ 1186  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller -DtargetTests=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller_ESTest
+ 1187  cd ..
+ 1188  cd javacv/
+ 1189  ll
+ 1190  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.bytedeco.javacv.Parallel -DtargetTests=org.bytedeco.javacv.Parallel_ESTest
+ 1191  cd ..
+ 1192  ll
+ 1193  cd webdrivermanager/
+ 1194  ll
+ 1195  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=io.github.bonigarcia.wdm.cache.CacheHandler -DtargetTests=io.github.bonigarcia.wdm.cache.CacheHandler_ESTest
+ 1196  cd ll
+ 1197  cd ..
+ 1198  cd zerocode/core/
+ 1199  ll
+ 1200  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger -DtargetTests=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger_ESTest
+ 1201  clear
+ 1202  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger -DtargetTests=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger_ESTest
+ 1203  clear
+ 1204  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger -DtargetTests=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger
+ 1205  ll
+ 1206  cd ..
+ 1207  cd core/
+ 1208  ll
+ 1209  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger -DtargetTests=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger_ESTest
+ 1210  ll
+ 1211  cd ..
+ 1212  cd core/
+ 1213  ll
+ 1214  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger -DtargetTests=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger_ESTest
+ 1215  cd ..
+ 1216  ll
+ 1217  cd frontend-maven-plugin/frontend-plugin-core/
+ 1218  ll
+ 1219  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller -DtargetTests=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller_ESTest
+ 1220  clear
+ 1221  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller -DtargetTests=com.github.eirslett.maven.plugins.frontend.lib.PnpmInstaller_ESTest
+ 1222  cd .
+ 1223  cd ..
+ 1224  ll
+ 1225  cd javacv/
+ 1226  ll
+ 1227  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.bytedeco.javacv.Parallel -DtargetTests=org.bytedeco.javacv.Parallel_ESTest
+ 1228  cd ll
+ 1229  cd ..
+ 1230  ll
+ 1231  cd webdrivermanager/
+ 1232  ll
+ 1233  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=io.github.bonigarcia.wdm.cache.CacheHandler -DtargetTests=io.github.bonigarcia.wdm.cache.CacheHandler_ESTest
+ 1234  cd ..
+ 1235  ll
+ 1236  cd zerocode/core/
+ 1237  ll
+ 1238  mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger -DtargetTests=org.jsmart.zerocode.core.logbuilder.ZerocodeCorrelationshipLogger_ESTest
+ 1239  exit
+ 1240  ll
+ 1241  python log_collector.py 
+ 1242  clear
+ 1243  python log_collector.py 
+ 1244  python add_method_name_from_log.py 
+ 1245  git pull
+ 1246  git checkout 41-analyze-experiment-results 
+ 1247  git status
+ 1248  git add .
+ 1249  git commit
+ 1250  git push
+ 1251  git status
+ 1252  python descriptive_statistics.py 
+ 1253  clear
+ 1254  python descriptive_statistics.py 
+ 1255  python add_method_name_from_log.py 
+ 1256  python descriptive_statistics.py 
+ 1257  clear
+ 1258  python descriptive_statistics.py 
+ 1259  python mutation_average_calculator.py 
+ 1260  clear
+ 1261  python mutation_average_calculator.py 
+ 1262  python mutation_average_plot.py 
+ 1263  python mutation_average_calculator.py 
+ 1264  python mutation_average_plot.py 
+ 1265  python mutation_average_calculator.py 
+ 1266  python mutation_average_plot.py 
+ 1267  python pit_runner.py 
+ 1268  python file_deleter.py 
+ 1269  clear
+ 1270  python file_deleter.py 
+ 1271  clear
+ 1272  python file_deleter.py 
+ 1273  python pit_runner.py 
+ 1274  clear
+ 1275  python pit_runner.py 
+ 1276  clear
+ 1277  python pit_runner.py 
+ 1278  clear
+ 1279  python pit_runner.py 
+ 1280  clear
+ 1281  python pit_runner.py 
+ 1282  clear
+ 1283  python pit_runner.py 
+ 1284  clear
+ 1285  python pit_runner.py 
+ 1286  clear
+ 1287  python pit_runner.py 
+ 1288  clear
+ 1289  python pit_runner.py 
+ 1290  clear
+ 1291  python pit_runner.py 
+ 1292  clear
+ 1293  python pit_runner.py 
+ 1294  clear
+ 1295  python pit_runner.py 
+ 1296  clear
+ 1297  python pit_runner.py 
+ 1298  clear
+ 1299  python pit_runner.py 
+ 1300  clear
+ 1301  python pit_runner.py 
+ 1302  clear
+ 1303  python pit_runner.py 
+ 1304  clear
+ 1305  python pit_runner.py 
+ 1306  clear
+ 1307  python pit_runner.py 
+ 1308  python mutation_average_calculator.py 
+ 1309  python mutation_average_plot.py 
+ 1310  python mutation_average_calculator.py 
+ 1311  python mutation_average_plot.py 
+ 1312  git status
+ 1313  git add .
+ 1314  git status
+ 1315  git commit
+ 1316  git pull
+ 1317  git push
+ 1318  python descriptive_statistics.py 
+ 1319  python log_collector.py 
+ 1320  python add_method_name_from_log.py 
+ 1321  python descriptive_statistics.py 
+ 1322  clear
+ 1323  python descriptive_statistics.py 
+ 1324  clear
+ 1325  python descriptive_statistics.py 
+ 1326  clear
+ 1327  python descriptive_statistics.py 
+ 1328  clear
+ 1329  python descriptive_statistics.py 
+ 1330  clear
+ 1331  python descriptive_statistics.py 
+ 1332  clear
+ 1333  python descriptive_statistics.py 
+ 1334  python mutation_average_table_generator.py 
+ 1335  clear
+ 1336  python mutation_average_table_generator.py 
+ 1337  python mutation_average_plot.py 
+ 1338  python descriptive_statistics.py 
+ 1339  python mutation_average_calculator.py 
+ 1340  python mutation_average_table_generator.py 
+ 1341  python enhance_evosuite_tests.py 
+ 1342  python pit_runner.py 
+ 1343  python mutation_average_calculator.py 
+ 1344  python mutation_average_plot.py 
+ 1345  python mutation_average_table_generator.py 
+ 1346  python mutation_average_plot.py 
+ 1347  python mutation_average_calculator.py 
+ 1348  python mutation_average_plot.py 
+ 1349  python enhance_evosuite_tests.py 
+ 1350  python pit_runner.py 
+ 1351  python file_deleter.py 
+ 1352  clear
+ 1353  python file_deleter.py 
+ 1354  clear
+ 1355  python file_deleter.py 
+ 1356  clear
+ 1357  python file_deleter.py 
+ 1358  clear
+ 1359  python file_deleter.py 
+ 1360  clear
+ 1361  python file_deleter.py 
+ 1362  clear
+ 1363  python file_deleter.py 
+ 1364  clear
+ 1365  python file_deleter.py 
+ 1366  clear
+ 1367  python file_deleter.py 
+ 1368  python pit_runner.py 
+ 1369  python mutation_average_calculator.py 
+ 1370  python mutation_average_plot.py 
+ 1371  python mutation_average_table_generator.py 
+ 1372  cd src/
+ 1373  cd ..
+ 1374  cd scripts/
+ 1375  python enhance_evosuite_tests.py 
+ 1376  python mutation_average_plot.py 
+ 1377  ssh skhandaker@diclubclsin.fbk.eu
+ 1378  exit
+ 1379  sudo modprobe -r psmouse
+ 1380  sudo modprobe psmouse proto=imps
+ 1381  exity
+ 1382  exit
+ 1383  git status
+ 1384  git add .
+ 1385  git commit
+ 1386  git push
+ 1387  exit
+ 1388  sudo udevadm trigger
+ 1389  exit
+ 1390  git status
+ 1391  git add .
+ 1392  git commit
+ 1393  git push
+ 1394  exit
+ 1395  git status
+ 1396  git add .
+ 1397  git status
+ 1398  git commit
+ 1399  git push
+ 1400  exit
+ 1401  git status
+ 1402  git add .
+ 1403  git commit
+ 1404  git fush
+ 1405  git push
+ 1406  ll
+ 1407  cd scripts/
+ 1408  python log_collector.py 
+ 1409  python add_method_name_from_log.py 
+ 1410  python RQ1.py 
+ 1411  source /home/shaker/Programs/evooracle_singularity/evooracle_singluarity/evooracle/evooracle_venv/bin/activate
+ 1412  python RQ1.py 
+ 1413  clear
+ 1414  python RQ1.py 
+ 1415  deactivae
+ 1416  deactivate
+ 1417  python RQ1.py 
+ 1418  python RQ1_all.py 
+ 1419  python RQ1.py 
+ 1420  python RQ1_all.py 
+ 1421  python RQ1.py 
+ 1422  python mutation_average_calculator.py 
+ 1423  python RQ3.py 
+ 1424  python mutation_average_plot.py 
+ 1425  git status
+ 1426  git add .
+ 1427  git status
+ 1428  git commit
+ 1429  git push
+ 1430  exit
+ 1431  cat /etc/X11/default-display-manager
+ 1432  /usr/sbin/lightdm
+ 1433  sudo apt install lightdm
+ 1434  systemctl enable lightdm
+ 1435  cd git/FeatureIDE
+ 1436  git pull
+ 1437  git status
+ 1438  git pull
+ 1439  git restore .
+ 1440  git pull
+ 1441  git fetch
+ 1442  git branch
+ 1443  git branch -a
+ 1444  git checkout 2-representation-of-feature-cardinality-func7 
+ 1445  git pull
+ 1446  exit
+ 1447  cd git/FeatureIDE
+ 1448  git pull
+ 1449  git branch
+ 1450  git branch -a
+ 1451  exit
+ 1452  export SWT_GTK3=0
+ 1453  gedit ~/.profile
+ 1454  exit\
+ 1455  exit
+ 1456  cd git/FeatureIDE
+ 1457  git branch -a
+ 1458  sudo apt install --reinstall gnome-screensaver
+ 1459  exit
+ 1460  gnome
+ 1461  sudo apt install gnome
+ 1462  gnome
+ 1463  exit
+ 1464  /etc/X11/default-display-manager
+ 1465  sudo /etc/X11/default-display-manager
+ 1466  sudo vim /etc/X11/default-display-manager
+ 1467  echo $DESKTOP_SESSION
+ 1468  sudo apt install kde-plasma-desktop
+ 1469  sudo update-alternatives --config x-session-manager
+ 1470  exit
+ 1471  sudo update-alternatives --config x-session-manager
+ 1472  exit
+ 1473  sudo apt purge lightdm
+ 1474  exit
+ 1475  systemctl get-default
+ 1476  systemctl set-default multi-user.target
+ 1477  systemctl get-default
+ 1478  systemctl set-default graphical.target
+ 1479  systemctl get-default
+ 1480  exit
+ 1481  reboot
+ 1482  sudo apt install lightdm
+ 1483  sudo apt autoremove sddm
+ 1484  reboot
+ 1485  sudo update-alternatives --config x-session-manager
+ 1486  exit
+ 1487  lock
+ 1488  reboot
+ 1489  sudo apt install kde-plasma-desktop
+ 1490  sudo dpkg-reconfigure gdm3
+ 1491  exit
+ 1492  sudo dpkg-reconfigure gdm3
+ 1493  reboot
+ 1494  chrome
+ 1495  google-chrome
+ 1496  google-chrome --disable-gpu
+ 1497  google-chrome --disable-software-rasterizer
+ 1498  google-chrome --disable-gpu-driver-bug-workarounds
+ 1499  lspci | grep VGA
+ 1500  lshw -C display
+ 1501  lsmod | grep nouveau  # For open-source NVIDIA driver
+ 1502  lsmod | grep amdgpu   # For AMD GPUs
+ 1503  google-chrome
+ 1504  sudo google-chrome
+ 1505  google-chrome
+ 1506  gedit ~/.profile
+ 1507  dpkg -l libgtk2.0-0 libgtk-3-0
+ 1508  pkg-config --modversion gtk+-3.0
+ 1509  sudo apt-get install libgtk-3-dev
+ 1510  pkg-config --modversion gtk+-3.0
+ 1511  reboot
+ 1512  google-chrome
+ 1513  dpkg -l libgtk2.0-0 libgtk-3-0
+ 1514  gedit ~/.profile
+ 1515  exit
+ 1516  google-chrome --disable-gpu
+ 1517  clear
+ 1518  sudo apt update
+ 1519  sudo apt upgrade
+ 1520  wget –version
+ 1521  wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+ 1522  sudo dpkg -i google-chrome-stable_current_amd64.deb
+ 1523  google-chrome
+ 1524  sudo apt update
+ 1525  sudo apt upgrade google-chrome-stable
+ 1526  lspci | grep -i nvidia
+ 1527  lspci | grep -i amd
+ 1528  lspci | grep VGA
+ 1529  sudo apt update
+ 1530  sudo apt upgrade intel-microcode
+ 1531  google-chrome
+ 1532  google-chrome --no-gpu
+ 1533  exit
+ 1534  google-chrome --no-gpu
+ 1535  sudo apt update
+ 1536  sudo apt upgrade
+ 1537  sudo apt install ubuntu-mate-desktop
+ 1538  sudo reboot
+ 1539  google-chrome
+ 1540  systemctl get-default
+ 1541  sudo update-alternatives --config x-session-manager
+ 1542  google-chrome
+ 1543  reboot
+ 1544  google-chrome
+ 1545  echo $SWT_GTK3
+ 1546  unset env SWT_GTK3
+ 1547  echo $SWT_GTK3
+ 1548  exit
+ 1549  google-chrome --help
+ 1550  google-chrome --incognito
+ 1551  google-chrome --user-data-dir=/tmp
+ 1552  ls
+ 1553  rm /etc/xdg/autostart/magnus-autostart.desktop
+ 1554  sudo /etc/xdg/autostart/magnus-autostart.desktop
+ 1555  sudo rm /etc/xdg/autostart/magnus-autostart.desktop
+ 1556  exit
+ 1557  google-chrome
+ 1558  sudo update-alternatives --config x-session-manager
+ 1559  sudo apt remove plasma-desktop --autoremove
+ 1560  sudo apt remove kde* --autoremove
+ 1561  sudo apt remove plasma* --autoremove
+ 1562  sudo update-alternatives --config default.plymouth
+ 1563  sudo update-initramfs -u
+ 1564  sudo update-grub
+ 1565  sudo systemctl disable sddm
+ 1566  sudo systemctl stop sddm
+ 1567  sudo apt remove --auto-remove sddm
+ 1568  sudo apt purge --auto-remove sddm
+ 1569  sudo systemctl enable gdm3
+ 1570  sudo systemctl start gdm3
+ 1571  systemctl get-default
+ 1572  reboot
+ 1573  sudo apt remove ubuntu-desktop
+ 1574  sudo apt update
+ 1575  sudo apt dist-upgrade
+ 1576  sudo apt autoremove
+ 1577  sudo apt clean
+ 1578  sudo apt install ubuntu-desktop
+ 1579  sudo shutdown -r now
+ 1580  google-chrome
+ 1581  sudo update-alternatives --config default.plymouth
+ 1582  sudo update-alternatives --config x-session-manager
+ 1583  sudo apt install kde-plasma-desktop
+ 1584  sudo update-alternatives --config x-session-manager
+ 1585  sudo update-alternatives --config default.plymouth
+ 1586  reboot
+ 1587  google-chrome
+ 1588  sudo update-alternatives --config default.plymouth
+ 1589  sudo update-alternatives --config x-session-manager
+ 1590  reboot
+ 1591  snap search chromium
+ 1592  snap install chromium
+ 1593  snap install chromium-ffmpeg
+ 1594  sudo apt install plymouth-manager
+ 1595  quiet splash
+ 1596  sudo update-alternatives --install /usr/share/plymouth/themes/default.plymouth default.plymouth /usr/share/plymouth/themes/"path/to-your-plymouth.plymouth" 100
+ 1597  sudo update-alternatives --config x-session-manager
+ 1598  sudo update-alternatives --config default.plymouth
+ 1599  reboot
+ 1600  sudo systemctl enable lightdm.service -f
+ 1601  exit
+ 1602  cat /etc/X11/default-display-manager
+ 1603  systemctl status display-manager
+ 1604  clear
+ 1605  sudo apt update && sudo apt upgrade
+ 1606  sudo apt install ubuntu-mate-desktop
+ 1607  sudo dpkg-reconfigure sddm
+ 1608  sudo apt autoremove '^mate' ubuntu-mate-desktop --purge
+ 1609  sudo apt update && sudo apt install ubuntu-gnome-desktop
+ 1610  sudo reboot
+ 1611  google-chrome
+ 1612  sudo update-alternatives --config javac
+ 1613  sudo update-alternatives --config java
+ 1614  cd git/FeatureIDE
+ 1615  git pull
+ 1616  exit
+ 1617  sudo apt purge google-chrome-stable
+ 1618  sudo apt purge chromium-browser
+ 1619  cd ~./cache/
+ 1620  ~./cache/
+ 1621  rm -r ~/.cache/google-chrome/
+ 1622  google-chrome
+ 1623  sudo apt update
+ 1624  sudo apt upgrade
+ 1625  wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+ 1626  sudo dpkg -i google-chrome-stable_current_amd64.deb
+ 1627  google-chrome
+ 1628  google-chrome --disable-gpu --disable-software-rasterizer
+ 1629  ll
+ 1630  cd git/evooracle
+ 1631  git status
+ 1632  git add .
+ 1633  git status
+ 1634  git commit
+ 1635  git push
+ 1636  exit
+ 1637  git status
+ 1638  git add .
+ 1639  git commit
+ 1640  git push
+ 1641  exit
+ 1642  java -version
+ 1643  exit
+ 1644  sudo dpkg --configure -a
+ 1645  sudo apt-get update
+ 1646  sudo apt-get full-upgrade
+ 1647  sudo apt-get install --reinstall ubuntu-desktop
+ 1648  sudo dpkg --configure -a
+ 1649  sudo apt-get update
+ 1650  exit
+ 1651  sudo dpkg --configure -a
+ 1652  sudo apt-get update
+ 1653  sudo apt-get -f install
+ 1654  sudo apt-get full-upgrade
+ 1655  sudo apt-get install --reinstall ubuntu-desktop
+ 1656  sudo apt-get autoremove
+ 1657  sudo apt-get clean
+ 1658  sudo reboot
+ 1659  vim /usr/share/X11/xorg.conf.d/40-libinput.conf
+ 1660  sudo vim /usr/share/X11/xorg.conf.d/40-libinput.conf
+ 1661  exit
+ 1662  /bin/python3.11 /home/shaker/git/localGPT/run_localGPT.py
+ 1663  sudo apt-get update
+ 1664  sudo apt-get -y upgrade
+ 1665  python3 -V
+ 1666  sudo apt-get install -y python3-venv
+ 1667  mkdir localGPT_venv
+ 1668  cd localGPT
+ 1669  cd localGPT_venv/
+ 1670  python -m venv 
+ 1671  python -m venv localgpt_venv
+ 1672  source localgpt_venv/bin/activate
+ 1673  pip install -r requirements.txt
+ 1674  cd ..
+ 1675  pip install -r requirements.txt
+ 1676  python ingest.py
+ 1677  python run_localGPT.py
+ 1678  python run_localGPT.py --device_type mps # to run on Apple silicon
+ 1679  python run_localGPT.py --device_type cpu
+ 1680  clear
+ 1681  python run_localGPT.py --device_type cpu
+ 1682  clear
+ 1683  python run_localGPT.py --device_type cpu
+ 1684  pip install peft
+ 1685  clear
+ 1686  pip install peft
+ 1687  clear
+ 1688  python run_localGPT.py --device_type cpu
+ 1689  clear
+ 1690  python run_localGPT.py --device_type cpu
+ 1691  clear
+ 1692  python run_localGPT.py --device_type cpu
+ 1693  clear
+ 1694  python run_localGPT.py --device_type cpu
+ 1695  clear
+ 1696  python run_localGPT.py --device_type cpu
+ 1697  python run_localGPT_API.py
+ 1698  clear
+ 1699  python run_localGPT_API.py
+ 1700  git status
+ 1701  clear
+ 1702  python run_localGPT_API.py
+ 1703  cd localGPTUI/
+ 1704  python localGPTUI.py 
+ 1705  cd git/
+ 1706  git clone https://github.com/PromtEngineer/localGPT.git
+ 1707  cd localGPT/
+ 1708  git status
+ 1709  cd ..
+ 1710  git clone https://github.com/imartinez/privateGPT
+ 1711  cd privateGPT/
+ 1712  pyenv install 3.11
+ 1713  python -m venv rivategpt_venv
+ 1714  source private_gpt_venv/bin/activate
+ 1715  source privategpt_venv/bin/activate
+ 1716  python -m venv privategpt_venv
+ 1717  source privategpt_venv/bin/activate
+ 1718  pip install poetry
+ 1719  poetry install --with ui,local
+ 1720  pyenv install 3.11
+ 1721  poetry install --with ui,local
+ 1722  pyenv shell 3.8.1
+ 1723  pip install pyenv
+ 1724  python --version
+ 1725  sudo apt update
+ 1726  sudo apt install build-essential libssl-dev zlib1g-dev libncurses5-dev libncursesw5-dev libreadline-dev libsqlite3-dev libgdbm-dev libdb5.3-dev libbz2-dev libexpat1-dev liblzma-dev libffi-dev libc6-dev
+ 1727  wget https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz
+ 1728  tar -xzvf Python-3.11.0.tgz
+ 1729  cd Python-3.11.0
+ 1730  ./configure --enable-optimizations
+ 1731  make -j$(nproc)
+ 1732  sudo make altinstall
+ 1733  python --version
+ 1734  python3.11 --version
+ 1735  python --version
+ 1736  deactivate
+ 1737  cd ..
+ 1738  python3.11 -m venv privategpt_venv
+ 1739  source privategpt_venv/bin/activate
+ 1740  poetry install --with ui,local
+ 1741  sudo apt install python3-poetry
+ 1742  poetry install --with ui,local
+ 1743  pyenv install 3.11
+ 1744  pip install pyenv
+ 1745  pip install --upgrade pip
+ 1746  pip install pyenv
+ 1747  clear
+ 1748  poetry install --with ui,local
+ 1749  cd git
+ 1750  cd RFI-LdS/
+ 1751  git pull
+ 1752  git fetch
+ 1753  git pull
+ 1754  git checkout 1416-problemi-di-regression-testing-con-la-versione-di-aida-e-tosca-aggiornata-ad-oggi 
+ 1755  git diff tools/eu.fbk.tools.aida.parent/bundles/mbt/eu.fbk.tools.mbt.testgeneration/src/eu/fbk/tools/mbt/testgeneration/inputspace/grammar/MbtJsonGrammarGenerator.java
+ 1756  git branch
+ 1757  git status
+ 1758  git checkout tools/eu.fbk.tools.aida.parent/bundles/mbt/eu.fbk.tools.mbt.testgeneration/src/eu/fbk/tools/mbt/testgeneration/inputspace/grammar/MbtJsonGrammarGenerator.java
+ 1759  git checkout tools/eu.fbk.tools.aida.parent/bundles/mbt/eu.fbk.tools.mbt.testgeneration/src/eu/fbk/tools/mbt/testgeneration/sbt/ui/handlers/SBTGeneratorHandler.java
+ 1760  git checkout 1416-problemi-di-regression-testing-con-la-versione-di-aida-e-tosca-aggiornata-ad-oggi 
+ 1761  git pull
+ 1762  cd ..
+ 1763  cd 2021/RFI-LdS/
+ 1764  git status
+ 1765  git pull
+ 1766  git switch 1416-problemi-di-regression-testing-con-la-versione-di-aida-e-tosca-aggiornata-ad-oggi 
+ 1767  git pull
+ 1768  java -version
+ 1769  cd git/2021/RFI-LdS/
+ 1770  git status
+ 1771  git didd tools/eu.fbk.tools.aida.parent/bundles/regression/eu.fbk.tools.regression/src/eu/fbk/tools/regression/analysis/ModelDiffAnalysis.java
+ 1772  git diff tools/eu.fbk.tools.aida.parent/bundles/regression/eu.fbk.tools.regression/src/eu/fbk/tools/regression/analysis/ModelDiffAnalysis.java
+ 1773  git status
+ 1774  git diff tools/eu.fbk.tools.aida.parent/bundles/regression/eu.fbk.tools.regression/src/eu/fbk/tools/regression/analysis/ModelDiffAnalysis.java
+ 1775  clear
+ 1776  git status
+ 1777  git diff tools/eu.fbk.tools.aida.parent/bundles/regression/eu.fbk.tools.regression/src/eu/fbk/tools/regression/analysis/ModelDiffAnalysis.java
+ 1778  git add tools/eu.fbk.tools.aida.parent/bundles/regression/eu.fbk.tools.regression/src/eu/fbk/tools/regression/analysis/ModelDiffAnalysis.java
+ 1779  git status
+ 1780  git commit
+ 1781  git pull
+ 1782  git push
+ 1783  nmcli d
+ 1784  nmcli r wifi on
+ 1785  nmcli d
+ 1786  nmcli r wifi on
+ 1787  nmcli c
+ 1788  nmcli d connect
+ 1789  ifconfig -a
+ 1790  sudo apt install net-tools
+ 1791  ifconfig -a
+ 1792  nmcli d connect
+ 1793  nmcli c
+ 1794  nmcli d connect a4a5dbdd-4c13-494a-bedd-e85ddaed6e01
+ 1795  nmcli nm wifi on
+ 1796  nmcli radio wifi on
+ 1797  nmcli -a d wifi connect TIM-27057121
+ 1798  nmcli -a d wifi list
+ 1799  nmcli d wifi list
+ 1800  nmcli -a d wifi list
+ 1801  nmcli radio wifi on
+ 1802  nmcli c
+ 1803  iwconfig
+ 1804  rfkill list
+ 1805  	
+ 1806  lshw -C network
+ 1807  	
+ 1808  lshw -C network
+ 1809  sudo apt-get update && sudo apt-get upgrade
+ 1810  sudo dmidecode | grep Version | sed -n '2p'
+ 1811  sudo dmidecode | grep 'SKU Number' | head -1
+ 1812  clear
+ 1813  Kernel modules: bcma, wl
+ 1814  grep wl /etc/modprobe.d/*
+ 1815  sudo apt install --reinstall bcmwl-kernel-source
+ 1816  exit
+ 1817  cd git/2021/RFI-LdS/
+ 1818  git status
+ 1819  git pull
+ 1820  git switch 
+ 1821  git switch master
+ 1822  git pull
+ 1823  git fetch
+ 1824  git pull
+ 1825  git checkout 1432-show-affected-test-cases-for-indirect-impact-in-tosca-regression-testing 
+ 1826  git pull
+ 1827  git fetch
+ 1828  git status
+ 1829  git add tools/eu.fbk.tools.aida.parent/bundles/regression/eu.fbk.tools.regression/src/eu/fbk/tools/regression/analysis/ImpactAnalysisReport.java
+ 1830  git add tools/eu.fbk.tools.aida.parent/bundles/regression/eu.fbk.tools.regression/src/eu/fbk/tools/regression/analysis/SysmlImpactAnalysis.java
+ 1831  git add tools/eu.fbk.tools.aida.parent/bundles/regression/eu.fbk.tools.regression/src/eu/fbk/tools/regression/ui/wizards/AffectedTestCasesSummaryPage.java
+ 1832  git add tools/eu.fbk.tools.aida.parent/bundles/regression/eu.fbk.tools.regression/src/eu/fbk/tools/regression/ui/wizards/RegressionTestingSummaryWizard.java
+ 1833  git add tools/eu.fbk.tools.aida.parent/bundles/regression/eu.fbk.tools.regression/src/eu/fbk/tools/regression/utils/AffectedTestDetailsCSVWriter.java
+ 1834  git status
+ 1835  git commit
+ 1836  git pull
+ 1837  git push
+ 1838  cd git/FeatureIDE
+ 1839  git status
+ 1840  git pull
+ 1841  git checkout 5-feature-model-to-smt-lib-encoding-2
+ 1842  git checkout plugins/de.ovgu.featureide.fm.core/META-INF/MANIFEST.MF
+ 1843  git checkout 5-feature-model-to-smt-lib-encoding-2
+ 1844  git pull
+ 1845  chrome
+ 1846  ./chrome
+ 1847  mvn clean install
+ 1848  mvn clean install -DskipTests
+ 1849  exit
+ 1850  cd git/RFI-LdS/
+ 1851  git status
+ 1852  cd tools/eu.fbk.tools.aida.parent/
+ 1853  mvn clean install -DskipTests
+ 1854  java --version
+ 1855  clear
+ 1856  mvn clean install -P Eclipse-2021-03-Java11-devel -T 1 -U -DskipTests=true -Xmx16g
+ 1857  cd ..
+ 1858  git fetch
+ 1859  gut pull
+ 1860  git pull
+ 1861  clear
+ 1862  cd tools/eu.fbk.tools.aida.parent/
+ 1863  mvn clean install -P Eclipse-2021-03-Java11-devel -T 1 -U -DskipTests=true -Xmx16g
+ 1864  exit
+ 1865  cd git/RFI-LdS/
+ 1866  git pull
+ 1867  git branch
+ 1868  git switch master
+ 1869  git fetch
+ 1870  git pull
+ 1871  # "pull" submodule
+ 1872  git submodule update --init
+ 1873  # move locally submodule to latest commit
+ 1874  git submodule update --remote
+ 1875  exit
+ 1876  zip TOSCA_resources/
+ 1877  zip TOSCA_resources Tosca_resources.zip
+ 1878  zip Tosca_resources.zip TOSCA_resources/
+ 1879  zip -r Tosca_resources.zip TOSCA_resources/
+ 1880  cd git/2021/RFI-LdS/
+ 1881  git status
+ 1882  git fetch
+ 1883  git branch
+ 1884  git checkout master
+ 1885  git pull
+ 1886  git branch
+ 1887  cd git/2021/RFI-LdS/
+ 1888  git status
+ 1889  git fetch
+ 1890  git pull
+ 1891  git stash
+ 1892  git pull
+ 1893  cd tools/eu.fbk.tools.aida.parent/
+ 1894  git status
+ 1895  mvn clean install -P Eclipse-2021-03-Java11-devel -T 1 -U -DskipTests=true -Xmx16g
+ 1896  mvn clean install -P Eclipse-2021-03-Java11-devel -T 1 -U -DskipTests=true
+ 1897  cd ..
+ 1898  git status uno
+ 1899  git fetch
+ 1900  git pull
+ 1901  cd tools/eu.fbk.tools.aida.parent/
+ 1902  mvn clean install -P Eclipse-2021-03-Java11-devel -T 1 -U -DskipTests=true
+ 1903  cd ..
+ 1904  git submodule update --init
+ 1905  git submodule update --remote
+ 1906  cd tools/eu.fbk.tools.aida.parent/
+ 1907  clear
+ 1908  mvn clean install -P Eclipse-2021-03-Java11-devel -T 1 -U -DskipTests=true
+ 1909  exit
+ 1910  dconf reset -f /
+ 1911  exit
+ 1912  dconf reset -f /
+ 1913  history
+ 1914  sudo apt-get install --reinstall ubuntu-desktopsudo apt-get install --reinstall ubuntu-desktop
+ 1915  sudo apt update
+ 1916  sudo apt upgrade -y
+ 1917  sudo apt update && sudo apt upgrade
+ 1918  sudo apt autoremove
+ 1919  sudo apt update && sudo apt upgrade
+ 1920  apt-get clean
+ 1921  sudo apt-get clean
+ 1922  rm -rf /var/lib/apt/lists/*
+ 1923  sudo rm -rf /var/lib/apt/lists/*
+ 1924  sudo  apt-get clean
+ 1925  sudo  apt-get update 
+ 1926  sudo apt-get upgrade
+ 1927  sudo apt install update-manager-core
+ 1928  sudo nano /etc/update-manager/release-upgrades
+ 1929  sudo do-release-upgrade
+ 1930  sudo apt-get upgrade
+ 1931  sudo  apt-get update 
+ 1932  sudo do-release-upgrade
+ 1933  sudo apt update
+ 1934  sudo apt upgrade
+ 1935  sudo apt dist-upgrade
+ 1936  sudo do-release-upgrade
+ 1937  clear
+ 1938  sudo -v
+ 1939  dpkg-query -l | awk '$1=="ii" {print $2}' | sudo xargs echo apt install --reinstall
+ 1940  clear
+ 1941  dpkg-query -l | awk '$1=="ii" {print $2}' | sudo xargs apt install --reinstall
+ 1942  sudo dpkg-query -l | awk '$1=="ii" {print $2}' | sudo xargs apt install --reinstall
+ 1943  sudo dpkg -i --force-overwrite /var/cache/apt/archives/nodejs_0.10.28-1chl1~trusty1_amd64.deb
+ 1944  cd /var/cache/apt/archives
+ 1945  ll
+ 1946  ls
+ 1947  cd partial/
+ 1948  ll
+ 1949  exit
+ 1950  cd git/
+ 1951  ls
+ 1952  ll
+ 1953  git clone git@gitlab.fbk.eu:skhandaker/privategpt_demo.git
+ 1954  cd privategpt_demo/
+ 1955  conda --version
+ 1956  pip --version
+ 1957  python --version
+ 1958  python3 --version
+ 1959  sudo add-apt-repository ppa:deadsnakes/ppa
+ 1960  sudo apt update
+ 1961  sudo apt upgrade
+ 1962  python3 --version
+ 1963  python3.11 --version
+ 1964  sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+ 1965  sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 2
+ 1966  sudo update-alternatives --config python3
+ 1967  python3 --version
+ 1968  sudo apt install python-is-python3
+ 1969  python --version
+ 1970  sudo apt install python-is-python3
+ 1971  python --version
+ 1972  git branch
+ 1973  python3 --version
+ 1974  python3 -m venv privategpt
+ 1975  source privategpt/bin/activate
+ 1976  pip install poetry
+ 1977  poetry --version
+ 1978  poetry install --with ui,local
+ 1979  poetry --help
+ 1980  poetry list
+ 1981  poetry install --with ui,local
+ 1982  poetry install --extras ui,local
+ 1983  poetry install --extras ui
+ 1984  sudo poetry install --extras ui
+ 1985  poetry install --extras ui
+ 1986  exit
+ 1987  ls
+ 1988  zip -r home.zip *
+ 1989  sudo zip -r home.zip *
+ 1990  ls
+ 1991  pwd
+ 1992  cd ..
+ 1993  ls
+ 1994  cd ..
+ 1995  pwd
+ 1996  ls
+ 1997  cd home/shaker/
+ 1998  ls
+ 1999  exit
+ 2000  history > history_for_print.txt
