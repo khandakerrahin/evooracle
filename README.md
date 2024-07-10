@@ -18,7 +18,7 @@ The tool follows the following workflow:
 1. Create a virtual environment `python -m venv evooracle_venv`
 2. Activate it: 
    - Windows:`.\evooracle_venv\Scripts\activate`
-   - Mac: `source evooracle_venv/bin/activate`
+   - Linux/Mac: `source evooracle_venv/bin/activate`
 3. Download the required LLM models and take note of the PATH they're installed to
 5. Clone this repo `git@github.com:khandakerrahin/evooracle.git`
 6. Go into the directory `cd evooracle`

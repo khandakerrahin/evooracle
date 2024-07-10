@@ -15,7 +15,8 @@ import time
 
 
 # Import depdencies 
-from langchain.llms import GPT4All, OpenAI
+# from langchain.llms import GPT4All, OpenAI
+from gpt4all import GPT4All
 from langchain import PromptTemplate, LLMChain
 from ctransformers.langchain import CTransformers
 
@@ -34,12 +35,13 @@ BASE_PATH = LLM_BASE_PATH
 try:
     PATH = f'{BASE_PATH}{sys.argv[5]}'
     # Callbacks support token-wise streaming
-    callbacks = [StreamingStdOutCallbackHandler()]
+    # callbacks = [StreamingStdOutCallbackHandler()]
 
-    llm = GPT4All(model=PATH, backend="gptj", callbacks=callbacks, verbose=True, temp=temperature, n_predict=n_predict, top_p=top_p, top_k=top_k, n_batch=n_batch, repeat_penalty=repeat_penalty, repeat_last_n=repeat_last_n)
+    llm = sys.argv[5]
+    # llm = GPT4All(model=PATH, backend="gptj", callbacks=callbacks, verbose=True, temp=temperature, n_predict=n_predict, top_p=top_p, top_k=top_k, n_batch=n_batch, repeat_penalty=repeat_penalty, repeat_last_n=repeat_last_n)
 
     template = PromptTemplate(input_variables=['action'], template="""{action}""")
-    chain = LLMChain(llm=llm, prompt=template, verbose=True) 
+    # chain = LLMChain(llm=llm, prompt=template, verbose=True) 
 except:
     print("LLM path missing, ignoring.")
 
@@ -52,8 +54,10 @@ def ask_openLLM(messages):
     max_try = 5
     while max_try:
         try:
-            completion = chain.run(messages)
-            return completion
+            # completion = chain.run(messages)
+            # return completion
+            model = GPT4All(llm)
+            return model.generate(messages)
         except Exception as e:
             print(Fore.RED + str(e), Style.RESET_ALL)
         max_try -= 1

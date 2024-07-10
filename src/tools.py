@@ -256,6 +256,19 @@ def export_method_test_case(output, class_name, method_test_case):
     """
     # method_test_case = add_timeout(method_test_case)
     # f = os.path.join(output, class_name + "_" + str(m_id) + '_' + str(test_num) + "Test.java")
+
+    print(output)
+    print()
+    print()
+
+    print(class_name)
+    print()
+    print()
+
+    print(method_test_case)
+    print()
+    print()
+
     f = os.path.join(output, class_name + ".java")
     if not os.path.exists(output):
         os.makedirs(output)
