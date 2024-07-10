@@ -56,8 +56,14 @@ def ask_openLLM(messages):
         try:
             # completion = chain.run(messages)
             # return completion
-            model = GPT4All(llm)
-            return model.generate(messages)
+            model = GPT4All(llm, model_path=BASE_PATH)
+            
+            print(Fore.GREEN + "Prompt: " + messages, Style.RESET_ALL)
+            
+            response = model.generate(messages)
+            print(Fore.GREEN + "Response: " + response, Style.RESET_ALL)
+            
+            return response
         except Exception as e:
             print(Fore.RED + str(e), Style.RESET_ALL)
         max_try -= 1
