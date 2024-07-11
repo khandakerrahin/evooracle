@@ -58,11 +58,11 @@ def ask_openLLM(messages):
             # return completion
             model = GPT4All(llm, model_path=BASE_PATH)
             
-            print(Fore.GREEN + "Prompt: " + messages, Style.RESET_ALL)
+            print("Prompt: " + Fore.GREEN + messages, Style.RESET_ALL)
             with model.chat_session():
                 # print(model.generate("quadratic formula"))
                 response = model.generate(messages)
-            print(Fore.GREEN + "Response: " + response, Style.RESET_ALL)
+            print("Response: " + Fore.GREEN + response, Style.RESET_ALL)
             
             return response
         except Exception as e:
@@ -577,9 +577,13 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
                 result["es_mutation_score"] = evo_result["es_mutation_score"]
                 result["es_test_path"] = evo_result["es_test_path"]
                 
-                break
+                if evo_result["eo_is_compiled"]:
+                    break
+                else:
+                    print("Assertion compilation: " + Fore.CYAN + "FAILED", Style.RESET_ALL)
+                    end_time = time.perf_counter()
             else:
-                print("Assertion generate: " + Fore.RED + "FAILED", Style.RESET_ALL)
+                print("Assertion generation: " + Fore.RED + "FAILED", Style.RESET_ALL)
                 end_time = time.perf_counter()
         
         result["attempts"] = rounds
