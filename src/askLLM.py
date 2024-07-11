@@ -59,8 +59,9 @@ def ask_openLLM(messages):
             model = GPT4All(llm, model_path=BASE_PATH)
             
             print(Fore.GREEN + "Prompt: " + messages, Style.RESET_ALL)
-            
-            response = model.generate(messages)
+            with model.chat_session():
+                # print(model.generate("quadratic formula"))
+                response = model.generate(messages)
             print(Fore.GREEN + "Response: " + response, Style.RESET_ALL)
             
             return response
@@ -452,20 +453,18 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
     
     prompts_and_responses = []
 
-    # if consider_dev_comments:
-    #     prompt_template = TEMPLATE_WITH_DEV_COMMENTS
-    # else:
-    #     prompt_template = TEMPLATE_BASIC
-
-    prompt_template = TEMPLATE_BASIC
+    if consider_dev_comments:
+        prompt_template = TEMPLATE_WITH_DEV_COMMENTS
+    else:
+        prompt_template = TEMPLATE_BASIC
 
     # write in file if comments exist
-    # write_entries_with_comments(context)
+    write_entries_with_comments(context)
     
     # sys.exit()
 
     if not consider_dev_comments:
-        context["method_details"] = remove_key_value_pair_from_json(context.get("method_details"), "dev_comments")
+        context["method_details"] = remove_key_value_pair_from_json(context.get("method_details"), "developer_comments")
 
         # print("AFTER REMOVING DEV COMMENTS:")
         # print(context["method_details"])

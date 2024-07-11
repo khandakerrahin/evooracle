@@ -307,7 +307,12 @@ def get_CUT_from_test_class_name(input_string):
     if len(parts) > 0:
         return parts[0]
     else:
-        return input_string  # Return the original string if "_ESTest" is not found
+        parts = input_string.split(string_tables.TEST_SIGNATURE)
+
+        if len(parts) > 0:
+            return parts[0]
+        else:
+            return input_string  # Return the original string if "_ESTest" or "Test" is not found
 
 def get_MUT_from_string(input_string):
     parts = input_string.split(".")
@@ -333,7 +338,7 @@ def write_entries_with_comments(context):
     
     data = context.get("method_details")
         
-    comment_entries_file = "/home/shaker/Documents/evooracle_comments_entries.csv"
+    comment_entries_file = "/home/shaker/evooracle_comments_entries.csv"
     # open file to write results
     if not os.path.exists(comment_entries_file):
         # If it doesn't exist, create the file with a header row

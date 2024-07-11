@@ -1,15 +1,11 @@
-'''
-### Instruction:
-You are working with a Java project which includes a class called `{{ class_name }}` and has some methods.
-Method details as JSON: `{{ method_details }}`.
-You are tasked with generating a test oracle for a JUnit test case based on the above information of the method to test its functionality .
-### Prompt:
-In the following the test case, replace the `{{ assertion_placeholder }}` with one or more appropriate assertions:
+A Java project includes a class called `{{ class_name }}` and it has the following method details as JSON:
+`{{ method_details }}`.
+Generate a test oracle for a JUnit test case based on the above information and DEVELOPER COMMENTS of the method to test its functionality.
+
+In the following the test case, replace the `{{ assertion_placeholder }}` with an appropriate assertion:
 ```
 {{ test_method_code }}
 ```
-Write the assertion statement using following pattern:
+THE ASSERTION STATEMENT MUST FOLLOW ONE OF THE FOLLOWING PYTHON REGEX PATTERNS:
 ```r'(\w+\.)?(assert|assertTrue|assertNull|fail|assertFalse|assertNotEquals|assertEquals|assertArrayEquals|assertNotNull|assertNotSame|assertSame|assertThat)\s*\(.+?\);'```
-Assertion must end with ```;```
-### Response:
-'''
+JUST WRITE THE ASSERTION, NO EXPLANATION NEEDED.
