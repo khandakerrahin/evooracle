@@ -329,7 +329,7 @@ def remove_key_value_pair_from_json(data, key):
             del item[key]
 
     # Convert the modified data back to JSON (if needed)
-    json_data = json.dumps(data)
+    json_data = json.dumps(data, indent=2)
     return json_data
 
 def write_entries_with_comments(context):
@@ -437,7 +437,7 @@ def extract_assertions_from_string(input_string):
     extracted_assertions = '\n'.join(extracted_assertions)
     return extracted_assertions
 
-def extract_first_assertion_from_string(input_string):
+def extract_first_assertion_from_string_old(input_string):
     # Regular expression pattern to match assertions
     assertion_patterns = [
         r'(\w+\.)?assert\s*\(.+?\);',           # Matches ClassName.assert(...)
@@ -461,4 +461,33 @@ def extract_first_assertion_from_string(input_string):
             return match.group(0)
 
     
+    return ""
+
+def extract_first_assertion_from_string(input_string):
+    # Regular expression pattern to match assertions with an optional semicolon at the end
+    assertion_patterns = [
+        r'(\w+\.)?assert\s*\(.+?\);?',           # Matches ClassName.assert(...)
+        r'(\w+\.)?assertTrue\s*\(.+?\);?',       # Matches ClassName.assertTrue(...)
+        r'(\w+\.)?assertNull\s*\(.+?\);?',       # Matches ClassName.assertNull(...)
+        r'(\w+\.)?fail\s*\(.+?\);?',             # Matches ClassName.fail(...)
+        r'(\w+\.)?assertFalse\s*\(.+?\);?',      # Matches ClassName.assertFalse(...)
+        r'(\w+\.)?assertNotEquals\s*\(.+?\);?',  # Matches ClassName.assertNotEquals(...)
+        r'(\w+\.)?assertEquals\s*\(.+?\);?',     # Matches ClassName.assertEquals(...)
+        r'(\w+\.)?assertArrayEquals\s*\(.+?\);?',# Matches ClassName.assertArrayEquals(...)
+        r'(\w+\.)?assertNotNull\s*\(.+?\);?',    # Matches ClassName.assertNotNull(...)
+        r'(\w+\.)?assertNotSame\s*\(.+?\);?',    # Matches ClassName.assertNotSame(...)
+        r'(\w+\.)?assertSame\s*\(.+?\);?',       # Matches ClassName.assertSame(...)
+        r'(\w+\.)?assertThat\s*\(.+?\);?',       # Matches ClassName.assertThat(...)
+    ]
+
+    # Iterate through each pattern and find matches in the input string
+    for pattern in assertion_patterns:
+        match = re.search(pattern, input_string)
+        if match:
+            assertion = match.group(0)
+            # Ensure the assertion ends with a semicolon
+            if not assertion.endswith(';'):
+                assertion += ';'
+            return assertion
+
     return ""

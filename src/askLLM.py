@@ -548,7 +548,7 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
             assertions = extract_first_assertion_from_string(llm_result)
             
             if assertions:
-                print("Assertion generate: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
+                print("Assertion generation: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
                 # print("LLM Response Assertion: " + Fore.GREEN + assertions, Style.RESET_ALL)
                 # print()
                 

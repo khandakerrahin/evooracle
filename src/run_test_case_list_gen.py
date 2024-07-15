@@ -30,7 +30,7 @@ def run(project_dir):
 
     # Parse project
     info_path = Task.parse(project_dir)
-    print(Fore.GREEN + "I AM HERE!!!!!!!!!", Style.RESET_ALL)
+    
     # # Parse data
     parse_data(info_path, (project_dir+db_file))
 

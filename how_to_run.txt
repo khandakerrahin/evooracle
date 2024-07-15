@@ -5,3 +5,38 @@ python -m venv evooracle_venv
 source evooracle_venv/bin/activate
 pip install -r requirements.txt
 cd src
+
+
+
+
+
+
+
+mvn test org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.bytedeco.javacv.Parallel -DtargetTests=org.bytedeco.javacv.Parallel_ESTest
+mvn test-compile org.pitest:pitest-maven:mutationCoverage -DtargetClasses=org.bytedeco.javacv.Parallel -DtargetTests=org.bytedeco.javacv.Parallel_ESTest
+
+python log_collector.py 
+python add_method_name_from_log.py 
+python descriptive_statistics.py
+python mutation_average_calculator.py
+python mutation_average_plot.py 
+python pit_runner.py 
+python file_deleter.py
+python enhance_evosuite_tests.py
+
+
+
+
+
+
+
+
+
+
+
+
+Step 0:
+mvn compile
+
+
+ssh -o ProxyCommand="ssh -i  ~/.ssh/authorized_keys/skhandaker.pub   -W %h:22 skhandaker@jump.fbk.eu" -i  ~/.ssh/authorized_keys/skhandaker.pub skhandaker@diclubclsin.fbk.eu
