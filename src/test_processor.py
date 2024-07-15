@@ -273,6 +273,9 @@ def prepare_test_cases(test_id, project_dir, class_name, method_name, llm_name, 
         if method_details:
             method_details_list.append(method_details)
     
+    # pretty print JSON
+    method_details_list = json.dumps(method_details_list, indent=2)
+
     # print("CUT: ", Fore.GREEN + class_under_test, Style.RESET_ALL)
     # print("MUT: \n", Fore.YELLOW + "\n".join(MUT_list), Style.RESET_ALL)
     # print()

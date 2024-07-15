@@ -55,7 +55,7 @@ class ResourceManager:
                                 "parameters": method.get("parameters"),
                                 "dependencies": method.get("dependencies"),
                                 "return_type": method.get("return_type"),
-                                "dev_comments": method.get("dev_comments"),
+                                "developer_comments": method.get("dev_comments"),
                             }
                             return details
                         else:

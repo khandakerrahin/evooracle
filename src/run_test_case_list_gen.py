@@ -30,7 +30,7 @@ def run(project_dir):
 
     # Parse project
     info_path = Task.parse(project_dir)
-
+    
     # # Parse data
     parse_data(info_path, (project_dir+db_file))
 
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     # Check if a command-line argument (project_dir) is provided
     if len(sys.argv) > 1:
         project_dir = sys.argv[1]
-        
+        print(Fore.GREEN + "Project Dir: "+project_dir, Style.RESET_ALL)
         run(project_dir)
     else:
         print(Fore.RED + "Run failed, missing arguments: project_dir", Style.RESET_ALL)        

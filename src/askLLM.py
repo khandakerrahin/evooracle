@@ -15,7 +15,8 @@ import time
 
 
 # Import depdencies 
-from langchain.llms import GPT4All, OpenAI
+# from langchain.llms import GPT4All, OpenAI
+from gpt4all import GPT4All
 from langchain import PromptTemplate, LLMChain
 from ctransformers.langchain import CTransformers
 
@@ -34,12 +35,13 @@ BASE_PATH = LLM_BASE_PATH
 try:
     PATH = f'{BASE_PATH}{sys.argv[5]}'
     # Callbacks support token-wise streaming
-    callbacks = [StreamingStdOutCallbackHandler()]
+    # callbacks = [StreamingStdOutCallbackHandler()]
 
-    llm = GPT4All(model=PATH, backend="gptj", callbacks=callbacks, verbose=True, temp=temperature, n_predict=n_predict, top_p=top_p, top_k=top_k, n_batch=n_batch, repeat_penalty=repeat_penalty, repeat_last_n=repeat_last_n)
+    llm = sys.argv[5]
+    # llm = GPT4All(model=PATH, backend="gptj", callbacks=callbacks, verbose=True, temp=temperature, n_predict=n_predict, top_p=top_p, top_k=top_k, n_batch=n_batch, repeat_penalty=repeat_penalty, repeat_last_n=repeat_last_n)
 
     template = PromptTemplate(input_variables=['action'], template="""{action}""")
-    chain = LLMChain(llm=llm, prompt=template, verbose=True) 
+    # chain = LLMChain(llm=llm, prompt=template, verbose=True) 
 except:
     print("LLM path missing, ignoring.")
 
@@ -52,8 +54,17 @@ def ask_openLLM(messages):
     max_try = 5
     while max_try:
         try:
-            completion = chain.run(messages)
-            return completion
+            # completion = chain.run(messages)
+            # return completion
+            model = GPT4All(llm, model_path=BASE_PATH)
+            
+            print("Prompt: " + Fore.GREEN + messages, Style.RESET_ALL)
+            with model.chat_session():
+                # print(model.generate("quadratic formula"))
+                response = model.generate(messages)
+            print("Response: " + Fore.GREEN + response, Style.RESET_ALL)
+            
+            return response
         except Exception as e:
             print(Fore.RED + str(e), Style.RESET_ALL)
         max_try -= 1
@@ -442,20 +453,18 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
     
     prompts_and_responses = []
 
-    # if consider_dev_comments:
-    #     prompt_template = TEMPLATE_WITH_DEV_COMMENTS
-    # else:
-    #     prompt_template = TEMPLATE_BASIC
-
-    prompt_template = TEMPLATE_BASIC
+    if consider_dev_comments:
+        prompt_template = TEMPLATE_WITH_DEV_COMMENTS
+    else:
+        prompt_template = TEMPLATE_BASIC
 
     # write in file if comments exist
-    # write_entries_with_comments(context)
+    write_entries_with_comments(context)
     
     # sys.exit()
 
     if not consider_dev_comments:
-        context["method_details"] = remove_key_value_pair_from_json(context.get("method_details"), "dev_comments")
+        context["method_details"] = remove_key_value_pair_from_json(context.get("method_details"), "developer_comments")
 
         # print("AFTER REMOVING DEV COMMENTS:")
         # print(context["method_details"])
@@ -539,7 +548,7 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
             assertions = extract_first_assertion_from_string(llm_result)
             
             if assertions:
-                print("Assertion generate: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
+                print("Assertion generation: " + Fore.GREEN + "SUCCESS", Style.RESET_ALL)
                 # print("LLM Response Assertion: " + Fore.GREEN + assertions, Style.RESET_ALL)
                 # print()
                 
@@ -568,9 +577,13 @@ def whole_process_with_LLM(project_dir, context, test_id, llm_name, consider_dev
                 result["es_mutation_score"] = evo_result["es_mutation_score"]
                 result["es_test_path"] = evo_result["es_test_path"]
                 
-                break
+                if evo_result["eo_is_compiled"]:
+                    break
+                else:
+                    print("Assertion compilation: " + Fore.CYAN + "FAILED", Style.RESET_ALL)
+                    end_time = time.perf_counter()
             else:
-                print("Assertion generate: " + Fore.RED + "FAILED", Style.RESET_ALL)
+                print("Assertion generation: " + Fore.RED + "FAILED", Style.RESET_ALL)
                 end_time = time.perf_counter()
         
         result["attempts"] = rounds
